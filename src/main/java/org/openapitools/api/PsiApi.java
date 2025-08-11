@@ -43,7 +43,7 @@ import javax.annotation.Generated;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
 @Validated
 @Tag(name = "rechercher-user-controller", description = "the rechercher-user-controller API")
-public interface UserApi {
+public interface PsiApi {
 
     /**
      * POST /user : Crée l&#39;utilisateur au SEC PSC à partir de ses traits d&#39;identité
@@ -288,5 +288,4 @@ public interface UserApi {
         @NotNull @Parameter(name = "nationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
         @Parameter(name = "UpdateEimsRequestDto", description = "", required = true) @Valid @RequestBody UpdateEimsRequestDto updateEimsRequestDto
     );
-
 }
