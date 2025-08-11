@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.openapitools.model.RechercherMiesResponseDto;
 import org.openapitools.model.TrouverUserResponseDto;
 import org.openapitools.model.UpdateEimsRequestDto;
@@ -49,6 +50,11 @@ public class PsiApiController implements PsiApi {
 			@Valid UpdateEimsRequestDto updateEimsRequestDto) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@GetMapping("/hello")
+	public ResponseEntity<String> hello() {
+	    return ResponseEntity.ok("Hello, world!");
 	}
 
 }

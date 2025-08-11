@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.context.request.NativeWebRequest;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"fr.ans.psc", "org.openapitools"})
 public class PscApiMajApplication {
 
     public static void main(String[] args) {
