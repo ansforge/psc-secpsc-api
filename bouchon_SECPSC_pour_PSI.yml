@@ -1,0 +1,642 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8092
+    description: Generated server url
+paths:
+  /user/eims:
+    get:
+      tags:
+        - rechercher-user-controller
+      summary: Récupère la liste des MIE et la liste des autres ids d'un utilisateur par son id national
+      operationId: rechercherEims
+      parameters:
+        - name: nationalId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Utilisateur trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RechercherMiesResponseDto'
+        '400':
+          description: Données invalides ou absentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: L'utilisateur avec cet identifiant national existe déjà
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+    put:
+      tags:
+        - rechercher-user-controller
+      summary: Met à jour la liste des MIE et autres identifiants d'un utilisateur par son id national
+      operationId: updateEims
+      parameters:
+        - name: nationalId
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEimsRequestDto'
+        required: true
+      responses:
+        '200':
+          description: MIE mis à jour
+        '400':
+          description: Données invalides ou absentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: L'utilisateur avec cet identifiant national existe déjà
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+  /user:
+    get:
+      tags:
+        - rechercher-user-controller
+      summary: Retourne la personne (si trouvée) au SEC PSC sur la base de son id national
+      operationId: rechercherParIdNational
+      parameters:
+        - name: nationalId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Personne trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrouverUserResponseDto'
+        '400':
+          description: Données invalides ou absentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: L'utilisateur avec cet identifiant national existe déjà
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+    post:
+      tags:
+        - rechercher-user-controller
+      summary: Crée l'utilisateur au SEC PSC à partir de ses traits d'identité
+      operationId: creerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+        required: true
+      responses:
+        '201':
+          description: Utilisateur créé
+          content:
+            application/json: {}
+        '400':
+          description: Données invalides ou absentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Conflits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+  /user/traitsidentite:
+    get:
+      tags:
+        - rechercher-user-controller
+      summary: Retourne la/les personne/s (si trouvées) au SEC PSC sur la base de ses traits d'identité
+      operationId: rechercherParTraitsIdentite_1
+      parameters:
+        - name: lastName
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: firstNames
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: genderCode
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: birthdate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: birthTownCode
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: birthCountryCode
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Personne/s trouvée/s
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrouverUserResponseDto'
+        '400':
+          description: Données invalides ou absentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Conflits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+components:
+  schemas:
+    EimDto:
+      type: object
+      properties:
+        idNat:
+          type: string
+        mieType:
+          type: string
+        serialNumber:
+          type: string
+        email:
+          type: string
+        deviceName:
+          type: string
+        model:
+          type: string
+        operatingSystem:
+          type: string
+        appVersion:
+          type: string
+        creationDate:
+          type: string
+          format: date
+        endOfValidityDate:
+          type: string
+          format: date
+        activationMode:
+          type: string
+        eidasLevel:
+          type: string
+        fitier:
+          type: string
+    UpdateEimsRequestDto:
+      type: object
+      properties:
+        nationalId:
+          type: string
+        eims:
+          type: array
+          items:
+            $ref: '#/components/schemas/EimDto'
+    ApiError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Instant auquel s'est produit l'erreur
+          example: '2024-02-27T14:45:00.593+00:00'
+        faultyFields:
+          type: array
+          description: Liste des champs invalides
+          example:
+            - nationalId
+            - email
+          items:
+            type: string
+        faultyValues:
+          type: array
+          description: Liste des valeurs invalides pour les champs mentionnés
+          example:
+            - '123456789'
+            - '987654321'
+          items: {}
+        errorMessage:
+          type: string
+          description: Brève description de l'erreur
+          example: Ressource non trouvée
+        path:
+          type: string
+          description: path
+          example: /user/123456789
+    ErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Instant auquel s'est produit l'erreur
+          example: '2024-02-27T14:45:00.593+00:00'
+        code:
+          type: string
+          description: Brève description de l'erreur
+          example: 404
+        message:
+          type: string
+          description: Brève description de l'erreur
+          example: Ressource non trouvée
+        metadata:
+          type: object
+          additionalProperties: {}
+          description: Données additionnelles sur l'erreur (clé/valeur)
+          example:
+            additionalProp1: {}
+            additionalProp2: {}
+            additionalProp3: {}
+    GenericInternalServerErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Instant auquel s'est produit l'erreur
+          example: '2024-02-27T14:45:00.593+00:00'
+        status:
+          type: integer
+          format: int32
+          description: Code statut HTTP
+          example: 500
+        error:
+          type: string
+          description: Brève description de l'erreur
+          example: Erreur interne serveur
+        path:
+          type: string
+          description: URL de base de la ressource à l'origine de l'erreur
+          example: /rpps-identifications
+    AlternativeIdentifierDto:
+      type: object
+      properties:
+        identifier:
+          type: string
+        origine:
+          type: string
+        quality:
+          type: integer
+          format: int32
+    CivilStatusDto:
+      type: object
+      properties:
+        lastName:
+          type: string
+        firstNames:
+          type: array
+          items:
+            type: string
+        birthDate:
+          type: string
+          format: date
+        birthTownCode:
+          type: string
+        birthCountryCode:
+          type: string
+        birthPlace:
+          type: string
+        genderCode:
+          type: string
+        personalCivilityTitle:
+          type: string
+    ContactInfoDto:
+      type: object
+      properties:
+        email:
+          type: string
+        phone:
+          type: string
+    UserDto:
+      type: object
+      properties:
+        nationalId:
+          type: string
+        civilStatus:
+          $ref: '#/components/schemas/CivilStatusDto'
+        contactInfo:
+          $ref: '#/components/schemas/ContactInfoDto'
+        alternativeIdentifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlternativeIdentifierDto'
+        eims:
+          type: array
+          items:
+            $ref: '#/components/schemas/EimDto'
+    EtatCivilDto:
+      type: object
+      properties:
+        idPP:
+          type: string
+        nomFamille:
+          type: string
+        prenom1:
+          type: string
+        prenom2:
+          type: string
+        prenom3:
+          type: string
+        sexe:
+          type: string
+        dateNaissance:
+          type: string
+        paysNaissance:
+          type: string
+        communeNaissance:
+          type: string
+        departementNaissance:
+          type: string
+        adeli:
+          type: array
+          items:
+            type: string
+    ReponsePSDto:
+      type: object
+      properties:
+        code:
+          type: string
+        libelle:
+          type: string
+        ts:
+          type: string
+          format: date-time
+        reponseEtatCivil:
+          type: array
+          items:
+            $ref: '#/components/schemas/EtatCivilDto'
+    TrouverEtatCivilReponseDto:
+      type: object
+      properties:
+        code:
+          type: string
+        libelle:
+          type: string
+        ts:
+          type: string
+          format: date-time
+        reponsePS:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReponsePSDto'
+    TrouverEtatCivilNotFoundErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Instant auquel s'est produit l'erreur
+          example: '2024-02-27T14:45:00.593+00:00'
+        status:
+          type: integer
+          format: int32
+          description: Brève description de l'erreur
+          example: 404
+        error:
+          type: string
+          description: Brève description de l'erreur
+          example: Ressource non trouvée
+        path:
+          type: string
+          description: URL de base de la ressource à l'origine de l'erreur
+          example: ps/trouverEtatCivil
+    TrouverUserResponseDto:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserDto'
+    RechercherMiesResponseDto:
+      type: object
+      properties:
+        nationalId:
+          type: string
+        alternativeIdentifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlternativeIdentifierDto'
+        eims:
+          type: array
+          items:
+            $ref: '#/components/schemas/EimDto'
+    CoordonneeDto:
+      type: object
+      properties:
+        numeroTelephonePort:
+          type: string
+        courriel:
+          type: string
+    ImagePSDto:
+      type: object
+      properties:
+        professionnel:
+          $ref: '#/components/schemas/ProfessionnelDto'
+    ImagesPSDto:
+      type: object
+      properties:
+        idPP:
+          type: string
+        code:
+          type: string
+        libelle:
+          type: string
+        imagePS:
+          $ref: '#/components/schemas/ImagePSDto'
+    ImagesPSReponseDto:
+      type: object
+      properties:
+        code:
+          type: string
+        libelle:
+          type: string
+        ts:
+          type: string
+          format: date-time
+        reponseImagesPS:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImagesPSDto'
+    ProfessionnelDto:
+      type: object
+      properties:
+        idPP:
+          type: string
+        prenomUsage:
+          type: string
+        nomUsage:
+          type: string
+        civilite:
+          type: string
+        dateAcquisitionNatFR:
+          type: string
+        paysNationalite:
+          type: string
+        prenom1:
+          type: string
+        prenom2:
+          type: string
+        prenom3:
+          type: string
+        dateNaissance:
+          type: string
+        communeNaissance:
+          type: string
+        lieuNaissance:
+          type: string
+        paysNaissance:
+          type: string
+        sexe:
+          type: string
+        dateDeces:
+          type: string
+        statutEtatCivil:
+          type: string
+        dateStatutEtatCivil:
+          type: string
+        coordonneesCorrespondance:
+          $ref: '#/components/schemas/CoordonneeDto'
+    ImagesPSReponseNotFoundErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Instant auquel s'est produit l'erreur
+          example: '2024-02-27T14:45:00.593+00:00'
+        status:
+          type: integer
+          format: int32
+          description: Brève description de l'erreur
+          example: 404
+        error:
+          type: string
+          description: Brève description de l'erreur
+          example: Ressource non trouvée
+        path:
+          type: string
+          description: URL de base de la ressource à l'origine de l'erreur
+          example: imagesPS/RIPSC/10109801023

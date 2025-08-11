@@ -1,0 +1,154 @@
+package org.openapitools.model;
+
+import java.net.URI;
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.openapitools.model.AlternativeIdentifierDto;
+import org.openapitools.model.EimDto;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import java.util.*;
+import javax.annotation.Generated;
+
+/**
+ * RechercherMiesResponseDto
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+public class RechercherMiesResponseDto {
+
+  private String nationalId;
+
+  @Valid
+  private List<@Valid AlternativeIdentifierDto> alternativeIdentifiers = new ArrayList<>();
+
+  @Valid
+  private List<@Valid EimDto> eims = new ArrayList<>();
+
+  public RechercherMiesResponseDto nationalId(String nationalId) {
+    this.nationalId = nationalId;
+    return this;
+  }
+
+  /**
+   * Get nationalId
+   * @return nationalId
+  */
+  
+  @Schema(name = "nationalId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("nationalId")
+  public String getNationalId() {
+    return nationalId;
+  }
+
+  public void setNationalId(String nationalId) {
+    this.nationalId = nationalId;
+  }
+
+  public RechercherMiesResponseDto alternativeIdentifiers(List<@Valid AlternativeIdentifierDto> alternativeIdentifiers) {
+    this.alternativeIdentifiers = alternativeIdentifiers;
+    return this;
+  }
+
+  public RechercherMiesResponseDto addAlternativeIdentifiersItem(AlternativeIdentifierDto alternativeIdentifiersItem) {
+    if (this.alternativeIdentifiers == null) {
+      this.alternativeIdentifiers = new ArrayList<>();
+    }
+    this.alternativeIdentifiers.add(alternativeIdentifiersItem);
+    return this;
+  }
+
+  /**
+   * Get alternativeIdentifiers
+   * @return alternativeIdentifiers
+  */
+  @Valid 
+  @Schema(name = "alternativeIdentifiers", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("alternativeIdentifiers")
+  public List<@Valid AlternativeIdentifierDto> getAlternativeIdentifiers() {
+    return alternativeIdentifiers;
+  }
+
+  public void setAlternativeIdentifiers(List<@Valid AlternativeIdentifierDto> alternativeIdentifiers) {
+    this.alternativeIdentifiers = alternativeIdentifiers;
+  }
+
+  public RechercherMiesResponseDto eims(List<@Valid EimDto> eims) {
+    this.eims = eims;
+    return this;
+  }
+
+  public RechercherMiesResponseDto addEimsItem(EimDto eimsItem) {
+    if (this.eims == null) {
+      this.eims = new ArrayList<>();
+    }
+    this.eims.add(eimsItem);
+    return this;
+  }
+
+  /**
+   * Get eims
+   * @return eims
+  */
+  @Valid 
+  @Schema(name = "eims", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("eims")
+  public List<@Valid EimDto> getEims() {
+    return eims;
+  }
+
+  public void setEims(List<@Valid EimDto> eims) {
+    this.eims = eims;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    RechercherMiesResponseDto rechercherMiesResponseDto = (RechercherMiesResponseDto) o;
+    return Objects.equals(this.nationalId, rechercherMiesResponseDto.nationalId) &&
+        Objects.equals(this.alternativeIdentifiers, rechercherMiesResponseDto.alternativeIdentifiers) &&
+        Objects.equals(this.eims, rechercherMiesResponseDto.eims);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(nationalId, alternativeIdentifiers, eims);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class RechercherMiesResponseDto {\n");
+    sb.append("    nationalId: ").append(toIndentedString(nationalId)).append("\n");
+    sb.append("    alternativeIdentifiers: ").append(toIndentedString(alternativeIdentifiers)).append("\n");
+    sb.append("    eims: ").append(toIndentedString(eims)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+}
+
