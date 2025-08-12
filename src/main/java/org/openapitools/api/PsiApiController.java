@@ -15,6 +15,7 @@ import org.openapitools.model.RechercherMiesResponseDto;
 import org.openapitools.model.TrouverUserResponseDto;
 import org.openapitools.model.UpdateEimsRequestDto;
 import org.openapitools.model.UserDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,8 +26,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-04T14:42:58.339608400+02:00[Europe/Paris]")
 @Controller
-@RequestMapping("${openapi.pscApiMajV2.base-path:/api}")
+@RequestMapping("${openapi.pscPsi.base-path:/api}")
 public class PsiApiController implements PsiApi {
+	
+	@Value("${openapi.pscApiMajV2.base-path}:/api")
+	private String psPath;
 
 	@Override
 	public ResponseEntity<Void> creerUser(@Valid UserDto userDto) {
@@ -44,7 +48,7 @@ public class PsiApiController implements PsiApi {
 
 		HttpClient client = HttpClient.newHttpClient();
 
-		String uri = "http://localhost:8080/psc-api-maj/api/v2/ps?psId=" + nationalId;
+		String uri = psPath + "/v2/ps/psId=" + nationalId;
 
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header(nationalId, nationalId).GET().build();
 
@@ -55,10 +59,11 @@ public class PsiApiController implements PsiApi {
 				String jsonResponse = response.body();
 
 				ObjectMapper mapper = new ObjectMapper();
-				TrouverUserResponseDto userResponse = mapper.readValue(jsonResponse, TrouverUserResponseDto.class);
+				//TrouverUserResponseDto userResponse = mapper.readValue(jsonResponse, TrouverUserResponseDto.class);
+				
+				//return new ResponseEntity<>(userResponse, HttpStatus.OK);
 
-				return new ResponseEntity<>(userResponse, HttpStatus.OK);
-
+				return new ResponseEntity<>(null, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
 			}
