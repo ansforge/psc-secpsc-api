@@ -4,7 +4,7 @@
     <artifactId>psc-psi-api</artifactId>
     <packaging>jar</packaging>
     <name>psc-psi-api</name>
-    <version>1.0.0</version>
+    <version>v2</version>
     <properties>
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -21,6 +21,20 @@
     </parent>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     <dependencies>
         <dependency>
@@ -70,12 +84,5 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
-        <!-- psc clients -->
-        <!-- <dependency>
-            <groupId>fr.ans.psc</groupId>
-            <artifactId>psc-api-client</artifactId>
-            <version>2.3.4-SNAPSHOT</version>
-        </dependency>-->
     </dependencies>
 </project>

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.OffsetDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -20,19 +21,19 @@ import javax.annotation.Generated;
  * TrouverEtatCivilNotFoundErrorDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class TrouverEtatCivilNotFoundErrorDto {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime timestamp;
+  private @Nullable OffsetDateTime timestamp;
 
-  private Integer status;
+  private @Nullable Integer status;
 
-  private String error;
+  private @Nullable String error;
 
-  private String path;
+  private @Nullable String path;
 
-  public TrouverEtatCivilNotFoundErrorDto timestamp(OffsetDateTime timestamp) {
+  public TrouverEtatCivilNotFoundErrorDto timestamp(@Nullable OffsetDateTime timestamp) {
     this.timestamp = timestamp;
     return this;
   }
@@ -40,19 +41,19 @@ public class TrouverEtatCivilNotFoundErrorDto {
   /**
    * Instant auquel s'est produit l'erreur
    * @return timestamp
-  */
+   */
   @Valid 
   @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", description = "Instant auquel s'est produit l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("timestamp")
-  public OffsetDateTime getTimestamp() {
+  public @Nullable OffsetDateTime getTimestamp() {
     return timestamp;
   }
 
-  public void setTimestamp(OffsetDateTime timestamp) {
+  public void setTimestamp(@Nullable OffsetDateTime timestamp) {
     this.timestamp = timestamp;
   }
 
-  public TrouverEtatCivilNotFoundErrorDto status(Integer status) {
+  public TrouverEtatCivilNotFoundErrorDto status(@Nullable Integer status) {
     this.status = status;
     return this;
   }
@@ -60,19 +61,19 @@ public class TrouverEtatCivilNotFoundErrorDto {
   /**
    * Brève description de l'erreur
    * @return status
-  */
+   */
   
   @Schema(name = "status", example = "404", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
-  public Integer getStatus() {
+  public @Nullable Integer getStatus() {
     return status;
   }
 
-  public void setStatus(Integer status) {
+  public void setStatus(@Nullable Integer status) {
     this.status = status;
   }
 
-  public TrouverEtatCivilNotFoundErrorDto error(String error) {
+  public TrouverEtatCivilNotFoundErrorDto error(@Nullable String error) {
     this.error = error;
     return this;
   }
@@ -80,19 +81,19 @@ public class TrouverEtatCivilNotFoundErrorDto {
   /**
    * Brève description de l'erreur
    * @return error
-  */
+   */
   
   @Schema(name = "error", example = "Ressource non trouvée", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("error")
-  public String getError() {
+  public @Nullable String getError() {
     return error;
   }
 
-  public void setError(String error) {
+  public void setError(@Nullable String error) {
     this.error = error;
   }
 
-  public TrouverEtatCivilNotFoundErrorDto path(String path) {
+  public TrouverEtatCivilNotFoundErrorDto path(@Nullable String path) {
     this.path = path;
     return this;
   }
@@ -100,15 +101,15 @@ public class TrouverEtatCivilNotFoundErrorDto {
   /**
    * URL de base de la ressource à l'origine de l'erreur
    * @return path
-  */
+   */
   
   @Schema(name = "path", example = "ps/trouverEtatCivil", description = "URL de base de la ressource à l'origine de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("path")
-  public String getPath() {
+  public @Nullable String getPath() {
     return path;
   }
 
-  public void setPath(String path) {
+  public void setPath(@Nullable String path) {
     this.path = path;
   }
 

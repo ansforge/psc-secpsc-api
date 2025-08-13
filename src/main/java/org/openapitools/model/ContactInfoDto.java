@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -18,50 +19,50 @@ import javax.annotation.Generated;
  * ContactInfoDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class ContactInfoDto {
 
-  private String email;
+  private @Nullable String email;
 
-  private String phone;
+  private @Nullable String phone;
 
-  public ContactInfoDto email(String email) {
+  public ContactInfoDto email(@Nullable String email) {
     this.email = email;
     return this;
   }
 
   /**
-   * Get email
+   * L'utilisateur a déjà vérifié son adresse e-mail avec PSI.
    * @return email
-  */
+   */
   
-  @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "email", description = "L'utilisateur a déjà vérifié son adresse e-mail avec PSI.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("email")
-  public String getEmail() {
+  public @Nullable String getEmail() {
     return email;
   }
 
-  public void setEmail(String email) {
+  public void setEmail(@Nullable String email) {
     this.email = email;
   }
 
-  public ContactInfoDto phone(String phone) {
+  public ContactInfoDto phone(@Nullable String phone) {
     this.phone = phone;
     return this;
   }
 
   /**
-   * Get phone
+   * L'utilisateur a déjà vérifié son numéro de téléphone avec PSI.
    * @return phone
-  */
+   */
   
-  @Schema(name = "phone", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "phone", description = "L'utilisateur a déjà vérifié son numéro de téléphone avec PSI.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("phone")
-  public String getPhone() {
+  public @Nullable String getPhone() {
     return phone;
   }
 
-  public void setPhone(String phone) {
+  public void setPhone(@Nullable String phone) {
     this.phone = phone;
   }
 

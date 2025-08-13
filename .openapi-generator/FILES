@@ -3,6 +3,7 @@ README.md
 pom.xml
 src/main/java/org/openapitools/api/ApiUtil.java
 src/main/java/org/openapitools/api/UserApi.java
+src/main/java/org/openapitools/model/ActivityDto.java
 src/main/java/org/openapitools/model/AlternativeIdentifierDto.java
 src/main/java/org/openapitools/model/ApiError.java
 src/main/java/org/openapitools/model/CivilStatusDto.java
@@ -16,11 +17,11 @@ src/main/java/org/openapitools/model/ImagePSDto.java
 src/main/java/org/openapitools/model/ImagesPSDto.java
 src/main/java/org/openapitools/model/ImagesPSReponseDto.java
 src/main/java/org/openapitools/model/ImagesPSReponseNotFoundErrorDto.java
+src/main/java/org/openapitools/model/PracticeDto.java
 src/main/java/org/openapitools/model/ProfessionnelDto.java
-src/main/java/org/openapitools/model/RechercherMiesResponseDto.java
 src/main/java/org/openapitools/model/ReponsePSDto.java
 src/main/java/org/openapitools/model/TrouverEtatCivilNotFoundErrorDto.java
 src/main/java/org/openapitools/model/TrouverEtatCivilReponseDto.java
 src/main/java/org/openapitools/model/TrouverUserResponseDto.java
-src/main/java/org/openapitools/model/UpdateEimsRequestDto.java
+src/main/java/org/openapitools/model/UpdateUserRequestDto.java
 src/main/java/org/openapitools/model/UserDto.java

@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -22,20 +23,20 @@ import javax.annotation.Generated;
  * ErrorDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class ErrorDto {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime timestamp;
+  private @Nullable OffsetDateTime timestamp;
 
-  private String code;
+  private @Nullable String code;
 
-  private String message;
+  private @Nullable String message;
 
   @Valid
   private Map<String, Object> metadata = new HashMap<>();
 
-  public ErrorDto timestamp(OffsetDateTime timestamp) {
+  public ErrorDto timestamp(@Nullable OffsetDateTime timestamp) {
     this.timestamp = timestamp;
     return this;
   }
@@ -43,19 +44,19 @@ public class ErrorDto {
   /**
    * Instant auquel s'est produit l'erreur
    * @return timestamp
-  */
+   */
   @Valid 
   @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", description = "Instant auquel s'est produit l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("timestamp")
-  public OffsetDateTime getTimestamp() {
+  public @Nullable OffsetDateTime getTimestamp() {
     return timestamp;
   }
 
-  public void setTimestamp(OffsetDateTime timestamp) {
+  public void setTimestamp(@Nullable OffsetDateTime timestamp) {
     this.timestamp = timestamp;
   }
 
-  public ErrorDto code(String code) {
+  public ErrorDto code(@Nullable String code) {
     this.code = code;
     return this;
   }
@@ -63,19 +64,19 @@ public class ErrorDto {
   /**
    * Brève description de l'erreur
    * @return code
-  */
+   */
   
   @Schema(name = "code", example = "404", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("code")
-  public String getCode() {
+  public @Nullable String getCode() {
     return code;
   }
 
-  public void setCode(String code) {
+  public void setCode(@Nullable String code) {
     this.code = code;
   }
 
-  public ErrorDto message(String message) {
+  public ErrorDto message(@Nullable String message) {
     this.message = message;
     return this;
   }
@@ -83,15 +84,15 @@ public class ErrorDto {
   /**
    * Brève description de l'erreur
    * @return message
-  */
+   */
   
   @Schema(name = "message", example = "Ressource non trouvée", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("message")
-  public String getMessage() {
+  public @Nullable String getMessage() {
     return message;
   }
 
-  public void setMessage(String message) {
+  public void setMessage(@Nullable String message) {
     this.message = message;
   }
 
@@ -111,7 +112,7 @@ public class ErrorDto {
   /**
    * Données additionnelles sur l'erreur (clé/valeur)
    * @return metadata
-  */
+   */
   
   @Schema(name = "metadata", example = "{additionalProp1={}, additionalProp2={}, additionalProp3={}}", description = "Données additionnelles sur l'erreur (clé/valeur)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("metadata")

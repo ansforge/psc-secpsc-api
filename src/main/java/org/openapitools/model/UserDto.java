@@ -11,6 +11,8 @@ import org.openapitools.model.AlternativeIdentifierDto;
 import org.openapitools.model.CivilStatusDto;
 import org.openapitools.model.ContactInfoDto;
 import org.openapitools.model.EimDto;
+import org.openapitools.model.PracticeDto;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -25,14 +27,17 @@ import javax.annotation.Generated;
  * UserDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class UserDto {
 
-  private String nationalId;
+  private @Nullable String nationalId;
 
-  private CivilStatusDto civilStatus;
+  private @Nullable CivilStatusDto civilStatus;
 
-  private ContactInfoDto contactInfo;
+  private @Nullable ContactInfoDto contactInfo;
+
+  @Valid
+  private List<@Valid PracticeDto> practices = new ArrayList<>();
 
   @Valid
   private List<@Valid AlternativeIdentifierDto> alternativeIdentifiers = new ArrayList<>();
@@ -40,7 +45,7 @@ public class UserDto {
   @Valid
   private List<@Valid EimDto> eims = new ArrayList<>();
 
-  public UserDto nationalId(String nationalId) {
+  public UserDto nationalId(@Nullable String nationalId) {
     this.nationalId = nationalId;
     return this;
   }
@@ -48,19 +53,19 @@ public class UserDto {
   /**
    * Get nationalId
    * @return nationalId
-  */
+   */
   
   @Schema(name = "nationalId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("nationalId")
-  public String getNationalId() {
+  public @Nullable String getNationalId() {
     return nationalId;
   }
 
-  public void setNationalId(String nationalId) {
+  public void setNationalId(@Nullable String nationalId) {
     this.nationalId = nationalId;
   }
 
-  public UserDto civilStatus(CivilStatusDto civilStatus) {
+  public UserDto civilStatus(@Nullable CivilStatusDto civilStatus) {
     this.civilStatus = civilStatus;
     return this;
   }
@@ -68,19 +73,19 @@ public class UserDto {
   /**
    * Get civilStatus
    * @return civilStatus
-  */
+   */
   @Valid 
   @Schema(name = "civilStatus", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("civilStatus")
-  public CivilStatusDto getCivilStatus() {
+  public @Nullable CivilStatusDto getCivilStatus() {
     return civilStatus;
   }
 
-  public void setCivilStatus(CivilStatusDto civilStatus) {
+  public void setCivilStatus(@Nullable CivilStatusDto civilStatus) {
     this.civilStatus = civilStatus;
   }
 
-  public UserDto contactInfo(ContactInfoDto contactInfo) {
+  public UserDto contactInfo(@Nullable ContactInfoDto contactInfo) {
     this.contactInfo = contactInfo;
     return this;
   }
@@ -88,16 +93,44 @@ public class UserDto {
   /**
    * Get contactInfo
    * @return contactInfo
-  */
+   */
   @Valid 
   @Schema(name = "contactInfo", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("contactInfo")
-  public ContactInfoDto getContactInfo() {
+  public @Nullable ContactInfoDto getContactInfo() {
     return contactInfo;
   }
 
-  public void setContactInfo(ContactInfoDto contactInfo) {
+  public void setContactInfo(@Nullable ContactInfoDto contactInfo) {
     this.contactInfo = contactInfo;
+  }
+
+  public UserDto practices(List<@Valid PracticeDto> practices) {
+    this.practices = practices;
+    return this;
+  }
+
+  public UserDto addPracticesItem(PracticeDto practicesItem) {
+    if (this.practices == null) {
+      this.practices = new ArrayList<>();
+    }
+    this.practices.add(practicesItem);
+    return this;
+  }
+
+  /**
+   * Get practices
+   * @return practices
+   */
+  @Valid 
+  @Schema(name = "practices", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("practices")
+  public List<@Valid PracticeDto> getPractices() {
+    return practices;
+  }
+
+  public void setPractices(List<@Valid PracticeDto> practices) {
+    this.practices = practices;
   }
 
   public UserDto alternativeIdentifiers(List<@Valid AlternativeIdentifierDto> alternativeIdentifiers) {
@@ -116,7 +149,7 @@ public class UserDto {
   /**
    * Get alternativeIdentifiers
    * @return alternativeIdentifiers
-  */
+   */
   @Valid 
   @Schema(name = "alternativeIdentifiers", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("alternativeIdentifiers")
@@ -144,7 +177,7 @@ public class UserDto {
   /**
    * Get eims
    * @return eims
-  */
+   */
   @Valid 
   @Schema(name = "eims", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("eims")
@@ -168,13 +201,14 @@ public class UserDto {
     return Objects.equals(this.nationalId, userDto.nationalId) &&
         Objects.equals(this.civilStatus, userDto.civilStatus) &&
         Objects.equals(this.contactInfo, userDto.contactInfo) &&
+        Objects.equals(this.practices, userDto.practices) &&
         Objects.equals(this.alternativeIdentifiers, userDto.alternativeIdentifiers) &&
         Objects.equals(this.eims, userDto.eims);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(nationalId, civilStatus, contactInfo, alternativeIdentifiers, eims);
+    return Objects.hash(nationalId, civilStatus, contactInfo, practices, alternativeIdentifiers, eims);
   }
 
   @Override
@@ -184,6 +218,7 @@ public class UserDto {
     sb.append("    nationalId: ").append(toIndentedString(nationalId)).append("\n");
     sb.append("    civilStatus: ").append(toIndentedString(civilStatus)).append("\n");
     sb.append("    contactInfo: ").append(toIndentedString(contactInfo)).append("\n");
+    sb.append("    practices: ").append(toIndentedString(practices)).append("\n");
     sb.append("    alternativeIdentifiers: ").append(toIndentedString(alternativeIdentifiers)).append("\n");
     sb.append("    eims: ").append(toIndentedString(eims)).append("\n");
     sb.append("}");

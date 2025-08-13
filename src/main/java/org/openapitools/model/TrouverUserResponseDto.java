@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.openapitools.model.UserDto;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -19,12 +20,12 @@ import javax.annotation.Generated;
  * TrouverUserResponseDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class TrouverUserResponseDto {
 
-  private UserDto user;
+  private @Nullable UserDto user;
 
-  public TrouverUserResponseDto user(UserDto user) {
+  public TrouverUserResponseDto user(@Nullable UserDto user) {
     this.user = user;
     return this;
   }
@@ -32,15 +33,15 @@ public class TrouverUserResponseDto {
   /**
    * Get user
    * @return user
-  */
+   */
   @Valid 
   @Schema(name = "user", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("user")
-  public UserDto getUser() {
+  public @Nullable UserDto getUser() {
     return user;
   }
 
-  public void setUser(UserDto user) {
+  public void setUser(@Nullable UserDto user) {
     this.user = user;
   }
 

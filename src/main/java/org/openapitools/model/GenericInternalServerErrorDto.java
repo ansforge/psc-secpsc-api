@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.OffsetDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -20,19 +21,19 @@ import javax.annotation.Generated;
  * GenericInternalServerErrorDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class GenericInternalServerErrorDto {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime timestamp;
+  private @Nullable OffsetDateTime timestamp;
 
-  private Integer status;
+  private @Nullable Integer status;
 
-  private String error;
+  private @Nullable String error;
 
-  private String path;
+  private @Nullable String path;
 
-  public GenericInternalServerErrorDto timestamp(OffsetDateTime timestamp) {
+  public GenericInternalServerErrorDto timestamp(@Nullable OffsetDateTime timestamp) {
     this.timestamp = timestamp;
     return this;
   }
@@ -40,19 +41,19 @@ public class GenericInternalServerErrorDto {
   /**
    * Instant auquel s'est produit l'erreur
    * @return timestamp
-  */
+   */
   @Valid 
   @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", description = "Instant auquel s'est produit l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("timestamp")
-  public OffsetDateTime getTimestamp() {
+  public @Nullable OffsetDateTime getTimestamp() {
     return timestamp;
   }
 
-  public void setTimestamp(OffsetDateTime timestamp) {
+  public void setTimestamp(@Nullable OffsetDateTime timestamp) {
     this.timestamp = timestamp;
   }
 
-  public GenericInternalServerErrorDto status(Integer status) {
+  public GenericInternalServerErrorDto status(@Nullable Integer status) {
     this.status = status;
     return this;
   }
@@ -60,19 +61,19 @@ public class GenericInternalServerErrorDto {
   /**
    * Code statut HTTP
    * @return status
-  */
+   */
   
   @Schema(name = "status", example = "500", description = "Code statut HTTP", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
-  public Integer getStatus() {
+  public @Nullable Integer getStatus() {
     return status;
   }
 
-  public void setStatus(Integer status) {
+  public void setStatus(@Nullable Integer status) {
     this.status = status;
   }
 
-  public GenericInternalServerErrorDto error(String error) {
+  public GenericInternalServerErrorDto error(@Nullable String error) {
     this.error = error;
     return this;
   }
@@ -80,19 +81,19 @@ public class GenericInternalServerErrorDto {
   /**
    * Brève description de l'erreur
    * @return error
-  */
+   */
   
   @Schema(name = "error", example = "Erreur interne serveur", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("error")
-  public String getError() {
+  public @Nullable String getError() {
     return error;
   }
 
-  public void setError(String error) {
+  public void setError(@Nullable String error) {
     this.error = error;
   }
 
-  public GenericInternalServerErrorDto path(String path) {
+  public GenericInternalServerErrorDto path(@Nullable String path) {
     this.path = path;
     return this;
   }
@@ -100,15 +101,15 @@ public class GenericInternalServerErrorDto {
   /**
    * URL de base de la ressource à l'origine de l'erreur
    * @return path
-  */
+   */
   
   @Schema(name = "path", example = "/rpps-identifications", description = "URL de base de la ressource à l'origine de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("path")
-  public String getPath() {
+  public @Nullable String getPath() {
     return path;
   }
 
-  public void setPath(String path) {
+  public void setPath(@Nullable String path) {
     this.path = path;
   }
 

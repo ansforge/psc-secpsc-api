@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.openapitools.model.ImagePSDto;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -19,18 +20,18 @@ import javax.annotation.Generated;
  * ImagesPSDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class ImagesPSDto {
 
-  private String idPP;
+  private @Nullable String idPP;
 
-  private String code;
+  private @Nullable String code;
 
-  private String libelle;
+  private @Nullable String libelle;
 
-  private ImagePSDto imagePS;
+  private @Nullable ImagePSDto imagePS;
 
-  public ImagesPSDto idPP(String idPP) {
+  public ImagesPSDto idPP(@Nullable String idPP) {
     this.idPP = idPP;
     return this;
   }
@@ -38,19 +39,19 @@ public class ImagesPSDto {
   /**
    * Get idPP
    * @return idPP
-  */
+   */
   
   @Schema(name = "idPP", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("idPP")
-  public String getIdPP() {
+  public @Nullable String getIdPP() {
     return idPP;
   }
 
-  public void setIdPP(String idPP) {
+  public void setIdPP(@Nullable String idPP) {
     this.idPP = idPP;
   }
 
-  public ImagesPSDto code(String code) {
+  public ImagesPSDto code(@Nullable String code) {
     this.code = code;
     return this;
   }
@@ -58,19 +59,19 @@ public class ImagesPSDto {
   /**
    * Get code
    * @return code
-  */
+   */
   
   @Schema(name = "code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("code")
-  public String getCode() {
+  public @Nullable String getCode() {
     return code;
   }
 
-  public void setCode(String code) {
+  public void setCode(@Nullable String code) {
     this.code = code;
   }
 
-  public ImagesPSDto libelle(String libelle) {
+  public ImagesPSDto libelle(@Nullable String libelle) {
     this.libelle = libelle;
     return this;
   }
@@ -78,19 +79,19 @@ public class ImagesPSDto {
   /**
    * Get libelle
    * @return libelle
-  */
+   */
   
   @Schema(name = "libelle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("libelle")
-  public String getLibelle() {
+  public @Nullable String getLibelle() {
     return libelle;
   }
 
-  public void setLibelle(String libelle) {
+  public void setLibelle(@Nullable String libelle) {
     this.libelle = libelle;
   }
 
-  public ImagesPSDto imagePS(ImagePSDto imagePS) {
+  public ImagesPSDto imagePS(@Nullable ImagePSDto imagePS) {
     this.imagePS = imagePS;
     return this;
   }
@@ -98,15 +99,15 @@ public class ImagesPSDto {
   /**
    * Get imagePS
    * @return imagePS
-  */
+   */
   @Valid 
   @Schema(name = "imagePS", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("imagePS")
-  public ImagePSDto getImagePS() {
+  public @Nullable ImagePSDto getImagePS() {
     return imagePS;
   }
 
-  public void setImagePS(ImagePSDto imagePS) {
+  public void setImagePS(@Nullable ImagePSDto imagePS) {
     this.imagePS = imagePS;
   }
 

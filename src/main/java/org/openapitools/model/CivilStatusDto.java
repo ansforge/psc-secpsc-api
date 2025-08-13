@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -23,28 +24,28 @@ import javax.annotation.Generated;
  * CivilStatusDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class CivilStatusDto {
 
-  private String lastName;
+  private @Nullable String lastName;
 
   @Valid
   private List<String> firstNames = new ArrayList<>();
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate birthDate;
+  private @Nullable LocalDate birthDate;
 
-  private String birthTownCode;
+  private @Nullable String birthTownCode;
 
-  private String birthCountryCode;
+  private @Nullable String birthCountryCode;
 
-  private String birthPlace;
+  private @Nullable String birthPlace;
 
-  private String genderCode;
+  private @Nullable String genderCode;
 
-  private String personalCivilityTitle;
+  private @Nullable String personalCivilityTitle;
 
-  public CivilStatusDto lastName(String lastName) {
+  public CivilStatusDto lastName(@Nullable String lastName) {
     this.lastName = lastName;
     return this;
   }
@@ -52,15 +53,15 @@ public class CivilStatusDto {
   /**
    * Get lastName
    * @return lastName
-  */
+   */
   
   @Schema(name = "lastName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("lastName")
-  public String getLastName() {
+  public @Nullable String getLastName() {
     return lastName;
   }
 
-  public void setLastName(String lastName) {
+  public void setLastName(@Nullable String lastName) {
     this.lastName = lastName;
   }
 
@@ -80,7 +81,7 @@ public class CivilStatusDto {
   /**
    * Get firstNames
    * @return firstNames
-  */
+   */
   
   @Schema(name = "firstNames", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("firstNames")
@@ -92,7 +93,7 @@ public class CivilStatusDto {
     this.firstNames = firstNames;
   }
 
-  public CivilStatusDto birthDate(LocalDate birthDate) {
+  public CivilStatusDto birthDate(@Nullable LocalDate birthDate) {
     this.birthDate = birthDate;
     return this;
   }
@@ -100,19 +101,19 @@ public class CivilStatusDto {
   /**
    * Get birthDate
    * @return birthDate
-  */
+   */
   @Valid 
   @Schema(name = "birthDate", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("birthDate")
-  public LocalDate getBirthDate() {
+  public @Nullable LocalDate getBirthDate() {
     return birthDate;
   }
 
-  public void setBirthDate(LocalDate birthDate) {
+  public void setBirthDate(@Nullable LocalDate birthDate) {
     this.birthDate = birthDate;
   }
 
-  public CivilStatusDto birthTownCode(String birthTownCode) {
+  public CivilStatusDto birthTownCode(@Nullable String birthTownCode) {
     this.birthTownCode = birthTownCode;
     return this;
   }
@@ -120,19 +121,19 @@ public class CivilStatusDto {
   /**
    * Get birthTownCode
    * @return birthTownCode
-  */
+   */
   
   @Schema(name = "birthTownCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("birthTownCode")
-  public String getBirthTownCode() {
+  public @Nullable String getBirthTownCode() {
     return birthTownCode;
   }
 
-  public void setBirthTownCode(String birthTownCode) {
+  public void setBirthTownCode(@Nullable String birthTownCode) {
     this.birthTownCode = birthTownCode;
   }
 
-  public CivilStatusDto birthCountryCode(String birthCountryCode) {
+  public CivilStatusDto birthCountryCode(@Nullable String birthCountryCode) {
     this.birthCountryCode = birthCountryCode;
     return this;
   }
@@ -140,19 +141,19 @@ public class CivilStatusDto {
   /**
    * Get birthCountryCode
    * @return birthCountryCode
-  */
+   */
   
   @Schema(name = "birthCountryCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("birthCountryCode")
-  public String getBirthCountryCode() {
+  public @Nullable String getBirthCountryCode() {
     return birthCountryCode;
   }
 
-  public void setBirthCountryCode(String birthCountryCode) {
+  public void setBirthCountryCode(@Nullable String birthCountryCode) {
     this.birthCountryCode = birthCountryCode;
   }
 
-  public CivilStatusDto birthPlace(String birthPlace) {
+  public CivilStatusDto birthPlace(@Nullable String birthPlace) {
     this.birthPlace = birthPlace;
     return this;
   }
@@ -160,19 +161,19 @@ public class CivilStatusDto {
   /**
    * Get birthPlace
    * @return birthPlace
-  */
+   */
   
   @Schema(name = "birthPlace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("birthPlace")
-  public String getBirthPlace() {
+  public @Nullable String getBirthPlace() {
     return birthPlace;
   }
 
-  public void setBirthPlace(String birthPlace) {
+  public void setBirthPlace(@Nullable String birthPlace) {
     this.birthPlace = birthPlace;
   }
 
-  public CivilStatusDto genderCode(String genderCode) {
+  public CivilStatusDto genderCode(@Nullable String genderCode) {
     this.genderCode = genderCode;
     return this;
   }
@@ -180,19 +181,19 @@ public class CivilStatusDto {
   /**
    * Get genderCode
    * @return genderCode
-  */
+   */
   
   @Schema(name = "genderCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("genderCode")
-  public String getGenderCode() {
+  public @Nullable String getGenderCode() {
     return genderCode;
   }
 
-  public void setGenderCode(String genderCode) {
+  public void setGenderCode(@Nullable String genderCode) {
     this.genderCode = genderCode;
   }
 
-  public CivilStatusDto personalCivilityTitle(String personalCivilityTitle) {
+  public CivilStatusDto personalCivilityTitle(@Nullable String personalCivilityTitle) {
     this.personalCivilityTitle = personalCivilityTitle;
     return this;
   }
@@ -200,15 +201,15 @@ public class CivilStatusDto {
   /**
    * Get personalCivilityTitle
    * @return personalCivilityTitle
-  */
+   */
   
   @Schema(name = "personalCivilityTitle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("personalCivilityTitle")
-  public String getPersonalCivilityTitle() {
+  public @Nullable String getPersonalCivilityTitle() {
     return personalCivilityTitle;
   }
 
-  public void setPersonalCivilityTitle(String personalCivilityTitle) {
+  public void setPersonalCivilityTitle(@Nullable String personalCivilityTitle) {
     this.personalCivilityTitle = personalCivilityTitle;
   }
 

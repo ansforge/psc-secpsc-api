@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -23,11 +24,11 @@ import javax.annotation.Generated;
  * ApiError
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class ApiError {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime timestamp;
+  private @Nullable OffsetDateTime timestamp;
 
   @Valid
   private List<String> faultyFields = new ArrayList<>();
@@ -35,11 +36,11 @@ public class ApiError {
   @Valid
   private List<Object> faultyValues = new ArrayList<>();
 
-  private String errorMessage;
+  private @Nullable String errorMessage;
 
-  private String path;
+  private @Nullable String path;
 
-  public ApiError timestamp(OffsetDateTime timestamp) {
+  public ApiError timestamp(@Nullable OffsetDateTime timestamp) {
     this.timestamp = timestamp;
     return this;
   }
@@ -47,15 +48,15 @@ public class ApiError {
   /**
    * Instant auquel s'est produit l'erreur
    * @return timestamp
-  */
+   */
   @Valid 
   @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", description = "Instant auquel s'est produit l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("timestamp")
-  public OffsetDateTime getTimestamp() {
+  public @Nullable OffsetDateTime getTimestamp() {
     return timestamp;
   }
 
-  public void setTimestamp(OffsetDateTime timestamp) {
+  public void setTimestamp(@Nullable OffsetDateTime timestamp) {
     this.timestamp = timestamp;
   }
 
@@ -75,7 +76,7 @@ public class ApiError {
   /**
    * Liste des champs invalides
    * @return faultyFields
-  */
+   */
   
   @Schema(name = "faultyFields", example = "[nationalId, email]", description = "Liste des champs invalides", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("faultyFields")
@@ -103,7 +104,7 @@ public class ApiError {
   /**
    * Liste des valeurs invalides pour les champs mentionnés
    * @return faultyValues
-  */
+   */
   
   @Schema(name = "faultyValues", example = "[123456789, 987654321]", description = "Liste des valeurs invalides pour les champs mentionnés", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("faultyValues")
@@ -115,7 +116,7 @@ public class ApiError {
     this.faultyValues = faultyValues;
   }
 
-  public ApiError errorMessage(String errorMessage) {
+  public ApiError errorMessage(@Nullable String errorMessage) {
     this.errorMessage = errorMessage;
     return this;
   }
@@ -123,19 +124,19 @@ public class ApiError {
   /**
    * Brève description de l'erreur
    * @return errorMessage
-  */
+   */
   
   @Schema(name = "errorMessage", example = "Ressource non trouvée", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("errorMessage")
-  public String getErrorMessage() {
+  public @Nullable String getErrorMessage() {
     return errorMessage;
   }
 
-  public void setErrorMessage(String errorMessage) {
+  public void setErrorMessage(@Nullable String errorMessage) {
     this.errorMessage = errorMessage;
   }
 
-  public ApiError path(String path) {
+  public ApiError path(@Nullable String path) {
     this.path = path;
     return this;
   }
@@ -143,15 +144,15 @@ public class ApiError {
   /**
    * path
    * @return path
-  */
+   */
   
   @Schema(name = "path", example = "/user/123456789", description = "path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("path")
-  public String getPath() {
+  public @Nullable String getPath() {
     return path;
   }
 
-  public void setPath(String path) {
+  public void setPath(@Nullable String path) {
     this.path = path;
   }
 

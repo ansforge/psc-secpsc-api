@@ -11,9 +11,9 @@ import java.time.LocalDate;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.openapitools.model.RechercherMiesResponseDto;
+//import org.openapitools.model.RechercherMiesResponseDto;
 import org.openapitools.model.TrouverUserResponseDto;
-import org.openapitools.model.UpdateEimsRequestDto;
+//import org.openapitools.model.UpdateEimsRequestDto;
 import org.openapitools.model.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,59 +29,57 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("${openapi.pscPsi.base-path:/api}")
 public class PsiApiController implements PsiApi {
 	
-	@Value("${openapi.pscApiMajV2.base-path}:/api")
-	private String psPath;
-
-	@Override
-	public ResponseEntity<Void> creerUser(@Valid UserDto userDto) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	@Override
-	public ResponseEntity<RechercherMiesResponseDto> rechercherEims(@NotNull @Valid String nationalId) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	@Override
-	public ResponseEntity<TrouverUserResponseDto> rechercherParIdNational(@NotNull @Valid String nationalId)
-			throws URISyntaxException, IOException, InterruptedException {
-
-		HttpClient client = HttpClient.newHttpClient();
-
-		String uri = psPath + "/v2/ps/psId=" + nationalId;
-
-		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header(nationalId, nationalId).GET().build();
-
-		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-		if (response != null) {
-			if (response.statusCode() == 200) {
-				String jsonResponse = response.body();
-
-				ObjectMapper mapper = new ObjectMapper();
-				//TrouverUserResponseDto userResponse = mapper.readValue(jsonResponse, TrouverUserResponseDto.class);
-				
-				//return new ResponseEntity<>(userResponse, HttpStatus.OK);
-
-				return new ResponseEntity<>(null, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
-			}
-		}
-
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
-	@Override
-	public ResponseEntity<TrouverUserResponseDto> rechercherParTraitsIdentite1(@NotNull @Valid String lastName,
-			@NotNull @Valid String firstNames, @NotNull @Valid String genderCode, @NotNull @Valid LocalDate birthdate,
-			@NotNull @Valid String birthTownCode, @NotNull @Valid String birthCountryCode) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	@Override
-	public ResponseEntity<Void> updateEims(@NotNull @Valid String nationalId,
-			@Valid UpdateEimsRequestDto updateEimsRequestDto) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	/*
+	 * @Value("${openapi.pscApiMajV2.base-path}:/api") private String psPath;
+	 * 
+	 * @Override public ResponseEntity<Void> creerUser(@Valid UserDto userDto) {
+	 * return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED); }
+	 * 
+	 * @Override public ResponseEntity<RechercherMiesResponseDto>
+	 * rechercherEims(@NotNull @Valid String nationalId) { return new
+	 * ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED); }
+	 * 
+	 * @Override public ResponseEntity<TrouverUserResponseDto>
+	 * rechercherParIdNational(@NotNull @Valid String nationalId) throws
+	 * URISyntaxException, IOException, InterruptedException {
+	 * 
+	 * HttpClient client = HttpClient.newHttpClient();
+	 * 
+	 * String uri = psPath + "/v2/ps/psId=" + nationalId;
+	 * 
+	 * HttpRequest request = HttpRequest.newBuilder().uri(new
+	 * URI(uri)).header(nationalId, nationalId).GET().build();
+	 * 
+	 * HttpResponse<String> response = client.send(request,
+	 * HttpResponse.BodyHandlers.ofString());
+	 * 
+	 * if (response != null) { if (response.statusCode() == 200) { String
+	 * jsonResponse = response.body();
+	 * 
+	 * ObjectMapper mapper = new ObjectMapper(); //TrouverUserResponseDto
+	 * userResponse = mapper.readValue(jsonResponse, TrouverUserResponseDto.class);
+	 * 
+	 * //return new ResponseEntity<>(userResponse, HttpStatus.OK);
+	 * 
+	 * return new ResponseEntity<>(null, HttpStatus.OK); } else { return new
+	 * ResponseEntity<>(HttpStatus.valueOf(response.statusCode())); } }
+	 * 
+	 * return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); }
+	 * 
+	 * @Override public ResponseEntity<TrouverUserResponseDto>
+	 * rechercherParTraitsIdentite1(@NotNull @Valid String lastName,
+	 * 
+	 * @NotNull @Valid String firstNames, @NotNull @Valid String
+	 * genderCode, @NotNull @Valid LocalDate birthdate,
+	 * 
+	 * @NotNull @Valid String birthTownCode, @NotNull @Valid String
+	 * birthCountryCode) { return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	 * }
+	 * 
+	 * @Override public ResponseEntity<Void> updateEims(@NotNull @Valid String
+	 * nationalId,
+	 * 
+	 * @Valid UpdateEimsRequestDto updateEimsRequestDto) { return new
+	 * ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED); }
+	 */
 }

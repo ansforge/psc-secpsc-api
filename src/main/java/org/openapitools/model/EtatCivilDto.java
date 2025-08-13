@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -21,33 +22,33 @@ import javax.annotation.Generated;
  * EtatCivilDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class EtatCivilDto {
 
-  private String idPP;
+  private @Nullable String idPP;
 
-  private String nomFamille;
+  private @Nullable String nomFamille;
 
-  private String prenom1;
+  private @Nullable String prenom1;
 
-  private String prenom2;
+  private @Nullable String prenom2;
 
-  private String prenom3;
+  private @Nullable String prenom3;
 
-  private String sexe;
+  private @Nullable String sexe;
 
-  private String dateNaissance;
+  private @Nullable String dateNaissance;
 
-  private String paysNaissance;
+  private @Nullable String paysNaissance;
 
-  private String communeNaissance;
+  private @Nullable String communeNaissance;
 
-  private String departementNaissance;
+  private @Nullable String departementNaissance;
 
   @Valid
   private List<String> adeli = new ArrayList<>();
 
-  public EtatCivilDto idPP(String idPP) {
+  public EtatCivilDto idPP(@Nullable String idPP) {
     this.idPP = idPP;
     return this;
   }
@@ -55,19 +56,19 @@ public class EtatCivilDto {
   /**
    * Get idPP
    * @return idPP
-  */
+   */
   
   @Schema(name = "idPP", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("idPP")
-  public String getIdPP() {
+  public @Nullable String getIdPP() {
     return idPP;
   }
 
-  public void setIdPP(String idPP) {
+  public void setIdPP(@Nullable String idPP) {
     this.idPP = idPP;
   }
 
-  public EtatCivilDto nomFamille(String nomFamille) {
+  public EtatCivilDto nomFamille(@Nullable String nomFamille) {
     this.nomFamille = nomFamille;
     return this;
   }
@@ -75,19 +76,19 @@ public class EtatCivilDto {
   /**
    * Get nomFamille
    * @return nomFamille
-  */
+   */
   
   @Schema(name = "nomFamille", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("nomFamille")
-  public String getNomFamille() {
+  public @Nullable String getNomFamille() {
     return nomFamille;
   }
 
-  public void setNomFamille(String nomFamille) {
+  public void setNomFamille(@Nullable String nomFamille) {
     this.nomFamille = nomFamille;
   }
 
-  public EtatCivilDto prenom1(String prenom1) {
+  public EtatCivilDto prenom1(@Nullable String prenom1) {
     this.prenom1 = prenom1;
     return this;
   }
@@ -95,19 +96,19 @@ public class EtatCivilDto {
   /**
    * Get prenom1
    * @return prenom1
-  */
+   */
   
   @Schema(name = "prenom1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("prenom1")
-  public String getPrenom1() {
+  public @Nullable String getPrenom1() {
     return prenom1;
   }
 
-  public void setPrenom1(String prenom1) {
+  public void setPrenom1(@Nullable String prenom1) {
     this.prenom1 = prenom1;
   }
 
-  public EtatCivilDto prenom2(String prenom2) {
+  public EtatCivilDto prenom2(@Nullable String prenom2) {
     this.prenom2 = prenom2;
     return this;
   }
@@ -115,19 +116,19 @@ public class EtatCivilDto {
   /**
    * Get prenom2
    * @return prenom2
-  */
+   */
   
   @Schema(name = "prenom2", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("prenom2")
-  public String getPrenom2() {
+  public @Nullable String getPrenom2() {
     return prenom2;
   }
 
-  public void setPrenom2(String prenom2) {
+  public void setPrenom2(@Nullable String prenom2) {
     this.prenom2 = prenom2;
   }
 
-  public EtatCivilDto prenom3(String prenom3) {
+  public EtatCivilDto prenom3(@Nullable String prenom3) {
     this.prenom3 = prenom3;
     return this;
   }
@@ -135,19 +136,19 @@ public class EtatCivilDto {
   /**
    * Get prenom3
    * @return prenom3
-  */
+   */
   
   @Schema(name = "prenom3", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("prenom3")
-  public String getPrenom3() {
+  public @Nullable String getPrenom3() {
     return prenom3;
   }
 
-  public void setPrenom3(String prenom3) {
+  public void setPrenom3(@Nullable String prenom3) {
     this.prenom3 = prenom3;
   }
 
-  public EtatCivilDto sexe(String sexe) {
+  public EtatCivilDto sexe(@Nullable String sexe) {
     this.sexe = sexe;
     return this;
   }
@@ -155,19 +156,19 @@ public class EtatCivilDto {
   /**
    * Get sexe
    * @return sexe
-  */
+   */
   
   @Schema(name = "sexe", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sexe")
-  public String getSexe() {
+  public @Nullable String getSexe() {
     return sexe;
   }
 
-  public void setSexe(String sexe) {
+  public void setSexe(@Nullable String sexe) {
     this.sexe = sexe;
   }
 
-  public EtatCivilDto dateNaissance(String dateNaissance) {
+  public EtatCivilDto dateNaissance(@Nullable String dateNaissance) {
     this.dateNaissance = dateNaissance;
     return this;
   }
@@ -175,19 +176,19 @@ public class EtatCivilDto {
   /**
    * Get dateNaissance
    * @return dateNaissance
-  */
+   */
   
   @Schema(name = "dateNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateNaissance")
-  public String getDateNaissance() {
+  public @Nullable String getDateNaissance() {
     return dateNaissance;
   }
 
-  public void setDateNaissance(String dateNaissance) {
+  public void setDateNaissance(@Nullable String dateNaissance) {
     this.dateNaissance = dateNaissance;
   }
 
-  public EtatCivilDto paysNaissance(String paysNaissance) {
+  public EtatCivilDto paysNaissance(@Nullable String paysNaissance) {
     this.paysNaissance = paysNaissance;
     return this;
   }
@@ -195,19 +196,19 @@ public class EtatCivilDto {
   /**
    * Get paysNaissance
    * @return paysNaissance
-  */
+   */
   
   @Schema(name = "paysNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("paysNaissance")
-  public String getPaysNaissance() {
+  public @Nullable String getPaysNaissance() {
     return paysNaissance;
   }
 
-  public void setPaysNaissance(String paysNaissance) {
+  public void setPaysNaissance(@Nullable String paysNaissance) {
     this.paysNaissance = paysNaissance;
   }
 
-  public EtatCivilDto communeNaissance(String communeNaissance) {
+  public EtatCivilDto communeNaissance(@Nullable String communeNaissance) {
     this.communeNaissance = communeNaissance;
     return this;
   }
@@ -215,19 +216,19 @@ public class EtatCivilDto {
   /**
    * Get communeNaissance
    * @return communeNaissance
-  */
+   */
   
   @Schema(name = "communeNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("communeNaissance")
-  public String getCommuneNaissance() {
+  public @Nullable String getCommuneNaissance() {
     return communeNaissance;
   }
 
-  public void setCommuneNaissance(String communeNaissance) {
+  public void setCommuneNaissance(@Nullable String communeNaissance) {
     this.communeNaissance = communeNaissance;
   }
 
-  public EtatCivilDto departementNaissance(String departementNaissance) {
+  public EtatCivilDto departementNaissance(@Nullable String departementNaissance) {
     this.departementNaissance = departementNaissance;
     return this;
   }
@@ -235,15 +236,15 @@ public class EtatCivilDto {
   /**
    * Get departementNaissance
    * @return departementNaissance
-  */
+   */
   
   @Schema(name = "departementNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("departementNaissance")
-  public String getDepartementNaissance() {
+  public @Nullable String getDepartementNaissance() {
     return departementNaissance;
   }
 
-  public void setDepartementNaissance(String departementNaissance) {
+  public void setDepartementNaissance(@Nullable String departementNaissance) {
     this.departementNaissance = departementNaissance;
   }
 
@@ -263,7 +264,7 @@ public class EtatCivilDto {
   /**
    * Get adeli
    * @return adeli
-  */
+   */
   
   @Schema(name = "adeli", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("adeli")

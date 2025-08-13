@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.openapitools.model.ProfessionnelDto;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -19,12 +20,12 @@ import javax.annotation.Generated;
  * ImagePSDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class ImagePSDto {
 
-  private ProfessionnelDto professionnel;
+  private @Nullable ProfessionnelDto professionnel;
 
-  public ImagePSDto professionnel(ProfessionnelDto professionnel) {
+  public ImagePSDto professionnel(@Nullable ProfessionnelDto professionnel) {
     this.professionnel = professionnel;
     return this;
   }
@@ -32,15 +33,15 @@ public class ImagePSDto {
   /**
    * Get professionnel
    * @return professionnel
-  */
+   */
   @Valid 
   @Schema(name = "professionnel", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("professionnel")
-  public ProfessionnelDto getProfessionnel() {
+  public @Nullable ProfessionnelDto getProfessionnel() {
     return professionnel;
   }
 
-  public void setProfessionnel(ProfessionnelDto professionnel) {
+  public void setProfessionnel(@Nullable ProfessionnelDto professionnel) {
     this.professionnel = professionnel;
   }
 

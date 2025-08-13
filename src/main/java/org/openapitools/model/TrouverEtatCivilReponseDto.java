@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.openapitools.model.ReponsePSDto;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -24,20 +25,20 @@ import javax.annotation.Generated;
  * TrouverEtatCivilReponseDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class TrouverEtatCivilReponseDto {
 
-  private String code;
+  private @Nullable String code;
 
-  private String libelle;
+  private @Nullable String libelle;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime ts;
+  private @Nullable OffsetDateTime ts;
 
   @Valid
   private List<@Valid ReponsePSDto> reponsePS = new ArrayList<>();
 
-  public TrouverEtatCivilReponseDto code(String code) {
+  public TrouverEtatCivilReponseDto code(@Nullable String code) {
     this.code = code;
     return this;
   }
@@ -45,19 +46,19 @@ public class TrouverEtatCivilReponseDto {
   /**
    * Get code
    * @return code
-  */
+   */
   
   @Schema(name = "code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("code")
-  public String getCode() {
+  public @Nullable String getCode() {
     return code;
   }
 
-  public void setCode(String code) {
+  public void setCode(@Nullable String code) {
     this.code = code;
   }
 
-  public TrouverEtatCivilReponseDto libelle(String libelle) {
+  public TrouverEtatCivilReponseDto libelle(@Nullable String libelle) {
     this.libelle = libelle;
     return this;
   }
@@ -65,19 +66,19 @@ public class TrouverEtatCivilReponseDto {
   /**
    * Get libelle
    * @return libelle
-  */
+   */
   
   @Schema(name = "libelle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("libelle")
-  public String getLibelle() {
+  public @Nullable String getLibelle() {
     return libelle;
   }
 
-  public void setLibelle(String libelle) {
+  public void setLibelle(@Nullable String libelle) {
     this.libelle = libelle;
   }
 
-  public TrouverEtatCivilReponseDto ts(OffsetDateTime ts) {
+  public TrouverEtatCivilReponseDto ts(@Nullable OffsetDateTime ts) {
     this.ts = ts;
     return this;
   }
@@ -85,15 +86,15 @@ public class TrouverEtatCivilReponseDto {
   /**
    * Get ts
    * @return ts
-  */
+   */
   @Valid 
   @Schema(name = "ts", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("ts")
-  public OffsetDateTime getTs() {
+  public @Nullable OffsetDateTime getTs() {
     return ts;
   }
 
-  public void setTs(OffsetDateTime ts) {
+  public void setTs(@Nullable OffsetDateTime ts) {
     this.ts = ts;
   }
 
@@ -113,7 +114,7 @@ public class TrouverEtatCivilReponseDto {
   /**
    * Get reponsePS
    * @return reponsePS
-  */
+   */
   @Valid 
   @Schema(name = "reponsePS", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("reponsePS")

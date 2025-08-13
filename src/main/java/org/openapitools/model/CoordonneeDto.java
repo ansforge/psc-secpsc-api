@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -18,14 +19,14 @@ import javax.annotation.Generated;
  * CoordonneeDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class CoordonneeDto {
 
-  private String numeroTelephonePort;
+  private @Nullable String numeroTelephonePort;
 
-  private String courriel;
+  private @Nullable String courriel;
 
-  public CoordonneeDto numeroTelephonePort(String numeroTelephonePort) {
+  public CoordonneeDto numeroTelephonePort(@Nullable String numeroTelephonePort) {
     this.numeroTelephonePort = numeroTelephonePort;
     return this;
   }
@@ -33,19 +34,19 @@ public class CoordonneeDto {
   /**
    * Get numeroTelephonePort
    * @return numeroTelephonePort
-  */
+   */
   
   @Schema(name = "numeroTelephonePort", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("numeroTelephonePort")
-  public String getNumeroTelephonePort() {
+  public @Nullable String getNumeroTelephonePort() {
     return numeroTelephonePort;
   }
 
-  public void setNumeroTelephonePort(String numeroTelephonePort) {
+  public void setNumeroTelephonePort(@Nullable String numeroTelephonePort) {
     this.numeroTelephonePort = numeroTelephonePort;
   }
 
-  public CoordonneeDto courriel(String courriel) {
+  public CoordonneeDto courriel(@Nullable String courriel) {
     this.courriel = courriel;
     return this;
   }
@@ -53,15 +54,15 @@ public class CoordonneeDto {
   /**
    * Get courriel
    * @return courriel
-  */
+   */
   
   @Schema(name = "courriel", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("courriel")
-  public String getCourriel() {
+  public @Nullable String getCourriel() {
     return courriel;
   }
 
-  public void setCourriel(String courriel) {
+  public void setCourriel(@Nullable String courriel) {
     this.courriel = courriel;
   }
 

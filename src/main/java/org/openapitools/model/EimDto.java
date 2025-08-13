@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -20,38 +21,38 @@ import javax.annotation.Generated;
  * EimDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class EimDto {
 
-  private String idNat;
+  private @Nullable String idNat;
 
-  private String mieType;
+  private @Nullable String mieType;
 
-  private String serialNumber;
+  private @Nullable String serialNumber;
 
-  private String email;
+  private @Nullable String email;
 
-  private String deviceName;
+  private @Nullable String deviceName;
 
-  private String model;
+  private @Nullable String model;
 
-  private String operatingSystem;
+  private @Nullable String operatingSystem;
 
-  private String appVersion;
-
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate creationDate;
+  private @Nullable String appVersion;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate endOfValidityDate;
+  private @Nullable LocalDate creationDate;
 
-  private String activationMode;
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  private @Nullable LocalDate endOfValidityDate;
 
-  private String eidasLevel;
+  private @Nullable String activationMode;
 
-  private String fitier;
+  private @Nullable String eidasLevel;
 
-  public EimDto idNat(String idNat) {
+  private @Nullable String fitier;
+
+  public EimDto idNat(@Nullable String idNat) {
     this.idNat = idNat;
     return this;
   }
@@ -59,19 +60,19 @@ public class EimDto {
   /**
    * Get idNat
    * @return idNat
-  */
+   */
   
   @Schema(name = "idNat", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("idNat")
-  public String getIdNat() {
+  public @Nullable String getIdNat() {
     return idNat;
   }
 
-  public void setIdNat(String idNat) {
+  public void setIdNat(@Nullable String idNat) {
     this.idNat = idNat;
   }
 
-  public EimDto mieType(String mieType) {
+  public EimDto mieType(@Nullable String mieType) {
     this.mieType = mieType;
     return this;
   }
@@ -79,19 +80,19 @@ public class EimDto {
   /**
    * Get mieType
    * @return mieType
-  */
+   */
   
   @Schema(name = "mieType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mieType")
-  public String getMieType() {
+  public @Nullable String getMieType() {
     return mieType;
   }
 
-  public void setMieType(String mieType) {
+  public void setMieType(@Nullable String mieType) {
     this.mieType = mieType;
   }
 
-  public EimDto serialNumber(String serialNumber) {
+  public EimDto serialNumber(@Nullable String serialNumber) {
     this.serialNumber = serialNumber;
     return this;
   }
@@ -99,19 +100,19 @@ public class EimDto {
   /**
    * Get serialNumber
    * @return serialNumber
-  */
+   */
   
   @Schema(name = "serialNumber", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("serialNumber")
-  public String getSerialNumber() {
+  public @Nullable String getSerialNumber() {
     return serialNumber;
   }
 
-  public void setSerialNumber(String serialNumber) {
+  public void setSerialNumber(@Nullable String serialNumber) {
     this.serialNumber = serialNumber;
   }
 
-  public EimDto email(String email) {
+  public EimDto email(@Nullable String email) {
     this.email = email;
     return this;
   }
@@ -119,19 +120,19 @@ public class EimDto {
   /**
    * Get email
    * @return email
-  */
+   */
   
   @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("email")
-  public String getEmail() {
+  public @Nullable String getEmail() {
     return email;
   }
 
-  public void setEmail(String email) {
+  public void setEmail(@Nullable String email) {
     this.email = email;
   }
 
-  public EimDto deviceName(String deviceName) {
+  public EimDto deviceName(@Nullable String deviceName) {
     this.deviceName = deviceName;
     return this;
   }
@@ -139,19 +140,19 @@ public class EimDto {
   /**
    * Get deviceName
    * @return deviceName
-  */
+   */
   
   @Schema(name = "deviceName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("deviceName")
-  public String getDeviceName() {
+  public @Nullable String getDeviceName() {
     return deviceName;
   }
 
-  public void setDeviceName(String deviceName) {
+  public void setDeviceName(@Nullable String deviceName) {
     this.deviceName = deviceName;
   }
 
-  public EimDto model(String model) {
+  public EimDto model(@Nullable String model) {
     this.model = model;
     return this;
   }
@@ -159,19 +160,19 @@ public class EimDto {
   /**
    * Get model
    * @return model
-  */
+   */
   
   @Schema(name = "model", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("model")
-  public String getModel() {
+  public @Nullable String getModel() {
     return model;
   }
 
-  public void setModel(String model) {
+  public void setModel(@Nullable String model) {
     this.model = model;
   }
 
-  public EimDto operatingSystem(String operatingSystem) {
+  public EimDto operatingSystem(@Nullable String operatingSystem) {
     this.operatingSystem = operatingSystem;
     return this;
   }
@@ -179,19 +180,19 @@ public class EimDto {
   /**
    * Get operatingSystem
    * @return operatingSystem
-  */
+   */
   
   @Schema(name = "operatingSystem", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("operatingSystem")
-  public String getOperatingSystem() {
+  public @Nullable String getOperatingSystem() {
     return operatingSystem;
   }
 
-  public void setOperatingSystem(String operatingSystem) {
+  public void setOperatingSystem(@Nullable String operatingSystem) {
     this.operatingSystem = operatingSystem;
   }
 
-  public EimDto appVersion(String appVersion) {
+  public EimDto appVersion(@Nullable String appVersion) {
     this.appVersion = appVersion;
     return this;
   }
@@ -199,19 +200,19 @@ public class EimDto {
   /**
    * Get appVersion
    * @return appVersion
-  */
+   */
   
   @Schema(name = "appVersion", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("appVersion")
-  public String getAppVersion() {
+  public @Nullable String getAppVersion() {
     return appVersion;
   }
 
-  public void setAppVersion(String appVersion) {
+  public void setAppVersion(@Nullable String appVersion) {
     this.appVersion = appVersion;
   }
 
-  public EimDto creationDate(LocalDate creationDate) {
+  public EimDto creationDate(@Nullable LocalDate creationDate) {
     this.creationDate = creationDate;
     return this;
   }
@@ -219,19 +220,19 @@ public class EimDto {
   /**
    * Get creationDate
    * @return creationDate
-  */
+   */
   @Valid 
   @Schema(name = "creationDate", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("creationDate")
-  public LocalDate getCreationDate() {
+  public @Nullable LocalDate getCreationDate() {
     return creationDate;
   }
 
-  public void setCreationDate(LocalDate creationDate) {
+  public void setCreationDate(@Nullable LocalDate creationDate) {
     this.creationDate = creationDate;
   }
 
-  public EimDto endOfValidityDate(LocalDate endOfValidityDate) {
+  public EimDto endOfValidityDate(@Nullable LocalDate endOfValidityDate) {
     this.endOfValidityDate = endOfValidityDate;
     return this;
   }
@@ -239,19 +240,19 @@ public class EimDto {
   /**
    * Get endOfValidityDate
    * @return endOfValidityDate
-  */
+   */
   @Valid 
   @Schema(name = "endOfValidityDate", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("endOfValidityDate")
-  public LocalDate getEndOfValidityDate() {
+  public @Nullable LocalDate getEndOfValidityDate() {
     return endOfValidityDate;
   }
 
-  public void setEndOfValidityDate(LocalDate endOfValidityDate) {
+  public void setEndOfValidityDate(@Nullable LocalDate endOfValidityDate) {
     this.endOfValidityDate = endOfValidityDate;
   }
 
-  public EimDto activationMode(String activationMode) {
+  public EimDto activationMode(@Nullable String activationMode) {
     this.activationMode = activationMode;
     return this;
   }
@@ -259,19 +260,19 @@ public class EimDto {
   /**
    * Get activationMode
    * @return activationMode
-  */
+   */
   
   @Schema(name = "activationMode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("activationMode")
-  public String getActivationMode() {
+  public @Nullable String getActivationMode() {
     return activationMode;
   }
 
-  public void setActivationMode(String activationMode) {
+  public void setActivationMode(@Nullable String activationMode) {
     this.activationMode = activationMode;
   }
 
-  public EimDto eidasLevel(String eidasLevel) {
+  public EimDto eidasLevel(@Nullable String eidasLevel) {
     this.eidasLevel = eidasLevel;
     return this;
   }
@@ -279,19 +280,19 @@ public class EimDto {
   /**
    * Get eidasLevel
    * @return eidasLevel
-  */
+   */
   
   @Schema(name = "eidasLevel", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("eidasLevel")
-  public String getEidasLevel() {
+  public @Nullable String getEidasLevel() {
     return eidasLevel;
   }
 
-  public void setEidasLevel(String eidasLevel) {
+  public void setEidasLevel(@Nullable String eidasLevel) {
     this.eidasLevel = eidasLevel;
   }
 
-  public EimDto fitier(String fitier) {
+  public EimDto fitier(@Nullable String fitier) {
     this.fitier = fitier;
     return this;
   }
@@ -299,15 +300,15 @@ public class EimDto {
   /**
    * Get fitier
    * @return fitier
-  */
+   */
   
   @Schema(name = "fitier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("fitier")
-  public String getFitier() {
+  public @Nullable String getFitier() {
     return fitier;
   }
 
-  public void setFitier(String fitier) {
+  public void setFitier(@Nullable String fitier) {
     this.fitier = fitier;
   }
 
