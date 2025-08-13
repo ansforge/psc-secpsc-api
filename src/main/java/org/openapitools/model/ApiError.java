@@ -49,7 +49,7 @@ public class ApiError {
    * @return timestamp
   */
   @Valid 
-  @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", description = "Instant auquel s'est produit l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", required = false, description = "Instant auquel s'est produit l'erreur")
   @JsonProperty("timestamp")
   public OffsetDateTime getTimestamp() {
     return timestamp;
@@ -77,7 +77,7 @@ public class ApiError {
    * @return faultyFields
   */
   
-  @Schema(name = "faultyFields", example = "[nationalId, email]", description = "Liste des champs invalides", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "faultyFields", example = "[nationalId, email]", required = false, description = "Liste des champs invalides")
   @JsonProperty("faultyFields")
   public List<String> getFaultyFields() {
     return faultyFields;
@@ -105,7 +105,7 @@ public class ApiError {
    * @return faultyValues
   */
   
-  @Schema(name = "faultyValues", example = "[123456789, 987654321]", description = "Liste des valeurs invalides pour les champs mentionnés", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "faultyValues", example = "[123456789, 987654321]", required = false, description = "Liste des valeurs invalides pour les champs mentionnés")
   @JsonProperty("faultyValues")
   public List<Object> getFaultyValues() {
     return faultyValues;
@@ -125,7 +125,7 @@ public class ApiError {
    * @return errorMessage
   */
   
-  @Schema(name = "errorMessage", example = "Ressource non trouvée", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "errorMessage", example = "Ressource non trouvée", required = false, description = "Brève description de l'erreur")
   @JsonProperty("errorMessage")
   public String getErrorMessage() {
     return errorMessage;
@@ -145,7 +145,7 @@ public class ApiError {
    * @return path
   */
   
-  @Schema(name = "path", example = "/user/123456789", description = "path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "path", example = "/user/123456789", required = false, description = "path")
   @JsonProperty("path")
   public String getPath() {
     return path;

@@ -57,7 +57,7 @@ public class EtatCivilDto {
    * @return idPP
   */
   
-  @Schema(name = "idPP", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "idPP", required = false, description = "")
   @JsonProperty("idPP")
   public String getIdPP() {
     return idPP;
@@ -77,7 +77,7 @@ public class EtatCivilDto {
    * @return nomFamille
   */
   
-  @Schema(name = "nomFamille", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "nomFamille", required = false, description = "")
   @JsonProperty("nomFamille")
   public String getNomFamille() {
     return nomFamille;
@@ -97,7 +97,7 @@ public class EtatCivilDto {
    * @return prenom1
   */
   
-  @Schema(name = "prenom1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "prenom1", required = false, description = "")
   @JsonProperty("prenom1")
   public String getPrenom1() {
     return prenom1;
@@ -117,7 +117,7 @@ public class EtatCivilDto {
    * @return prenom2
   */
   
-  @Schema(name = "prenom2", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "prenom2", required = false, description = "")
   @JsonProperty("prenom2")
   public String getPrenom2() {
     return prenom2;
@@ -137,7 +137,7 @@ public class EtatCivilDto {
    * @return prenom3
   */
   
-  @Schema(name = "prenom3", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "prenom3", required = false, description = "")
   @JsonProperty("prenom3")
   public String getPrenom3() {
     return prenom3;
@@ -157,7 +157,7 @@ public class EtatCivilDto {
    * @return sexe
   */
   
-  @Schema(name = "sexe", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "sexe", required = false, description = "")
   @JsonProperty("sexe")
   public String getSexe() {
     return sexe;
@@ -177,7 +177,7 @@ public class EtatCivilDto {
    * @return dateNaissance
   */
   
-  @Schema(name = "dateNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateNaissance", required = false, description = "")
   @JsonProperty("dateNaissance")
   public String getDateNaissance() {
     return dateNaissance;
@@ -197,7 +197,7 @@ public class EtatCivilDto {
    * @return paysNaissance
   */
   
-  @Schema(name = "paysNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "paysNaissance", required = false, description = "")
   @JsonProperty("paysNaissance")
   public String getPaysNaissance() {
     return paysNaissance;
@@ -217,7 +217,7 @@ public class EtatCivilDto {
    * @return communeNaissance
   */
   
-  @Schema(name = "communeNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "communeNaissance", required = false, description = "")
   @JsonProperty("communeNaissance")
   public String getCommuneNaissance() {
     return communeNaissance;
@@ -237,7 +237,7 @@ public class EtatCivilDto {
    * @return departementNaissance
   */
   
-  @Schema(name = "departementNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "departementNaissance", required = false, description = "")
   @JsonProperty("departementNaissance")
   public String getDepartementNaissance() {
     return departementNaissance;
@@ -265,7 +265,7 @@ public class EtatCivilDto {
    * @return adeli
   */
   
-  @Schema(name = "adeli", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "adeli", required = false, description = "")
   @JsonProperty("adeli")
   public List<String> getAdeli() {
     return adeli;

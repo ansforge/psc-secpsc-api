@@ -19,21 +19,31 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import fr.ans.psc.amar.model.User;
 
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-04T14:42:58.339608400+02:00[Europe/Paris]")
 @Controller
 @RequestMapping("${openapi.pscPsi.base-path:/api}")
 public class PsiApiController implements PsiApi {
-	
+
 	@Value("${openapi.pscApiMajV2.base-path}:/api")
 	private String psPath;
 
 	@Override
 	public ResponseEntity<Void> creerUser(@Valid UserDto userDto) {
+
+		// Convert userDto
+		// mapping de User vers Ps
+
+		/*HttpClient client = HttpClient.newHttpClient();
+		String uri = psPath + "/v2/ps?psId=" + nationalId;
+		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header(nationalId, nationalId).GET().build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+*/
 		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
@@ -43,27 +53,20 @@ public class PsiApiController implements PsiApi {
 	}
 
 	@Override
-	public ResponseEntity<TrouverUserResponseDto> rechercherParIdNational(@NotNull @Valid String nationalId)
+	public ResponseEntity<User> rechercherParIdNational(@NotNull @Valid String nationalId)
 			throws URISyntaxException, IOException, InterruptedException {
 
 		HttpClient client = HttpClient.newHttpClient();
-
 		String uri = psPath + "/v2/ps/psId=" + nationalId;
-
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header(nationalId, nationalId).GET().build();
-
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
+		
 		if (response != null) {
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
-
 				ObjectMapper mapper = new ObjectMapper();
-				//TrouverUserResponseDto userResponse = mapper.readValue(jsonResponse, TrouverUserResponseDto.class);
-				
-				//return new ResponseEntity<>(userResponse, HttpStatus.OK);
-
-				return new ResponseEntity<>(null, HttpStatus.OK);
+				User userResponse = mapper.readValue(jsonResponse, User.class);
+				return new ResponseEntity<>(userResponse, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
 			}
@@ -83,5 +86,12 @@ public class PsiApiController implements PsiApi {
 	public ResponseEntity<Void> updateEims(@NotNull @Valid String nationalId,
 			@Valid UpdateEimsRequestDto updateEimsRequestDto) {
 		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	@Override
+	public ResponseEntity<Void> test1(@NotNull @Valid String nationalId,
+			@Valid UpdateEimsRequestDto updateEimsRequestDto) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -54,7 +54,7 @@ public class CivilStatusDto {
    * @return lastName
   */
   
-  @Schema(name = "lastName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "lastName", required = false, description = "")
   @JsonProperty("lastName")
   public String getLastName() {
     return lastName;
@@ -82,7 +82,7 @@ public class CivilStatusDto {
    * @return firstNames
   */
   
-  @Schema(name = "firstNames", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "firstNames", required = false, description = "")
   @JsonProperty("firstNames")
   public List<String> getFirstNames() {
     return firstNames;
@@ -102,7 +102,7 @@ public class CivilStatusDto {
    * @return birthDate
   */
   @Valid 
-  @Schema(name = "birthDate", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "birthDate", required = false, description = "")
   @JsonProperty("birthDate")
   public LocalDate getBirthDate() {
     return birthDate;
@@ -122,7 +122,7 @@ public class CivilStatusDto {
    * @return birthTownCode
   */
   
-  @Schema(name = "birthTownCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "birthTownCode", required = false, description = "")
   @JsonProperty("birthTownCode")
   public String getBirthTownCode() {
     return birthTownCode;
@@ -142,7 +142,7 @@ public class CivilStatusDto {
    * @return birthCountryCode
   */
   
-  @Schema(name = "birthCountryCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "birthCountryCode", required = false, description = "")
   @JsonProperty("birthCountryCode")
   public String getBirthCountryCode() {
     return birthCountryCode;
@@ -162,7 +162,7 @@ public class CivilStatusDto {
    * @return birthPlace
   */
   
-  @Schema(name = "birthPlace", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "birthPlace", required = false, description = "")
   @JsonProperty("birthPlace")
   public String getBirthPlace() {
     return birthPlace;
@@ -182,7 +182,7 @@ public class CivilStatusDto {
    * @return genderCode
   */
   
-  @Schema(name = "genderCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "genderCode", required = false, description = "")
   @JsonProperty("genderCode")
   public String getGenderCode() {
     return genderCode;
@@ -202,7 +202,7 @@ public class CivilStatusDto {
    * @return personalCivilityTitle
   */
   
-  @Schema(name = "personalCivilityTitle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "personalCivilityTitle", required = false, description = "")
   @JsonProperty("personalCivilityTitle")
   public String getPersonalCivilityTitle() {
     return personalCivilityTitle;

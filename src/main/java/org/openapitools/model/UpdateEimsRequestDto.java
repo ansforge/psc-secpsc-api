@@ -40,7 +40,7 @@ public class UpdateEimsRequestDto {
    * @return nationalId
   */
   
-  @Schema(name = "nationalId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "nationalId", required = false, description = "")
   @JsonProperty("nationalId")
   public String getNationalId() {
     return nationalId;
@@ -68,7 +68,7 @@ public class UpdateEimsRequestDto {
    * @return eims
   */
   @Valid 
-  @Schema(name = "eims", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "eims", required = false, description = "")
   @JsonProperty("eims")
   public List<@Valid EimDto> getEims() {
     return eims;

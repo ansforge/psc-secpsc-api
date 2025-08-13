@@ -47,7 +47,7 @@ public class ImagesPSReponseDto {
    * @return code
   */
   
-  @Schema(name = "code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "code", required = false, description = "")
   @JsonProperty("code")
   public String getCode() {
     return code;
@@ -67,7 +67,7 @@ public class ImagesPSReponseDto {
    * @return libelle
   */
   
-  @Schema(name = "libelle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "libelle", required = false, description = "")
   @JsonProperty("libelle")
   public String getLibelle() {
     return libelle;
@@ -87,7 +87,7 @@ public class ImagesPSReponseDto {
    * @return ts
   */
   @Valid 
-  @Schema(name = "ts", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "ts", required = false, description = "")
   @JsonProperty("ts")
   public OffsetDateTime getTs() {
     return ts;
@@ -115,7 +115,7 @@ public class ImagesPSReponseDto {
    * @return reponseImagesPS
   */
   @Valid 
-  @Schema(name = "reponseImagesPS", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "reponseImagesPS", required = false, description = "")
   @JsonProperty("reponseImagesPS")
   public List<@Valid ImagesPSDto> getReponseImagesPS() {
     return reponseImagesPS;

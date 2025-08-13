@@ -35,7 +35,7 @@ public class ContactInfoDto {
    * @return email
   */
   
-  @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "email", required = false, description = "")
   @JsonProperty("email")
   public String getEmail() {
     return email;
@@ -55,7 +55,7 @@ public class ContactInfoDto {
    * @return phone
   */
   
-  @Schema(name = "phone", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "phone", required = false, description = "")
   @JsonProperty("phone")
   public String getPhone() {
     return phone;

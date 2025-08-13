@@ -44,7 +44,7 @@ public class RechercherMiesResponseDto {
    * @return nationalId
   */
   
-  @Schema(name = "nationalId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "nationalId", required = false, description = "")
   @JsonProperty("nationalId")
   public String getNationalId() {
     return nationalId;
@@ -72,7 +72,7 @@ public class RechercherMiesResponseDto {
    * @return alternativeIdentifiers
   */
   @Valid 
-  @Schema(name = "alternativeIdentifiers", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "alternativeIdentifiers", required = false, description = "")
   @JsonProperty("alternativeIdentifiers")
   public List<@Valid AlternativeIdentifierDto> getAlternativeIdentifiers() {
     return alternativeIdentifiers;
@@ -100,7 +100,7 @@ public class RechercherMiesResponseDto {
    * @return eims
   */
   @Valid 
-  @Schema(name = "eims", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "eims", required = false, description = "")
   @JsonProperty("eims")
   public List<@Valid EimDto> getEims() {
     return eims;

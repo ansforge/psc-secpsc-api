@@ -35,7 +35,7 @@ public class CoordonneeDto {
    * @return numeroTelephonePort
   */
   
-  @Schema(name = "numeroTelephonePort", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "numeroTelephonePort", required = false, description = "")
   @JsonProperty("numeroTelephonePort")
   public String getNumeroTelephonePort() {
     return numeroTelephonePort;
@@ -55,7 +55,7 @@ public class CoordonneeDto {
    * @return courriel
   */
   
-  @Schema(name = "courriel", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "courriel", required = false, description = "")
   @JsonProperty("courriel")
   public String getCourriel() {
     return courriel;

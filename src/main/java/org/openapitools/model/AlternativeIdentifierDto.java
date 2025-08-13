@@ -37,7 +37,7 @@ public class AlternativeIdentifierDto {
    * @return identifier
   */
   
-  @Schema(name = "identifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "identifier", required = false, description = "")
   @JsonProperty("identifier")
   public String getIdentifier() {
     return identifier;
@@ -57,7 +57,7 @@ public class AlternativeIdentifierDto {
    * @return origine
   */
   
-  @Schema(name = "origine", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "origine", required = false, description = "")
   @JsonProperty("origine")
   public String getOrigine() {
     return origine;
@@ -77,7 +77,7 @@ public class AlternativeIdentifierDto {
    * @return quality
   */
   
-  @Schema(name = "quality", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "quality", required = false, description = "")
   @JsonProperty("quality")
   public Integer getQuality() {
     return quality;

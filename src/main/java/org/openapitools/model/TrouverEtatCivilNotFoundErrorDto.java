@@ -42,7 +42,7 @@ public class TrouverEtatCivilNotFoundErrorDto {
    * @return timestamp
   */
   @Valid 
-  @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", description = "Instant auquel s'est produit l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", required = false, description = "Instant auquel s'est produit l'erreur")
   @JsonProperty("timestamp")
   public OffsetDateTime getTimestamp() {
     return timestamp;
@@ -62,7 +62,7 @@ public class TrouverEtatCivilNotFoundErrorDto {
    * @return status
   */
   
-  @Schema(name = "status", example = "404", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "status", example = "404", required = false, description = "Brève description de l'erreur")
   @JsonProperty("status")
   public Integer getStatus() {
     return status;
@@ -82,7 +82,7 @@ public class TrouverEtatCivilNotFoundErrorDto {
    * @return error
   */
   
-  @Schema(name = "error", example = "Ressource non trouvée", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "error", example = "Ressource non trouvée", required = false, description = "Brève description de l'erreur")
   @JsonProperty("error")
   public String getError() {
     return error;
@@ -102,7 +102,7 @@ public class TrouverEtatCivilNotFoundErrorDto {
    * @return path
   */
   
-  @Schema(name = "path", example = "ps/trouverEtatCivil", description = "URL de base de la ressource à l'origine de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "path", example = "ps/trouverEtatCivil", required = false, description = "URL de base de la ressource à l'origine de l'erreur")
   @JsonProperty("path")
   public String getPath() {
     return path;

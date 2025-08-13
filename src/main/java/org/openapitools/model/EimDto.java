@@ -61,7 +61,7 @@ public class EimDto {
    * @return idNat
   */
   
-  @Schema(name = "idNat", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "idNat", required = false, description = "")
   @JsonProperty("idNat")
   public String getIdNat() {
     return idNat;
@@ -81,7 +81,7 @@ public class EimDto {
    * @return mieType
   */
   
-  @Schema(name = "mieType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "mieType", required = false, description = "")
   @JsonProperty("mieType")
   public String getMieType() {
     return mieType;
@@ -101,7 +101,7 @@ public class EimDto {
    * @return serialNumber
   */
   
-  @Schema(name = "serialNumber", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "serialNumber", required = false, description = "")
   @JsonProperty("serialNumber")
   public String getSerialNumber() {
     return serialNumber;
@@ -121,7 +121,7 @@ public class EimDto {
    * @return email
   */
   
-  @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "email", required = false, description = "")
   @JsonProperty("email")
   public String getEmail() {
     return email;
@@ -141,7 +141,7 @@ public class EimDto {
    * @return deviceName
   */
   
-  @Schema(name = "deviceName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "deviceName", required = false, description = "")
   @JsonProperty("deviceName")
   public String getDeviceName() {
     return deviceName;
@@ -161,7 +161,7 @@ public class EimDto {
    * @return model
   */
   
-  @Schema(name = "model", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "model", required = false, description = "")
   @JsonProperty("model")
   public String getModel() {
     return model;
@@ -181,7 +181,7 @@ public class EimDto {
    * @return operatingSystem
   */
   
-  @Schema(name = "operatingSystem", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "operatingSystem", required = false, description = "")
   @JsonProperty("operatingSystem")
   public String getOperatingSystem() {
     return operatingSystem;
@@ -201,7 +201,7 @@ public class EimDto {
    * @return appVersion
   */
   
-  @Schema(name = "appVersion", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "appVersion", required = false, description = "")
   @JsonProperty("appVersion")
   public String getAppVersion() {
     return appVersion;
@@ -221,7 +221,7 @@ public class EimDto {
    * @return creationDate
   */
   @Valid 
-  @Schema(name = "creationDate", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "creationDate", required = false, description = "")
   @JsonProperty("creationDate")
   public LocalDate getCreationDate() {
     return creationDate;
@@ -241,7 +241,7 @@ public class EimDto {
    * @return endOfValidityDate
   */
   @Valid 
-  @Schema(name = "endOfValidityDate", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "endOfValidityDate", required = false, description = "")
   @JsonProperty("endOfValidityDate")
   public LocalDate getEndOfValidityDate() {
     return endOfValidityDate;
@@ -261,7 +261,7 @@ public class EimDto {
    * @return activationMode
   */
   
-  @Schema(name = "activationMode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "activationMode", required = false, description = "")
   @JsonProperty("activationMode")
   public String getActivationMode() {
     return activationMode;
@@ -281,7 +281,7 @@ public class EimDto {
    * @return eidasLevel
   */
   
-  @Schema(name = "eidasLevel", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "eidasLevel", required = false, description = "")
   @JsonProperty("eidasLevel")
   public String getEidasLevel() {
     return eidasLevel;
@@ -301,7 +301,7 @@ public class EimDto {
    * @return fitier
   */
   
-  @Schema(name = "fitier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "fitier", required = false, description = "")
   @JsonProperty("fitier")
   public String getFitier() {
     return fitier;

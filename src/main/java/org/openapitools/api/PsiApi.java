@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import fr.ans.psc.amar.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -130,7 +131,7 @@ public interface PsiApi {
 							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
 	@RequestMapping(method = RequestMethod.GET, value = "/user", produces = { "application/json" })
 
-	ResponseEntity<TrouverUserResponseDto> rechercherParIdNational(
+	ResponseEntity<User> rechercherParIdNational(
 			@NotNull @Parameter(name = "nationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId) throws URISyntaxException, IOException, InterruptedException;
 
 	/**
@@ -201,6 +202,39 @@ public interface PsiApi {
 			"application/json" })
 
 	ResponseEntity<Void> updateEims(
+			@NotNull @Parameter(name = "nationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
+			@Parameter(name = "UpdateEimsRequestDto", description = "", required = true) @Valid @RequestBody UpdateEimsRequestDto updateEimsRequestDto);
+	
+	
+	/**
+	 * PUT /user/eims : Met à jour la liste des MIE et autres identifiants d&#39;un
+	 * utilisateur par son id national
+	 *
+	 * @param nationalId           (required)
+	 * @param updateEimsRequestDto (required)
+	 * @return MIE mis à jour (status code 200) or Données invalides ou absentes
+	 *         (status code 400) or Utilisateur non autorisé (status code 401) or
+	 *         Utilisateur non trouvé (status code 404) or L&#39;utilisateur avec
+	 *         cet identifiant national existe déjà (status code 409) or Erreur
+	 *         interne serveur (status code 500)
+	 */
+	@Operation(operationId = "updateEims", summary = "Met à jour la liste des MIE et autres identifiants d'un utilisateur par son id national", tags = {
+			"rechercher-user-controller" }, responses = {
+					@ApiResponse(responseCode = "200", description = "MIE mis à jour"),
+					@ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)) }),
+					@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "409", description = "L'utilisateur avec cet identifiant national existe déjà", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
+	@RequestMapping(method = RequestMethod.PUT, value = "/user/eims", produces = { "application/json" }, consumes = {
+			"application/json" })
+
+	ResponseEntity<Void> test1(
 			@NotNull @Parameter(name = "nationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
 			@Parameter(name = "UpdateEimsRequestDto", description = "", required = true) @Valid @RequestBody UpdateEimsRequestDto updateEimsRequestDto);
 }
