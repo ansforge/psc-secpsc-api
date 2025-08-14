@@ -26,10 +26,10 @@ import fr.ans.psc.model.ps.PsiPsAdapter;
 @RequestMapping("${openapi.pscPsi.base-path:/api}")
 public class PsiApiController implements PsiApi {
 
-	@Value("${openapi.pscAmar.base-path}:/api")
+	@Value("${openapi.pscAmar.base-path:/api}")
 	private String amarPath;
 	
-	@Value("${openapi.pscApiMajV2.base-path}:/api")
+	@Value("${openapi.pscApiMajV2.base-path:/api}")
 	private String psPath;
 
 	@Override
