@@ -92,7 +92,7 @@ public class ActivityDto {
    * @return professionalModeCode
    */
   
-  @Schema(name = "professionalModeCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "professionalModeCode", required = false, description = "")
   @JsonProperty("professionalModeCode")
   public @Nullable String getProfessionalModeCode() {
     return professionalModeCode;
@@ -112,7 +112,7 @@ public class ActivityDto {
    * @return activitySectorCode
    */
   
-  @Schema(name = "activitySectorCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "activitySectorCode", required = false, description = "")
   @JsonProperty("activitySectorCode")
   public @Nullable String getActivitySectorCode() {
     return activitySectorCode;
@@ -132,7 +132,7 @@ public class ActivityDto {
    * @return pharmacistTableSectionCode
    */
   
-  @Schema(name = "pharmacistTableSectionCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "pharmacistTableSectionCode", required = false, description = "")
   @JsonProperty("pharmacistTableSectionCode")
   public @Nullable String getPharmacistTableSectionCode() {
     return pharmacistTableSectionCode;
@@ -152,7 +152,7 @@ public class ActivityDto {
    * @return roleCode
    */
   
-  @Schema(name = "roleCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "roleCode", required = false, description = "")
   @JsonProperty("roleCode")
   public @Nullable String getRoleCode() {
     return roleCode;
@@ -172,7 +172,7 @@ public class ActivityDto {
    * @return activityTypeCode
    */
   
-  @Schema(name = "activityTypeCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "activityTypeCode", required = false, description = "")
   @JsonProperty("activityTypeCode")
   public @Nullable String getActivityTypeCode() {
     return activityTypeCode;
@@ -192,7 +192,7 @@ public class ActivityDto {
    * @return siretSiteNumber
    */
   
-  @Schema(name = "siretSiteNumber", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "siretSiteNumber", required = false, description = "")
   @JsonProperty("siretSiteNumber")
   public @Nullable String getSiretSiteNumber() {
     return siretSiteNumber;
@@ -212,7 +212,7 @@ public class ActivityDto {
    * @return sirenSiteNumber
    */
   
-  @Schema(name = "sirenSiteNumber", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "sirenSiteNumber", required = false, description = "")
   @JsonProperty("sirenSiteNumber")
   public @Nullable String getSirenSiteNumber() {
     return sirenSiteNumber;
@@ -232,7 +232,7 @@ public class ActivityDto {
    * @return finessSiteNumber
    */
   
-  @Schema(name = "finessSiteNumber", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "finessSiteNumber", required = false, description = "")
   @JsonProperty("finessSiteNumber")
   public @Nullable String getFinessSiteNumber() {
     return finessSiteNumber;
@@ -252,7 +252,7 @@ public class ActivityDto {
    * @return finessLegalCompanyNumber
    */
   
-  @Schema(name = "finessLegalCompanyNumber", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "finessLegalCompanyNumber", required = false, description = "")
   @JsonProperty("finessLegalCompanyNumber")
   public @Nullable String getFinessLegalCompanyNumber() {
     return finessLegalCompanyNumber;
@@ -272,7 +272,7 @@ public class ActivityDto {
    * @return companyTechnicalIdentifier
    */
   
-  @Schema(name = "companyTechnicalIdentifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyTechnicalIdentifier", required = false, description = "")
   @JsonProperty("companyTechnicalIdentifier")
   public @Nullable String getCompanyTechnicalIdentifier() {
     return companyTechnicalIdentifier;
@@ -292,7 +292,7 @@ public class ActivityDto {
    * @return companyName
    */
   
-  @Schema(name = "companyName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyName", required = false, description = "")
   @JsonProperty("companyName")
   public @Nullable String getCompanyName() {
     return companyName;
@@ -312,7 +312,7 @@ public class ActivityDto {
    * @return companyCommercialSign
    */
   
-  @Schema(name = "companyCommercialSign", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyCommercialSign", required = false, description = "")
   @JsonProperty("companyCommercialSign")
   public @Nullable String getCompanyCommercialSign() {
     return companyCommercialSign;
@@ -332,7 +332,7 @@ public class ActivityDto {
    * @return companyAdditionalAddress
    */
   
-  @Schema(name = "companyAdditionalAddress", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyAdditionalAddress", required = false, description = "")
   @JsonProperty("companyAdditionalAddress")
   public @Nullable String getCompanyAdditionalAddress() {
     return companyAdditionalAddress;
@@ -352,7 +352,7 @@ public class ActivityDto {
    * @return companyGeographicalPointComplement
    */
   
-  @Schema(name = "companyGeographicalPointComplement", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyGeographicalPointComplement", required = false, description = "")
   @JsonProperty("companyGeographicalPointComplement")
   public @Nullable String getCompanyGeographicalPointComplement() {
     return companyGeographicalPointComplement;
@@ -372,7 +372,7 @@ public class ActivityDto {
    * @return companyWayNumber
    */
   
-  @Schema(name = "companyWayNumber", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyWayNumber", required = false, description = "")
   @JsonProperty("companyWayNumber")
   public @Nullable String getCompanyWayNumber() {
     return companyWayNumber;
@@ -392,7 +392,7 @@ public class ActivityDto {
    * @return companyRepeatIndex
    */
   
-  @Schema(name = "companyRepeatIndex", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyRepeatIndex", required = false, description = "")
   @JsonProperty("companyRepeatIndex")
   public @Nullable String getCompanyRepeatIndex() {
     return companyRepeatIndex;
@@ -412,7 +412,7 @@ public class ActivityDto {
    * @return companyWayType
    */
   
-  @Schema(name = "companyWayType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyWayType", required = false, description = "")
   @JsonProperty("companyWayType")
   public @Nullable String getCompanyWayType() {
     return companyWayType;
@@ -432,7 +432,7 @@ public class ActivityDto {
    * @return companyWayLabel
    */
   
-  @Schema(name = "companyWayLabel", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyWayLabel", required = false, description = "")
   @JsonProperty("companyWayLabel")
   public @Nullable String getCompanyWayLabel() {
     return companyWayLabel;
@@ -452,7 +452,7 @@ public class ActivityDto {
    * @return companyDistributionMention
    */
   
-  @Schema(name = "companyDistributionMention", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyDistributionMention", required = false, description = "")
   @JsonProperty("companyDistributionMention")
   public @Nullable String getCompanyDistributionMention() {
     return companyDistributionMention;
@@ -472,7 +472,7 @@ public class ActivityDto {
    * @return companyCedexOffice
    */
   
-  @Schema(name = "companyCedexOffice", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyCedexOffice", required = false, description = "")
   @JsonProperty("companyCedexOffice")
   public @Nullable String getCompanyCedexOffice() {
     return companyCedexOffice;
@@ -492,7 +492,7 @@ public class ActivityDto {
    * @return companyPostalCode
    */
   
-  @Schema(name = "companyPostalCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyPostalCode", required = false, description = "")
   @JsonProperty("companyPostalCode")
   public @Nullable String getCompanyPostalCode() {
     return companyPostalCode;
@@ -512,7 +512,7 @@ public class ActivityDto {
    * @return companyTownCode
    */
   
-  @Schema(name = "companyTownCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyTownCode", required = false, description = "")
   @JsonProperty("companyTownCode")
   public @Nullable String getCompanyTownCode() {
     return companyTownCode;
@@ -532,7 +532,7 @@ public class ActivityDto {
    * @return companyCountryCode
    */
   
-  @Schema(name = "companyCountryCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyCountryCode", required = false, description = "")
   @JsonProperty("companyCountryCode")
   public @Nullable String getCompanyCountryCode() {
     return companyCountryCode;
@@ -552,7 +552,7 @@ public class ActivityDto {
    * @return companyPhone1
    */
   
-  @Schema(name = "companyPhone1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyPhone1", required = false, description = "")
   @JsonProperty("companyPhone1")
   public @Nullable String getCompanyPhone1() {
     return companyPhone1;
@@ -572,7 +572,7 @@ public class ActivityDto {
    * @return companyPhone2
    */
   
-  @Schema(name = "companyPhone2", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyPhone2", required = false, description = "")
   @JsonProperty("companyPhone2")
   public @Nullable String getCompanyPhone2() {
     return companyPhone2;
@@ -592,7 +592,7 @@ public class ActivityDto {
    * @return companyFax
    */
   
-  @Schema(name = "companyFax", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyFax", required = false, description = "")
   @JsonProperty("companyFax")
   public @Nullable String getCompanyFax() {
     return companyFax;
@@ -612,7 +612,7 @@ public class ActivityDto {
    * @return companyEmail
    */
   
-  @Schema(name = "companyEmail", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyEmail", required = false, description = "")
   @JsonProperty("companyEmail")
   public @Nullable String getCompanyEmail() {
     return companyEmail;
@@ -632,7 +632,7 @@ public class ActivityDto {
    * @return companyCountyCode
    */
   
-  @Schema(name = "companyCountyCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyCountyCode", required = false, description = "")
   @JsonProperty("companyCountyCode")
   public @Nullable String getCompanyCountyCode() {
     return companyCountyCode;
@@ -652,7 +652,7 @@ public class ActivityDto {
    * @return companyOldIdentifier
    */
   
-  @Schema(name = "companyOldIdentifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyOldIdentifier", required = false, description = "")
   @JsonProperty("companyOldIdentifier")
   public @Nullable String getCompanyOldIdentifier() {
     return companyOldIdentifier;
@@ -672,7 +672,7 @@ public class ActivityDto {
    * @return companyRegistrationAuthority
    */
   
-  @Schema(name = "companyRegistrationAuthority", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "companyRegistrationAuthority", required = false, description = "")
   @JsonProperty("companyRegistrationAuthority")
   public @Nullable String getCompanyRegistrationAuthority() {
     return companyRegistrationAuthority;

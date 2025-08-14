@@ -46,7 +46,7 @@ public class ErrorDto {
    * @return timestamp
    */
   @Valid 
-  @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", description = "Instant auquel s'est produit l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", required = false, description = "Instant auquel s'est produit l'erreur")
   @JsonProperty("timestamp")
   public @Nullable OffsetDateTime getTimestamp() {
     return timestamp;
@@ -66,7 +66,7 @@ public class ErrorDto {
    * @return code
    */
   
-  @Schema(name = "code", example = "404", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "code", example = "404", required = false, description = "Brève description de l'erreur")
   @JsonProperty("code")
   public @Nullable String getCode() {
     return code;
@@ -86,7 +86,7 @@ public class ErrorDto {
    * @return message
    */
   
-  @Schema(name = "message", example = "Ressource non trouvée", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "message", example = "Ressource non trouvée", required = false, description = "Brève description de l'erreur")
   @JsonProperty("message")
   public @Nullable String getMessage() {
     return message;
@@ -114,7 +114,7 @@ public class ErrorDto {
    * @return metadata
    */
   
-  @Schema(name = "metadata", example = "{additionalProp1={}, additionalProp2={}, additionalProp3={}}", description = "Données additionnelles sur l'erreur (clé/valeur)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "metadata", example = "{additionalProp1={}, additionalProp2={}, additionalProp3={}}", required = false, description = "Données additionnelles sur l'erreur (clé/valeur)")
   @JsonProperty("metadata")
   public Map<String, Object> getMetadata() {
     return metadata;

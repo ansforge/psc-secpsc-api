@@ -35,7 +35,7 @@ public class TrouverUserResponseDto {
    * @return user
    */
   @Valid 
-  @Schema(name = "user", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "user", required = false, description = "")
   @JsonProperty("user")
   public @Nullable UserDto getUser() {
     return user;

@@ -7,79 +7,155 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-//import org.openapitools.model.RechercherMiesResponseDto;
-import org.openapitools.model.TrouverUserResponseDto;
-//import org.openapitools.model.UpdateEimsRequestDto;
-import org.openapitools.model.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-04T14:42:58.339608400+02:00[Europe/Paris]")
+import fr.ans.psc.amar.model.User;
+import fr.ans.psc.model.Ps;
+import fr.ans.psc.model.ps.PsiPsAdapter;
+
 @Controller
 @RequestMapping("${openapi.pscPsi.base-path:/api}")
 public class PsiApiController implements PsiApi {
+
+	@Value("${openapi.pscAmar.base-path}:/api")
+	private String amarPath;
 	
-	/*
-	 * @Value("${openapi.pscApiMajV2.base-path}:/api") private String psPath;
-	 * 
-	 * @Override public ResponseEntity<Void> creerUser(@Valid UserDto userDto) {
-	 * return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED); }
-	 * 
-	 * @Override public ResponseEntity<RechercherMiesResponseDto>
-	 * rechercherEims(@NotNull @Valid String nationalId) { return new
-	 * ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED); }
-	 * 
-	 * @Override public ResponseEntity<TrouverUserResponseDto>
-	 * rechercherParIdNational(@NotNull @Valid String nationalId) throws
-	 * URISyntaxException, IOException, InterruptedException {
-	 * 
-	 * HttpClient client = HttpClient.newHttpClient();
-	 * 
-	 * String uri = psPath + "/v2/ps/psId=" + nationalId;
-	 * 
-	 * HttpRequest request = HttpRequest.newBuilder().uri(new
-	 * URI(uri)).header(nationalId, nationalId).GET().build();
-	 * 
-	 * HttpResponse<String> response = client.send(request,
-	 * HttpResponse.BodyHandlers.ofString());
-	 * 
-	 * if (response != null) { if (response.statusCode() == 200) { String
-	 * jsonResponse = response.body();
-	 * 
-	 * ObjectMapper mapper = new ObjectMapper(); //TrouverUserResponseDto
-	 * userResponse = mapper.readValue(jsonResponse, TrouverUserResponseDto.class);
-	 * 
-	 * //return new ResponseEntity<>(userResponse, HttpStatus.OK);
-	 * 
-	 * return new ResponseEntity<>(null, HttpStatus.OK); } else { return new
-	 * ResponseEntity<>(HttpStatus.valueOf(response.statusCode())); } }
-	 * 
-	 * return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); }
-	 * 
-	 * @Override public ResponseEntity<TrouverUserResponseDto>
-	 * rechercherParTraitsIdentite1(@NotNull @Valid String lastName,
-	 * 
-	 * @NotNull @Valid String firstNames, @NotNull @Valid String
-	 * genderCode, @NotNull @Valid LocalDate birthdate,
-	 * 
-	 * @NotNull @Valid String birthTownCode, @NotNull @Valid String
-	 * birthCountryCode) { return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	 * }
-	 * 
-	 * @Override public ResponseEntity<Void> updateEims(@NotNull @Valid String
-	 * nationalId,
-	 * 
-	 * @Valid UpdateEimsRequestDto updateEimsRequestDto) { return new
-	 * ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED); }
-	 */
+	@Value("${openapi.pscApiMajV2.base-path}:/api")
+	private String psPath;
+
+	@Override
+	public ResponseEntity<User> rechercherParIdNational(String nationalId, String oldNationalId)
+			throws URISyntaxException, IOException, InterruptedException {
+
+		/*
+		 * Côté PSC
+		 * 
+		 * HttpClient client = HttpClient.newHttpClient(); String uri = psPath +
+		 * "/v2/ps?psId=" + nationalId; // HttpRequest request =
+		 * HttpRequest.newBuilder().uri(new // URI(uri)).header("nationalId",
+		 * nationalId).GET().build(); HttpRequest request =
+		 * HttpRequest.newBuilder().uri(new URI(uri)).header("Content-Type",
+		 * "application/json") .GET().build(); HttpResponse<String> response =
+		 * client.send(request, HttpResponse.BodyHandlers.ofString());
+		 * 
+		 * if (response != null) { if (response.statusCode() == 200) { String
+		 * jsonResponse = response.body(); ObjectMapper mapper = new ObjectMapper();
+		 * User userResponse = mapper.readValue(jsonResponse, User.class); return new
+		 * ResponseEntity<>(userResponse, HttpStatus.OK); } else { return new
+		 * ResponseEntity<>(HttpStatus.valueOf(response.statusCode())); } }
+		 */
+
+		HttpClient client = HttpClient.newHttpClient();
+		String uri = amarPath + "/users";
+		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
+				.headers("Content-Type", "application/json", "nationalId", nationalId).GET().build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		if (response != null) {
+			if (response.statusCode() == 200) {
+				String jsonResponse = response.body();
+				ObjectMapper mapper = new ObjectMapper();
+				User userResponse = mapper.readValue(jsonResponse, User.class);
+				return new ResponseEntity<>(userResponse, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		//return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	@Override
+	public ResponseEntity<List<String>> rechercherNationalIdParTraitsIdentite(String lastName, String firstNames,
+			String genderCode, LocalDate birthdate, String birthTownCode, String birthCountryCode, String birthPlace)
+			throws URISyntaxException, IOException, InterruptedException {
+
+		HttpClient client = HttpClient.newHttpClient();
+		String uri = psPath + "/user/identitytraits";
+		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
+				.headers("Content-Type", "application/json", "lastName", lastName, "firstNames", firstNames,
+						"genderCode", genderCode, "birthdate", birthdate.toString(), "birthTownCode", birthTownCode,
+						"birthCountryCode", birthCountryCode, "birthPlace", birthPlace)
+				.GET().build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		if (response != null) {
+			if (response.statusCode() == 200) {
+				String jsonResponse = response.body();
+				ObjectMapper mapper = new ObjectMapper();
+				List<String> list = mapper.readValue(jsonResponse, new TypeReference<List<String>>() {
+				});
+				return new ResponseEntity<>(list, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@Override
+	public ResponseEntity<Void> creerUser(User user) throws IOException, InterruptedException, URISyntaxException {
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		// Mapping
+		Ps ps = new PsiPsAdapter(user);
+		String psJson = mapper.writeValueAsString(ps);
+
+		HttpClient client = HttpClient.newHttpClient();
+		String uri = psPath + "/v2/ps";
+		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString(psJson)).build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		if (response != null) {
+			if (response.statusCode() == 200) {
+				String jsonResponse = response.body();
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@Override
+	public ResponseEntity<Void> updateUser(String nationalId, User user)
+			throws IOException, InterruptedException, URISyntaxException {
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		// Mapping
+		Ps ps = new PsiPsAdapter(user);
+		String psJson = mapper.writeValueAsString(ps);
+
+		HttpClient client = HttpClient.newHttpClient();
+		String uri = psPath + "/v2/ps";
+		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString(psJson)).build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		if (response != null) {
+			if (response.statusCode() == 200) {
+				String jsonResponse = response.body();
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
 }

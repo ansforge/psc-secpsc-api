@@ -35,7 +35,7 @@ public class ImagePSDto {
    * @return professionnel
    */
   @Valid 
-  @Schema(name = "professionnel", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "professionnel", required = false, description = "")
   @JsonProperty("professionnel")
   public @Nullable ProfessionnelDto getProfessionnel() {
     return professionnel;

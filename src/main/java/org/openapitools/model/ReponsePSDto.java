@@ -48,7 +48,7 @@ public class ReponsePSDto {
    * @return code
    */
   
-  @Schema(name = "code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "code", required = false, description = "")
   @JsonProperty("code")
   public @Nullable String getCode() {
     return code;
@@ -68,7 +68,7 @@ public class ReponsePSDto {
    * @return libelle
    */
   
-  @Schema(name = "libelle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "libelle", required = false, description = "")
   @JsonProperty("libelle")
   public @Nullable String getLibelle() {
     return libelle;
@@ -88,7 +88,7 @@ public class ReponsePSDto {
    * @return ts
    */
   @Valid 
-  @Schema(name = "ts", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "ts", required = false, description = "")
   @JsonProperty("ts")
   public @Nullable OffsetDateTime getTs() {
     return ts;
@@ -116,7 +116,7 @@ public class ReponsePSDto {
    * @return reponseEtatCivil
    */
   @Valid 
-  @Schema(name = "reponseEtatCivil", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "reponseEtatCivil", required = false, description = "")
   @JsonProperty("reponseEtatCivil")
   public List<@Valid EtatCivilDto> getReponseEtatCivil() {
     return reponseEtatCivil;

@@ -36,7 +36,7 @@ public class ContactInfoDto {
    * @return email
    */
   
-  @Schema(name = "email", description = "L'utilisateur a déjà vérifié son adresse e-mail avec PSI.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "email", required = false, description = "L'utilisateur a déjà vérifié son adresse e-mail avec PSI.")
   @JsonProperty("email")
   public @Nullable String getEmail() {
     return email;
@@ -56,7 +56,7 @@ public class ContactInfoDto {
    * @return phone
    */
   
-  @Schema(name = "phone", description = "L'utilisateur a déjà vérifié son numéro de téléphone avec PSI.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "phone", required = false, description = "L'utilisateur a déjà vérifié son numéro de téléphone avec PSI.")
   @JsonProperty("phone")
   public @Nullable String getPhone() {
     return phone;

@@ -40,7 +40,7 @@ public class UpdateUserRequestDto {
    * @return nationalId
    */
   
-  @Schema(name = "nationalId", description = "id PSI, qui sera le nouvel nationalId de l'utilisateur, et ajouté dans les identifiants alternatifs.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "nationalId", required = false, description = "id PSI, qui sera le nouvel nationalId de l'utilisateur, et ajouté dans les identifiants alternatifs.")
   @JsonProperty("nationalId")
   public @Nullable String getNationalId() {
     return nationalId;
@@ -60,7 +60,7 @@ public class UpdateUserRequestDto {
    * @return civilStatus
    */
   @Valid 
-  @Schema(name = "civilStatus", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "civilStatus", required = false, description = "")
   @JsonProperty("civilStatus")
   public @Nullable CivilStatusDto getCivilStatus() {
     return civilStatus;
@@ -80,7 +80,7 @@ public class UpdateUserRequestDto {
    * @return contactInfo
    */
   @Valid 
-  @Schema(name = "contactInfo", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "contactInfo", required = false, description = "")
   @JsonProperty("contactInfo")
   public @Nullable ContactInfoDto getContactInfo() {
     return contactInfo;

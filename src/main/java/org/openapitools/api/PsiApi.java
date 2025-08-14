@@ -5,392 +5,212 @@
  */
 package org.openapitools.api;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Generated;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.openapitools.model.ApiError;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.openapitools.model.ErrorDto;
 import org.openapitools.model.GenericInternalServerErrorDto;
-import java.time.LocalDate;
 import org.openapitools.model.TrouverUserResponseDto;
-import org.openapitools.model.UpdateUserRequestDto;
-import org.openapitools.model.UserDto;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.NativeWebRequest;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import fr.ans.psc.amar.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.lang.Nullable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 @Validated
 @Tag(name = "rechercher-user-controller", description = "the rechercher-user-controller API")
 public interface PsiApi {
 
-    default Optional<NativeWebRequest> getRequest() {
-        return Optional.empty();
-    }
+	default Optional<NativeWebRequest> getRequest() {
+		return Optional.empty();
+	}
 
-    /**
-     * POST /user : Crée l&#39;utilisateur au SEC PSC à partir de ses traits d&#39;identité
-     *
-     * @param userDto  (required)
-     * @return Utilisateur créé (status code 201)
-     *         or Données invalides ou absentes (status code 400)
-     *         or Utilisateur non autorisé (status code 401)
-     *         or Utilisateur non trouvé (status code 404)
-     *         or Conflits (status code 409)
-     *         or Erreur interne serveur (status code 500)
-     */
-    @Operation(
-        operationId = "creerUser",
-        summary = "Crée l'utilisateur au SEC PSC à partir de ses traits d'identité",
-        tags = { "rechercher-user-controller" },
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Utilisateur créé"),
-            @ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "409", description = "Conflits", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/user",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    
-    default ResponseEntity<Void> creerUser(
-        @Parameter(name = "UserDto", description = "", required = true) @Valid @RequestBody UserDto userDto
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"metadata\" : { \"additionalProp1\" : { }, \"additionalProp2\" : { }, \"additionalProp3\" : { } }, \"code\" : 404, \"message\" : \"Ressource non trouvée\", \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/rpps-identifications\", \"error\" : \"Erreur interne serveur\", \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\", \"status\" : 500 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	/**
+	 * GET /user : Retourne la personne (si trouvée) au SEC PSC sur la base de son
+	 * id national
+	 *
+	 * @param nationalId (required)
+	 * @return Personne trouvée (status code 200) or Données invalides ou absentes
+	 *         (status code 400) or Utilisateur non autorisé (status code 401) or
+	 *         Utilisateur non trouvé (status code 404) or L&#39;utilisateur avec
+	 *         cet identifiant national existe déjà (status code 409) or Erreur
+	 *         interne serveur (status code 500)
+	 * @throws URISyntaxException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	@Operation(operationId = "rechercherParIdNational", summary = "Retourne la personne (si trouvée) au SEC PSC sur la base de son id national", tags = {
+			"rechercher-user-controller" }, responses = {
+					@ApiResponse(responseCode = "200", description = "Personne trouvée", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = TrouverUserResponseDto.class)) }),
+					@ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)) }),
+					@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "409", description = "L'utilisateur avec cet identifiant national existe déjà", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
+	@RequestMapping(method = RequestMethod.GET, value = "/user", produces = { "application/json" })
 
-    }
+	ResponseEntity<User> rechercherParIdNational(
+			@NotNull @Parameter(name = "nationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
+			@Parameter(name = "oldNationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "oldNationalId", required = true) String oldNationalId)
+			throws URISyntaxException, IOException, InterruptedException;
 
+	/**
+	 * GET /user/identitytraits : Retourne l&#39;id national de chaque personne
+	 * trouvée sur la base des traits d&#39;identité
+	 *
+	 * @param lastName         (required)
+	 * @param firstNames       (required)
+	 * @param genderCode       (required)
+	 * @param birthdate        (required)
+	 * @param birthTownCode    (optional)
+	 * @param birthCountryCode (optional)
+	 * @param birthPlace       (optional)
+	 * @return Au moins une personne a été trouvé, retourne donc un tableau d&#39;id
+	 *         (status code 200) or Données invalides ou absentes (status code 400)
+	 *         or Utilisateur non autorisé (status code 401) or Utilisateur non
+	 *         trouvé (status code 404) or Conflits (status code 409) or Erreur
+	 *         interne serveur (status code 500)
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 * @throws URISyntaxException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	@Operation(operationId = "rechercherNationalIdParTraitsIdentite", summary = "Retourne l'id national de chaque personne trouvée sur la base des traits d'identité", tags = {
+			"rechercher-user-controller" }, responses = {
+					@ApiResponse(responseCode = "200", description = "Au moins une personne a été trouvé, retourne donc un tableau d'id", content = {
+							@Content(mediaType = "*/*", array = @ArraySchema(schema = @Schema(implementation = String.class))),
+							@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))) }),
+					@ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
+							@Content(mediaType = "*/*", schema = @Schema(implementation = ApiError.class)),
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
+							@Content(mediaType = "*/*", schema = @Schema(implementation = ErrorDto.class)),
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)) }),
+					@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = {
+							@Content(mediaType = "*/*", schema = @Schema(implementation = ApiError.class)),
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "409", description = "Conflits", content = {
+							@Content(mediaType = "*/*", schema = @Schema(implementation = ApiError.class)),
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
+							@Content(mediaType = "*/*", schema = @Schema(implementation = GenericInternalServerErrorDto.class)),
+							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
+	@RequestMapping(method = RequestMethod.GET, value = "/user/identitytraits", produces = { "*/*",
+			"application/json" })
 
-    /**
-     * GET /user/identitytraits : Retourne l&#39;id national de chaque personne trouvée sur la base des traits d&#39;identité
-     *
-     * @param lastName  (required)
-     * @param firstNames  (required)
-     * @param genderCode  (required)
-     * @param birthdate  (required)
-     * @param birthTownCode  (optional)
-     * @param birthCountryCode  (optional)
-     * @param birthPlace  (optional)
-     * @return Au moins une personne a été trouvé, retourne donc un tableau d&#39;id (status code 200)
-     *         or Données invalides ou absentes (status code 400)
-     *         or Utilisateur non autorisé (status code 401)
-     *         or Utilisateur non trouvé (status code 404)
-     *         or Conflits (status code 409)
-     *         or Erreur interne serveur (status code 500)
-     */
-    @Operation(
-        operationId = "rechercherNationalIdParTraitsIdentite",
-        summary = "Retourne l'id national de chaque personne trouvée sur la base des traits d'identité",
-        tags = { "rechercher-user-controller" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Au moins une personne a été trouvé, retourne donc un tableau d'id", content = {
-                @Content(mediaType = "*/*", array = @ArraySchema(schema = @Schema(implementation = String.class))),
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class)))
-            }),
-            @ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
-                @Content(mediaType = "*/*", schema = @Schema(implementation = ApiError.class)),
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
-                @Content(mediaType = "*/*", schema = @Schema(implementation = ErrorDto.class)),
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = {
-                @Content(mediaType = "*/*", schema = @Schema(implementation = ApiError.class)),
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "409", description = "Conflits", content = {
-                @Content(mediaType = "*/*", schema = @Schema(implementation = ApiError.class)),
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
-                @Content(mediaType = "*/*", schema = @Schema(implementation = GenericInternalServerErrorDto.class)),
-                @Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/user/identitytraits",
-        produces = { "*/*", "application/json" }
-    )
-    
-    default ResponseEntity<List<String>> rechercherNationalIdParTraitsIdentite(
-        @NotNull @Parameter(name = "lastName", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "lastName", required = true) String lastName,
-        @NotNull @Parameter(name = "firstNames", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "firstNames", required = true) String firstNames,
-        @NotNull @Parameter(name = "genderCode", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "genderCode", required = true) String genderCode,
-        @NotNull @Parameter(name = "birthdate", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthdate", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthdate,
-        @Parameter(name = "birthTownCode", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthTownCode", required = false) @Nullable String birthTownCode,
-        @Parameter(name = "birthCountryCode", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthCountryCode", required = false) @Nullable String birthCountryCode,
-        @Parameter(name = "birthPlace", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthPlace", required = false) @Nullable String birthPlace
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("*/*"))) {
-                    String exampleString = "[ \"\", \"\" ]";
-                    ApiUtil.setExampleResponse(request, "*/*", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"metadata\" : { \"additionalProp1\" : { }, \"additionalProp2\" : { }, \"additionalProp3\" : { } }, \"code\" : 404, \"message\" : \"Ressource non trouvée\", \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/rpps-identifications\", \"error\" : \"Erreur interne serveur\", \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\", \"status\" : 500 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	ResponseEntity<List<String>> rechercherNationalIdParTraitsIdentite(
+			@NotNull @Parameter(name = "lastName", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "lastName", required = true) String lastName,
+			@NotNull @Parameter(name = "firstNames", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "firstNames", required = true) String firstNames,
+			@NotNull @Parameter(name = "genderCode", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "genderCode", required = true) String genderCode,
+			@NotNull @Parameter(name = "birthdate", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthdate", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthdate,
+			@Parameter(name = "birthTownCode", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthTownCode", required = false) @Nullable String birthTownCode,
+			@Parameter(name = "birthCountryCode", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthCountryCode", required = false) @Nullable String birthCountryCode,
+			@Parameter(name = "birthPlace", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthPlace", required = false) @Nullable String birthPlace)
+			throws JsonMappingException, JsonProcessingException, URISyntaxException, IOException, InterruptedException;
 
-    }
+	/**
+	 * POST /user : Crée l&#39;utilisateur au SEC PSC à partir de ses traits
+	 * d&#39;identité
+	 *
+	 * @param userDto (required)
+	 * @return Utilisateur créé (status code 201) or Données invalides ou absentes
+	 *         (status code 400) or Utilisateur non autorisé (status code 401) or
+	 *         Utilisateur non trouvé (status code 404) or Conflits (status code
+	 *         409) or Erreur interne serveur (status code 500)
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
+	@Operation(operationId = "creerUser", summary = "Crée l'utilisateur au SEC PSC à partir de ses traits d'identité", tags = {
+			"rechercher-user-controller" }, responses = {
+					@ApiResponse(responseCode = "201", description = "Utilisateur créé"),
+					@ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)) }),
+					@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "409", description = "Conflits", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
+	@RequestMapping(method = RequestMethod.POST, value = "/user", produces = { "application/json" }, consumes = {
+			"application/json" })
 
+	ResponseEntity<Void> creerUser(
+			@Parameter(name = "user", description = "", required = true) @Valid @RequestBody User user)
+			throws JsonMappingException, JsonProcessingException, IOException, InterruptedException, URISyntaxException;
 
-    /**
-     * GET /user : Retourne la personne (si trouvée) au SEC PSC sur la base de son id national
-     *
-     * @param nationalId  (required)
-     * @return Personne trouvée (status code 200)
-     *         or Données invalides ou absentes (status code 400)
-     *         or Utilisateur non autorisé (status code 401)
-     *         or Utilisateur non trouvé (status code 404)
-     *         or L&#39;utilisateur avec cet identifiant national existe déjà (status code 409)
-     *         or Erreur interne serveur (status code 500)
-     */
-    @Operation(
-        operationId = "rechercherParIdNational",
-        summary = "Retourne la personne (si trouvée) au SEC PSC sur la base de son id national",
-        tags = { "rechercher-user-controller" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Personne trouvée", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = TrouverUserResponseDto.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "409", description = "L'utilisateur avec cet identifiant national existe déjà", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/user",
-        produces = { "application/json" }
-    )
-    
-    default ResponseEntity<TrouverUserResponseDto> rechercherParIdNational(
-        @NotNull @Parameter(name = "nationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"user\" : { \"alternativeIdentifiers\" : [ { \"identifier\" : \"identifier\", \"origine\" : \"origine\", \"showInToken\" : true, \"quality\" : 0 }, { \"identifier\" : \"identifier\", \"origine\" : \"origine\", \"showInToken\" : true, \"quality\" : 0 } ], \"nationalId\" : \"nationalId\", \"contactInfo\" : { \"phone\" : \"phone\", \"email\" : \"email\" }, \"eims\" : [ { \"appVersion\" : \"appVersion\", \"serialNumber\" : \"serialNumber\", \"activationMode\" : \"activationMode\", \"mieType\" : \"mieType\", \"fitier\" : \"fitier\", \"eidasLevel\" : \"eidasLevel\", \"creationDate\" : \"2000-01-23\", \"deviceName\" : \"deviceName\", \"operatingSystem\" : \"operatingSystem\", \"idNat\" : \"idNat\", \"model\" : \"model\", \"endOfValidityDate\" : \"2000-01-23\", \"email\" : \"email\" }, { \"appVersion\" : \"appVersion\", \"serialNumber\" : \"serialNumber\", \"activationMode\" : \"activationMode\", \"mieType\" : \"mieType\", \"fitier\" : \"fitier\", \"eidasLevel\" : \"eidasLevel\", \"creationDate\" : \"2000-01-23\", \"deviceName\" : \"deviceName\", \"operatingSystem\" : \"operatingSystem\", \"idNat\" : \"idNat\", \"model\" : \"model\", \"endOfValidityDate\" : \"2000-01-23\", \"email\" : \"email\" } ], \"practices\" : [ { \"expertiseTypeCode\" : \"expertiseTypeCode\", \"professionalFirstName\" : \"professionalFirstName\", \"professionCode\" : \"professionCode\", \"expertiseCode\" : \"expertiseCode\", \"activities\" : [ { \"pharmacistTableSectionCode\" : \"pharmacistTableSectionCode\", \"companyDistributionMention\" : \"companyDistributionMention\", \"companyPhone1\" : \"companyPhone1\", \"activitySectorCode\" : \"activitySectorCode\", \"companyName\" : \"companyName\", \"companyPhone2\" : \"companyPhone2\", \"companyWayType\" : \"companyWayType\", \"finessSiteNumber\" : \"finessSiteNumber\", \"companyWayLabel\" : \"companyWayLabel\", \"professionalModeCode\" : \"professionalModeCode\", \"siretSiteNumber\" : \"siretSiteNumber\", \"companyEmail\" : \"companyEmail\", \"roleCode\" : \"roleCode\", \"activityTypeCode\" : \"activityTypeCode\", \"companyFax\" : \"companyFax\", \"companyCountyCode\" : \"companyCountyCode\", \"companyRepeatIndex\" : \"companyRepeatIndex\", \"companyPostalCode\" : \"companyPostalCode\", \"companyTechnicalIdentifier\" : \"companyTechnicalIdentifier\", \"companyCommercialSign\" : \"companyCommercialSign\", \"companyOldIdentifier\" : \"companyOldIdentifier\", \"companyWayNumber\" : \"companyWayNumber\", \"finessLegalCompanyNumber\" : \"finessLegalCompanyNumber\", \"sirenSiteNumber\" : \"sirenSiteNumber\", \"companyRegistrationAuthority\" : \"companyRegistrationAuthority\", \"companyCedexOffice\" : \"companyCedexOffice\", \"companyTownCode\" : \"companyTownCode\", \"companyAdditionalAddress\" : \"companyAdditionalAddress\", \"companyGeographicalPointComplement\" : \"companyGeographicalPointComplement\", \"companyCountryCode\" : \"companyCountryCode\" }, { \"pharmacistTableSectionCode\" : \"pharmacistTableSectionCode\", \"companyDistributionMention\" : \"companyDistributionMention\", \"companyPhone1\" : \"companyPhone1\", \"activitySectorCode\" : \"activitySectorCode\", \"companyName\" : \"companyName\", \"companyPhone2\" : \"companyPhone2\", \"companyWayType\" : \"companyWayType\", \"finessSiteNumber\" : \"finessSiteNumber\", \"companyWayLabel\" : \"companyWayLabel\", \"professionalModeCode\" : \"professionalModeCode\", \"siretSiteNumber\" : \"siretSiteNumber\", \"companyEmail\" : \"companyEmail\", \"roleCode\" : \"roleCode\", \"activityTypeCode\" : \"activityTypeCode\", \"companyFax\" : \"companyFax\", \"companyCountyCode\" : \"companyCountyCode\", \"companyRepeatIndex\" : \"companyRepeatIndex\", \"companyPostalCode\" : \"companyPostalCode\", \"companyTechnicalIdentifier\" : \"companyTechnicalIdentifier\", \"companyCommercialSign\" : \"companyCommercialSign\", \"companyOldIdentifier\" : \"companyOldIdentifier\", \"companyWayNumber\" : \"companyWayNumber\", \"finessLegalCompanyNumber\" : \"finessLegalCompanyNumber\", \"sirenSiteNumber\" : \"sirenSiteNumber\", \"companyRegistrationAuthority\" : \"companyRegistrationAuthority\", \"companyCedexOffice\" : \"companyCedexOffice\", \"companyTownCode\" : \"companyTownCode\", \"companyAdditionalAddress\" : \"companyAdditionalAddress\", \"companyGeographicalPointComplement\" : \"companyGeographicalPointComplement\", \"companyCountryCode\" : \"companyCountryCode\" } ], \"professionalLastName\" : \"professionalLastName\", \"professionalCivilityTitle\" : \"professionalCivilityTitle\", \"professionalCategoryCode\" : \"professionalCategoryCode\" }, { \"expertiseTypeCode\" : \"expertiseTypeCode\", \"professionalFirstName\" : \"professionalFirstName\", \"professionCode\" : \"professionCode\", \"expertiseCode\" : \"expertiseCode\", \"activities\" : [ { \"pharmacistTableSectionCode\" : \"pharmacistTableSectionCode\", \"companyDistributionMention\" : \"companyDistributionMention\", \"companyPhone1\" : \"companyPhone1\", \"activitySectorCode\" : \"activitySectorCode\", \"companyName\" : \"companyName\", \"companyPhone2\" : \"companyPhone2\", \"companyWayType\" : \"companyWayType\", \"finessSiteNumber\" : \"finessSiteNumber\", \"companyWayLabel\" : \"companyWayLabel\", \"professionalModeCode\" : \"professionalModeCode\", \"siretSiteNumber\" : \"siretSiteNumber\", \"companyEmail\" : \"companyEmail\", \"roleCode\" : \"roleCode\", \"activityTypeCode\" : \"activityTypeCode\", \"companyFax\" : \"companyFax\", \"companyCountyCode\" : \"companyCountyCode\", \"companyRepeatIndex\" : \"companyRepeatIndex\", \"companyPostalCode\" : \"companyPostalCode\", \"companyTechnicalIdentifier\" : \"companyTechnicalIdentifier\", \"companyCommercialSign\" : \"companyCommercialSign\", \"companyOldIdentifier\" : \"companyOldIdentifier\", \"companyWayNumber\" : \"companyWayNumber\", \"finessLegalCompanyNumber\" : \"finessLegalCompanyNumber\", \"sirenSiteNumber\" : \"sirenSiteNumber\", \"companyRegistrationAuthority\" : \"companyRegistrationAuthority\", \"companyCedexOffice\" : \"companyCedexOffice\", \"companyTownCode\" : \"companyTownCode\", \"companyAdditionalAddress\" : \"companyAdditionalAddress\", \"companyGeographicalPointComplement\" : \"companyGeographicalPointComplement\", \"companyCountryCode\" : \"companyCountryCode\" }, { \"pharmacistTableSectionCode\" : \"pharmacistTableSectionCode\", \"companyDistributionMention\" : \"companyDistributionMention\", \"companyPhone1\" : \"companyPhone1\", \"activitySectorCode\" : \"activitySectorCode\", \"companyName\" : \"companyName\", \"companyPhone2\" : \"companyPhone2\", \"companyWayType\" : \"companyWayType\", \"finessSiteNumber\" : \"finessSiteNumber\", \"companyWayLabel\" : \"companyWayLabel\", \"professionalModeCode\" : \"professionalModeCode\", \"siretSiteNumber\" : \"siretSiteNumber\", \"companyEmail\" : \"companyEmail\", \"roleCode\" : \"roleCode\", \"activityTypeCode\" : \"activityTypeCode\", \"companyFax\" : \"companyFax\", \"companyCountyCode\" : \"companyCountyCode\", \"companyRepeatIndex\" : \"companyRepeatIndex\", \"companyPostalCode\" : \"companyPostalCode\", \"companyTechnicalIdentifier\" : \"companyTechnicalIdentifier\", \"companyCommercialSign\" : \"companyCommercialSign\", \"companyOldIdentifier\" : \"companyOldIdentifier\", \"companyWayNumber\" : \"companyWayNumber\", \"finessLegalCompanyNumber\" : \"finessLegalCompanyNumber\", \"sirenSiteNumber\" : \"sirenSiteNumber\", \"companyRegistrationAuthority\" : \"companyRegistrationAuthority\", \"companyCedexOffice\" : \"companyCedexOffice\", \"companyTownCode\" : \"companyTownCode\", \"companyAdditionalAddress\" : \"companyAdditionalAddress\", \"companyGeographicalPointComplement\" : \"companyGeographicalPointComplement\", \"companyCountryCode\" : \"companyCountryCode\" } ], \"professionalLastName\" : \"professionalLastName\", \"professionalCivilityTitle\" : \"professionalCivilityTitle\", \"professionalCategoryCode\" : \"professionalCategoryCode\" } ], \"civilStatus\" : { \"lastName\" : \"lastName\", \"birthPlace\" : \"birthPlace\", \"genderCode\" : \"genderCode\", \"personalCivilityTitle\" : \"personalCivilityTitle\", \"birthCountryCode\" : \"birthCountryCode\", \"birthTownCode\" : \"birthTownCode\", \"firstNames\" : [ \"firstNames\", \"firstNames\" ], \"birthDate\" : \"2000-01-23\" } } }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"metadata\" : { \"additionalProp1\" : { }, \"additionalProp2\" : { }, \"additionalProp3\" : { } }, \"code\" : 404, \"message\" : \"Ressource non trouvée\", \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/rpps-identifications\", \"error\" : \"Erreur interne serveur\", \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\", \"status\" : 500 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	/**
+	 * PUT /user : Met à jour les données de l&#39;utilisateur comme son mail, son
+	 * téléphone (tous 2 vérifiés), ses traits d&#39;identité, l&#39;id PSI (qui,
+	 * coté SEC PSC, ajoutera l&#39;id à la liste des identifiants de
+	 * l&#39;utilisateur)
+	 *
+	 * @param nationalId           Identifiant national de l&#39;utilisateur
+	 *                             (required)
+	 * @param updateUserRequestDto (required)
+	 * @return Utilisateur mis à jour (status code 200) or Données invalides ou
+	 *         absentes (status code 400) or Utilisateur non autorisé (status code
+	 *         401) or Utilisateur non trouvé (status code 404) or L&#39;utilisateur
+	 *         avec cet identifiant national existe déjà (status code 409) or Erreur
+	 *         interne serveur (status code 500)
+	 * @throws URISyntaxException 
+	 * @throws InterruptedException 
+	 * @throws IOException 
+	 */
+	@Operation(operationId = "updateUser", summary = "Met à jour les données de l'utilisateur comme son mail, son téléphone (tous 2 vérifiés), ses traits d'identité, l'id PSI (qui, coté SEC PSC, ajoutera l'id à la liste des identifiants de l'utilisateur)", tags = {
+			"rechercher-user-controller" }, responses = {
+					@ApiResponse(responseCode = "200", description = "Utilisateur mis à jour"),
+					@ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)) }),
+					@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "409", description = "L'utilisateur avec cet identifiant national existe déjà", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
+	@RequestMapping(method = RequestMethod.PUT, value = "/user", produces = { "application/json" }, consumes = {
+			"application/json" })
 
-    }
-
-
-    /**
-     * PUT /user : Met à jour les données de l&#39;utilisateur comme son mail, son téléphone (tous 2 vérifiés), ses traits d&#39;identité, l&#39;id PSI (qui, coté SEC PSC, ajoutera l&#39;id à la liste des identifiants de l&#39;utilisateur)
-     *
-     * @param nationalId Identifiant national de l&#39;utilisateur (required)
-     * @param updateUserRequestDto  (required)
-     * @return Utilisateur mis à jour (status code 200)
-     *         or Données invalides ou absentes (status code 400)
-     *         or Utilisateur non autorisé (status code 401)
-     *         or Utilisateur non trouvé (status code 404)
-     *         or L&#39;utilisateur avec cet identifiant national existe déjà (status code 409)
-     *         or Erreur interne serveur (status code 500)
-     */
-    @Operation(
-        operationId = "updateUser",
-        summary = "Met à jour les données de l'utilisateur comme son mail, son téléphone (tous 2 vérifiés), ses traits d'identité, l'id PSI (qui, coté SEC PSC, ajoutera l'id à la liste des identifiants de l'utilisateur)",
-        tags = { "rechercher-user-controller" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Utilisateur mis à jour"),
-            @ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "409", description = "L'utilisateur avec cet identifiant national existe déjà", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.PUT,
-        value = "/user",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    
-    default ResponseEntity<Void> updateUser(
-        @NotNull @Parameter(name = "nationalId", description = "Identifiant national de l'utilisateur", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
-        @Parameter(name = "UpdateUserRequestDto", description = "", required = true) @Valid @RequestBody UpdateUserRequestDto updateUserRequestDto
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"metadata\" : { \"additionalProp1\" : { }, \"additionalProp2\" : { }, \"additionalProp3\" : { } }, \"code\" : 404, \"message\" : \"Ressource non trouvée\", \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/user/123456789\", \"faultyFields\" : [ \"nationalId\", \"email\" ], \"errorMessage\" : \"Ressource non trouvée\", \"faultyValues\" : [ \"123456789\", \"987654321\" ], \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"path\" : \"/rpps-identifications\", \"error\" : \"Erreur interne serveur\", \"timestamp\" : \"2024-02-27T14:45:00.593+00:00\", \"status\" : 500 }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
+	ResponseEntity<Void> updateUser(
+			@NotNull @Parameter(name = "nationalId", description = "Identifiant national de l'utilisateur", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
+			@Parameter(name = "UpdateUserRequestDto", description = "", required = true) @Valid @RequestBody User updateUserRequestDto) throws IOException, InterruptedException, URISyntaxException;
 }

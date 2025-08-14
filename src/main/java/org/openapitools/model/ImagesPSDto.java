@@ -41,7 +41,7 @@ public class ImagesPSDto {
    * @return idPP
    */
   
-  @Schema(name = "idPP", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "idPP", required = false, description = "")
   @JsonProperty("idPP")
   public @Nullable String getIdPP() {
     return idPP;
@@ -61,7 +61,7 @@ public class ImagesPSDto {
    * @return code
    */
   
-  @Schema(name = "code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "code", required = false, description = "")
   @JsonProperty("code")
   public @Nullable String getCode() {
     return code;
@@ -81,7 +81,7 @@ public class ImagesPSDto {
    * @return libelle
    */
   
-  @Schema(name = "libelle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "libelle", required = false, description = "")
   @JsonProperty("libelle")
   public @Nullable String getLibelle() {
     return libelle;
@@ -101,7 +101,7 @@ public class ImagesPSDto {
    * @return imagePS
    */
   @Valid 
-  @Schema(name = "imagePS", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "imagePS", required = false, description = "")
   @JsonProperty("imagePS")
   public @Nullable ImagePSDto getImagePS() {
     return imagePS;

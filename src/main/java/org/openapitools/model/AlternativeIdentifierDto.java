@@ -40,7 +40,7 @@ public class AlternativeIdentifierDto {
    * @return identifier
    */
   
-  @Schema(name = "identifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "identifier", required = false, description = "")
   @JsonProperty("identifier")
   public @Nullable String getIdentifier() {
     return identifier;
@@ -60,7 +60,7 @@ public class AlternativeIdentifierDto {
    * @return origine
    */
   
-  @Schema(name = "origine", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "origine", required = false, description = "")
   @JsonProperty("origine")
   public @Nullable String getOrigine() {
     return origine;
@@ -80,7 +80,7 @@ public class AlternativeIdentifierDto {
    * @return quality
    */
   
-  @Schema(name = "quality", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "quality", required = false, description = "")
   @JsonProperty("quality")
   public @Nullable Integer getQuality() {
     return quality;
@@ -100,7 +100,7 @@ public class AlternativeIdentifierDto {
    * @return showInToken
    */
   
-  @Schema(name = "showInToken", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "showInToken", required = false, description = "")
   @JsonProperty("showInToken")
   public @Nullable Boolean getShowInToken() {
     return showInToken;

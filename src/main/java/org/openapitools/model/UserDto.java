@@ -55,7 +55,7 @@ public class UserDto {
    * @return nationalId
    */
   
-  @Schema(name = "nationalId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "nationalId", required = false, description = "")
   @JsonProperty("nationalId")
   public @Nullable String getNationalId() {
     return nationalId;
@@ -75,7 +75,7 @@ public class UserDto {
    * @return civilStatus
    */
   @Valid 
-  @Schema(name = "civilStatus", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "civilStatus", required = false, description = "")
   @JsonProperty("civilStatus")
   public @Nullable CivilStatusDto getCivilStatus() {
     return civilStatus;
@@ -95,7 +95,7 @@ public class UserDto {
    * @return contactInfo
    */
   @Valid 
-  @Schema(name = "contactInfo", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "contactInfo", required = false, description = "")
   @JsonProperty("contactInfo")
   public @Nullable ContactInfoDto getContactInfo() {
     return contactInfo;
@@ -123,7 +123,7 @@ public class UserDto {
    * @return practices
    */
   @Valid 
-  @Schema(name = "practices", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "practices", required = false, description = "")
   @JsonProperty("practices")
   public List<@Valid PracticeDto> getPractices() {
     return practices;
@@ -151,7 +151,7 @@ public class UserDto {
    * @return alternativeIdentifiers
    */
   @Valid 
-  @Schema(name = "alternativeIdentifiers", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "alternativeIdentifiers", required = false, description = "")
   @JsonProperty("alternativeIdentifiers")
   public List<@Valid AlternativeIdentifierDto> getAlternativeIdentifiers() {
     return alternativeIdentifiers;
@@ -179,7 +179,7 @@ public class UserDto {
    * @return eims
    */
   @Valid 
-  @Schema(name = "eims", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "eims", required = false, description = "")
   @JsonProperty("eims")
   public List<@Valid EimDto> getEims() {
     return eims;

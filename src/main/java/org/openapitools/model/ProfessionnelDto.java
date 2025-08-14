@@ -69,7 +69,7 @@ public class ProfessionnelDto {
    * @return idPP
    */
   
-  @Schema(name = "idPP", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "idPP", required = false, description = "")
   @JsonProperty("idPP")
   public @Nullable String getIdPP() {
     return idPP;
@@ -89,7 +89,7 @@ public class ProfessionnelDto {
    * @return prenomUsage
    */
   
-  @Schema(name = "prenomUsage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "prenomUsage", required = false, description = "")
   @JsonProperty("prenomUsage")
   public @Nullable String getPrenomUsage() {
     return prenomUsage;
@@ -109,7 +109,7 @@ public class ProfessionnelDto {
    * @return nomUsage
    */
   
-  @Schema(name = "nomUsage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "nomUsage", required = false, description = "")
   @JsonProperty("nomUsage")
   public @Nullable String getNomUsage() {
     return nomUsage;
@@ -129,7 +129,7 @@ public class ProfessionnelDto {
    * @return civilite
    */
   
-  @Schema(name = "civilite", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "civilite", required = false, description = "")
   @JsonProperty("civilite")
   public @Nullable String getCivilite() {
     return civilite;
@@ -149,7 +149,7 @@ public class ProfessionnelDto {
    * @return dateAcquisitionNatFR
    */
   
-  @Schema(name = "dateAcquisitionNatFR", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateAcquisitionNatFR", required = false, description = "")
   @JsonProperty("dateAcquisitionNatFR")
   public @Nullable String getDateAcquisitionNatFR() {
     return dateAcquisitionNatFR;
@@ -169,7 +169,7 @@ public class ProfessionnelDto {
    * @return paysNationalite
    */
   
-  @Schema(name = "paysNationalite", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "paysNationalite", required = false, description = "")
   @JsonProperty("paysNationalite")
   public @Nullable String getPaysNationalite() {
     return paysNationalite;
@@ -189,7 +189,7 @@ public class ProfessionnelDto {
    * @return prenom1
    */
   
-  @Schema(name = "prenom1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "prenom1", required = false, description = "")
   @JsonProperty("prenom1")
   public @Nullable String getPrenom1() {
     return prenom1;
@@ -209,7 +209,7 @@ public class ProfessionnelDto {
    * @return prenom2
    */
   
-  @Schema(name = "prenom2", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "prenom2", required = false, description = "")
   @JsonProperty("prenom2")
   public @Nullable String getPrenom2() {
     return prenom2;
@@ -229,7 +229,7 @@ public class ProfessionnelDto {
    * @return prenom3
    */
   
-  @Schema(name = "prenom3", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "prenom3", required = false, description = "")
   @JsonProperty("prenom3")
   public @Nullable String getPrenom3() {
     return prenom3;
@@ -249,7 +249,7 @@ public class ProfessionnelDto {
    * @return dateNaissance
    */
   
-  @Schema(name = "dateNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateNaissance", required = false, description = "")
   @JsonProperty("dateNaissance")
   public @Nullable String getDateNaissance() {
     return dateNaissance;
@@ -269,7 +269,7 @@ public class ProfessionnelDto {
    * @return communeNaissance
    */
   
-  @Schema(name = "communeNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "communeNaissance", required = false, description = "")
   @JsonProperty("communeNaissance")
   public @Nullable String getCommuneNaissance() {
     return communeNaissance;
@@ -289,7 +289,7 @@ public class ProfessionnelDto {
    * @return lieuNaissance
    */
   
-  @Schema(name = "lieuNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "lieuNaissance", required = false, description = "")
   @JsonProperty("lieuNaissance")
   public @Nullable String getLieuNaissance() {
     return lieuNaissance;
@@ -309,7 +309,7 @@ public class ProfessionnelDto {
    * @return paysNaissance
    */
   
-  @Schema(name = "paysNaissance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "paysNaissance", required = false, description = "")
   @JsonProperty("paysNaissance")
   public @Nullable String getPaysNaissance() {
     return paysNaissance;
@@ -329,7 +329,7 @@ public class ProfessionnelDto {
    * @return sexe
    */
   
-  @Schema(name = "sexe", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "sexe", required = false, description = "")
   @JsonProperty("sexe")
   public @Nullable String getSexe() {
     return sexe;
@@ -349,7 +349,7 @@ public class ProfessionnelDto {
    * @return dateDeces
    */
   
-  @Schema(name = "dateDeces", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateDeces", required = false, description = "")
   @JsonProperty("dateDeces")
   public @Nullable String getDateDeces() {
     return dateDeces;
@@ -369,7 +369,7 @@ public class ProfessionnelDto {
    * @return statutEtatCivil
    */
   
-  @Schema(name = "statutEtatCivil", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "statutEtatCivil", required = false, description = "")
   @JsonProperty("statutEtatCivil")
   public @Nullable String getStatutEtatCivil() {
     return statutEtatCivil;
@@ -389,7 +389,7 @@ public class ProfessionnelDto {
    * @return dateStatutEtatCivil
    */
   
-  @Schema(name = "dateStatutEtatCivil", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateStatutEtatCivil", required = false, description = "")
   @JsonProperty("dateStatutEtatCivil")
   public @Nullable String getDateStatutEtatCivil() {
     return dateStatutEtatCivil;
@@ -409,7 +409,7 @@ public class ProfessionnelDto {
    * @return coordonneesCorrespondance
    */
   @Valid 
-  @Schema(name = "coordonneesCorrespondance", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "coordonneesCorrespondance", required = false, description = "")
   @JsonProperty("coordonneesCorrespondance")
   public @Nullable CoordonneeDto getCoordonneesCorrespondance() {
     return coordonneesCorrespondance;

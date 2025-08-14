@@ -53,7 +53,7 @@ public class PracticeDto {
    * @return professionCode
    */
   
-  @Schema(name = "professionCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "professionCode", required = false, description = "")
   @JsonProperty("professionCode")
   public @Nullable String getProfessionCode() {
     return professionCode;
@@ -73,7 +73,7 @@ public class PracticeDto {
    * @return professionalCategoryCode
    */
   
-  @Schema(name = "professionalCategoryCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "professionalCategoryCode", required = false, description = "")
   @JsonProperty("professionalCategoryCode")
   public @Nullable String getProfessionalCategoryCode() {
     return professionalCategoryCode;
@@ -93,7 +93,7 @@ public class PracticeDto {
    * @return expertiseTypeCode
    */
   
-  @Schema(name = "expertiseTypeCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "expertiseTypeCode", required = false, description = "")
   @JsonProperty("expertiseTypeCode")
   public @Nullable String getExpertiseTypeCode() {
     return expertiseTypeCode;
@@ -113,7 +113,7 @@ public class PracticeDto {
    * @return expertiseCode
    */
   
-  @Schema(name = "expertiseCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "expertiseCode", required = false, description = "")
   @JsonProperty("expertiseCode")
   public @Nullable String getExpertiseCode() {
     return expertiseCode;
@@ -133,7 +133,7 @@ public class PracticeDto {
    * @return professionalCivilityTitle
    */
   
-  @Schema(name = "professionalCivilityTitle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "professionalCivilityTitle", required = false, description = "")
   @JsonProperty("professionalCivilityTitle")
   public @Nullable String getProfessionalCivilityTitle() {
     return professionalCivilityTitle;
@@ -153,7 +153,7 @@ public class PracticeDto {
    * @return professionalLastName
    */
   
-  @Schema(name = "professionalLastName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "professionalLastName", required = false, description = "")
   @JsonProperty("professionalLastName")
   public @Nullable String getProfessionalLastName() {
     return professionalLastName;
@@ -173,7 +173,7 @@ public class PracticeDto {
    * @return professionalFirstName
    */
   
-  @Schema(name = "professionalFirstName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "professionalFirstName", required = false, description = "")
   @JsonProperty("professionalFirstName")
   public @Nullable String getProfessionalFirstName() {
     return professionalFirstName;
@@ -201,7 +201,7 @@ public class PracticeDto {
    * @return activities
    */
   @Valid 
-  @Schema(name = "activities", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "activities", required = false, description = "")
   @JsonProperty("activities")
   public List<@Valid ActivityDto> getActivities() {
     return activities;

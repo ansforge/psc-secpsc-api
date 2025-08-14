@@ -43,7 +43,7 @@ public class ImagesPSReponseNotFoundErrorDto {
    * @return timestamp
    */
   @Valid 
-  @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", description = "Instant auquel s'est produit l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "timestamp", example = "2024-02-27T14:45:00.593+00:00", required = false, description = "Instant auquel s'est produit l'erreur")
   @JsonProperty("timestamp")
   public @Nullable OffsetDateTime getTimestamp() {
     return timestamp;
@@ -63,7 +63,7 @@ public class ImagesPSReponseNotFoundErrorDto {
    * @return status
    */
   
-  @Schema(name = "status", example = "404", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "status", example = "404", required = false, description = "Brève description de l'erreur")
   @JsonProperty("status")
   public @Nullable Integer getStatus() {
     return status;
@@ -83,7 +83,7 @@ public class ImagesPSReponseNotFoundErrorDto {
    * @return error
    */
   
-  @Schema(name = "error", example = "Ressource non trouvée", description = "Brève description de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "error", example = "Ressource non trouvée", required = false, description = "Brève description de l'erreur")
   @JsonProperty("error")
   public @Nullable String getError() {
     return error;
@@ -103,7 +103,7 @@ public class ImagesPSReponseNotFoundErrorDto {
    * @return path
    */
   
-  @Schema(name = "path", example = "imagesPS/RIPSC/10109801023", description = "URL de base de la ressource à l'origine de l'erreur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "path", example = "imagesPS/RIPSC/10109801023", required = false, description = "URL de base de la ressource à l'origine de l'erreur")
   @JsonProperty("path")
   public @Nullable String getPath() {
     return path;
