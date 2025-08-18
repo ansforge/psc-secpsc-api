@@ -12,7 +12,7 @@
           <url>https://repo1.maven.org/maven2</url>
         </repository>
         <repository>
-          <id>github</id>
+          <id>github-prosanteconnect</id>
           <url>https://maven.pkg.github.com/ansforge/psc-components</url>
           <snapshots>
             <enabled>true</enabled>
@@ -21,6 +21,10 @@
       </repositories>
     </profile>
   </profiles>
+
+  <activeProfiles>
+    <activeProfile>github</activeProfile>
+  </activeProfiles>
 
   <servers>
     <server>
