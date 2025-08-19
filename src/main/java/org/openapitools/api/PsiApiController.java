@@ -33,7 +33,7 @@ public class PsiApiController implements PsiApi {
 	private String psPath;
 
 	@Override
-	public ResponseEntity<User> rechercherParIdNational(String nationalId, String oldNationalId)
+	public ResponseEntity<User> rechercherParIdNational(String nationalId)
 			throws URISyntaxException, IOException, InterruptedException {
 
 		/*
@@ -95,8 +95,10 @@ public class PsiApiController implements PsiApi {
 				ObjectMapper mapper = new ObjectMapper();
 				List<String> list = mapper.readValue(jsonResponse, new TypeReference<List<String>>() {
 				});
+				
 				return new ResponseEntity<>(list, HttpStatus.OK);
 			} else {
+				
 				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
 			}
 		}

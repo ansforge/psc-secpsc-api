@@ -82,8 +82,7 @@ public interface PsiApi {
 	@RequestMapping(method = RequestMethod.GET, value = "/user", produces = { "application/json" })
 
 	ResponseEntity<User> rechercherParIdNational(
-			@NotNull @Parameter(name = "nationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
-			@Parameter(name = "oldNationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "oldNationalId", required = true) String oldNationalId)
+			@NotNull @Parameter(name = "nationalId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId)
 			throws URISyntaxException, IOException, InterruptedException;
 
 	/**

@@ -21,9 +21,9 @@ public class PsiPsAdapter extends Ps {
 		CivilStatus civilStatus = user.getCivilStatus();
 		ContactInfo contactInfo = user.getContactInfo();
 		List<Practice> practices = user.getPractices();
+		List<fr.ans.psc.amar.model.AlternativeIdentifier> alternativeIdentifiers = user.getAlternativeIdentifiers();
 
 		// Mapping CivilStatus
-		
 		if(civilStatus != null) {
 			this.setLastName(AttributeEncoding.encodeStringAttribute(civilStatus.getLastName()));
 			this.setDateOfBirth(AttributeEncoding.encodeStringAttribute(civilStatus.getBirthdate()));
@@ -31,7 +31,8 @@ public class PsiPsAdapter extends Ps {
 			this.setBirthCountryCode(AttributeEncoding.encodeStringAttribute(civilStatus.getBirthCountryCode()));
 			this.setBirthAddress(AttributeEncoding.encodeStringAttribute(civilStatus.getBirthplace()));
 			this.setGenderCode(AttributeEncoding.encodeStringAttribute(civilStatus.getGenderCode()));
-
+			this.setSalutationCode(AttributeEncoding.encodeStringAttribute(civilStatus.getPersonalCivilityTitle()));
+			
 			// Mapping FirstName
 			int i = 0;
 			List<FirstName> firstNames = new ArrayList<FirstName>();
@@ -55,20 +56,23 @@ public class PsiPsAdapter extends Ps {
 			this.setProfessions(professions);
 		}
 
-		// Mapping AlternativeIdentifiers
+		// Mapping Ids
 		List<String> ids = new ArrayList<String>();
 		user.getAlternativeIdentifiers().forEach(alternativeIdentifier -> {
 			ids.add(AttributeEncoding.encodeStringAttribute(alternativeIdentifier.getIdentifier()));
 		});
 		this.setIds(ids);
 
-		// Mapping otherIds
-		// TODO à faire quand dev Ex_003 fini
-
+		// Mapping AlternativeIdentifiers
+		if(practices != null && !practices.isEmpty()) {
+			List<fr.ans.psc.model.AlternativeIdentifier> alternativeIdentifierPS = new ArrayList<fr.ans.psc.model.AlternativeIdentifier>();
+			alternativeIdentifiers.forEach(alternativeIdentifier -> alternativeIdentifierPS.add(new PsiAlternativeIdentifierPsAdapter(alternativeIdentifier)));
+			this.setAlternativeIds(alternativeIdentifierPS);
+		}
+		
 		// TODO : que faire d'eux ?
 		this.setIdType("");
 		this.setId("");
-		this.setSalutationCode("");
 		this.setActivated(0L);
 		this.setDeactivated(0L);
 	}

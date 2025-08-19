@@ -18,13 +18,14 @@ public class PsiProfessionAdapter extends Profession {
 		this.setLastName(AttributeEncoding.encodeStringAttribute(practice.getProfessionalLastName()));
 		this.setFirstName(AttributeEncoding.encodeStringAttribute(practice.getProfessionalFirstName()));
 
-		// TODO : Ne marche pas bien dans l'autre sens Sinon je n'en garde qu'un seul ..
+		// Expertises
 		Expertise mainExpertise = new Expertise();
 		mainExpertise.setCode(AttributeEncoding.encodeStringAttribute(practice.getExpertiseCode()));
 		mainExpertise.setTypeCode(AttributeEncoding.encodeStringAttribute(practice.getExpertiseTypeCode()));
 		// mainExpertise.setExpertiseId(""); TODO : pas utilisé..
 		this.setExpertises(List.of(mainExpertise));
 
+		// WorkSituations
 		List<WorkSituation> workSituations = new ArrayList<WorkSituation>();
 		practice.getActivities().forEach(activity -> workSituations.add(new PsiWorkSituationAdapter(activity)));
 		this.setWorkSituations(workSituations);
