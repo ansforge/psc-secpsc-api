@@ -21,10 +21,9 @@ runner {
 app "prosanteconnect/psc-psi-api" {
   build {
     use "docker" {
-      build_args = {
-        "proxy_address" = var.proxy_address
-      }
+      build_args = {"PROSANTECONNECT_PACKAGE_GITHUB_TOKEN"="${var.github_token}"}
       dockerfile = "${path.app}/${var.dockerfile_path}"
+      disable_entrypoint = true
     }
     registry {
       use "docker" {

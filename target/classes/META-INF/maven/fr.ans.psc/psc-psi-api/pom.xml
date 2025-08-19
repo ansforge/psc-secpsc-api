@@ -19,6 +19,17 @@
         <version>2.7.15</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    
+    <repositories>
+        <repository>
+            <id>github-prosanteconnect</id>
+            <url>https://maven.pkg.github.com/ansforge/psc-components</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
