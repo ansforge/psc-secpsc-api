@@ -82,3 +82,10 @@ variable "dockerfile_path" {
   type = string
   default = "Dockerfile"
 }
+
+variable "github_token" {
+  type = string
+  default = ""
+  env = ["PROSANTECONNECT_PACKAGE_GITHUB_TOKEN"]
+  sensitive = true
+}
