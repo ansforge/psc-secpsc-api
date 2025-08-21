@@ -187,7 +187,7 @@ public class PsiApiController implements PsiApi {
 		String uri = psPath + "/v2/ps";
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
 				.headers("Content-Type", "application/json", "extraId", nationalId)
-				.POST(HttpRequest.BodyPublishers.ofString(psJson)).build();
+				.PUT(HttpRequest.BodyPublishers.ofString(psJson)).build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		HttpHeaders headers = new HttpHeaders();
