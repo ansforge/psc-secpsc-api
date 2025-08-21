@@ -47,13 +47,16 @@ public class PsiApiController implements PsiApi {
 		String uri = amarPath + "/users";
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
 				.headers("Content-Type", "application/json", "nationalId", nationalId).GET().build();
+		
+		log.info(String.format(
+		    "Send request to [%s] with in headers: nationalId=%s", uri, nationalId
+		));
+		
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-		HttpHeaders headers = new HttpHeaders();
 
 		if (response != null) {
 			
-			log.info("response" + response);
+			log.info("Response of [%s] : %s", uri, response);
 			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
@@ -61,6 +64,7 @@ public class PsiApiController implements PsiApi {
 				User userResponse = mapper.readValue(jsonResponse, User.class);
 				return new ResponseEntity<>(userResponse, HttpStatus.OK);
 			} else {
+				HttpHeaders headers = new HttpHeaders();
 				if (response.statusCode() == 400) {
 					headers.add("X-Error-Message", "Données invalides ou absentes");
 				} else if (response.statusCode() == 401) {
@@ -105,13 +109,17 @@ public class PsiApiController implements PsiApi {
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
 				.headers("Content-Type", "application/json")
 				.GET().build();
+		
+		log.info(String.format(
+		    "Send request to [%s] with parameters: lastName=%s, firstNames=%s, genderCode=%s, birthTownCode=%s, birthCountryCode=%s, birthPlace=%s",
+		    uri, lastName, firstNames, genderCode, birthTownCode, birthCountryCode, birthPlace
+		));
+		
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-		HttpHeaders headers = new HttpHeaders();
 
 		if (response != null) {
 			
-			log.info("response" + response);
+			log.info("Response of [%s] : %s", uri, response);
 			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
@@ -121,6 +129,7 @@ public class PsiApiController implements PsiApi {
 
 				return new ResponseEntity<>(list, HttpStatus.OK);
 			} else {
+				HttpHeaders headers = new HttpHeaders();
 				if (response.statusCode() == 400) {
 					headers.add("X-Error-Message", "Données invalides ou absentes");
 				} else if (response.statusCode() == 401) {
@@ -154,18 +163,22 @@ public class PsiApiController implements PsiApi {
 		String uri = psPath + "/v2/ps";
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header("Content-Type", "application/json")
 				.POST(HttpRequest.BodyPublishers.ofString(psJson)).build();
+		
+		log.info(String.format(
+		    "Send request to [%s] with in body: %s", uri, psJson
+		));
+		
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-		HttpHeaders headers = new HttpHeaders();
 
 		if (response != null) {
 			
-			log.info("response" + response);
+			log.info("Response of [%s] : %s", uri, response);
 			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
+				HttpHeaders headers = new HttpHeaders();
 				if (response.statusCode() == 400) {
 					headers.add("X-Error-Message", "Données invalides ou absentes");
 				} else if (response.statusCode() == 401) {
@@ -207,18 +220,22 @@ public class PsiApiController implements PsiApi {
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
 				.headers("Content-Type", "application/json")
 				.PUT(HttpRequest.BodyPublishers.ofString(psJson)).build();
+		
+		log.info(String.format(
+		    "Send request to [%s] with in parameters : extraId=%s and in body: %s", uri, nationalId, psJson
+		));
+		
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-		HttpHeaders headers = new HttpHeaders();
 
 		if (response != null) {
 			
-			log.info("response" + response);
+			log.info("Response of [%s] : %s", uri, response);
 			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
+				HttpHeaders headers = new HttpHeaders();
 				if (response.statusCode() == 400) {
 					headers.add("X-Error-Message", "Données invalides ou absentes");
 				} else if (response.statusCode() == 401) {
