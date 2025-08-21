@@ -89,7 +89,7 @@ logging.level.org.springframework.data.mongodb.core.MongoTemplate=INFO
 spring.data.mongodb.host={{ range service "${nomad_namespace}-psc-mongodb" }}{{ .Address }}{{ end }}
 spring.data.mongodb.port={{ range service "${nomad_namespace}-psc-mongodb" }}{{ .Port }}{{ end }}
 spring.data.mongodb.database=mongodb
-{{ with secret "psc-ecosystem/${nomad_namespace}/mongodb" }}spring.data.mongodb.username={{ .Data.data.root_user }}
+{{ with secret "psc-ecosystem/${nomad_namespace}/mongodb" }}spring.data.mongodb.username={{ .Data.data.root_user }} {{ end }}
 EOF
         destination = "secrets/application.properties"
         change_mode = "restart"
