@@ -22,7 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.ans.psc.amar.model.User;
 import fr.ans.psc.model.Ps;
 import fr.ans.psc.model.ps.PsiPsAdapter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequestMapping("${openapi.pscPsi.base-path:/api}")
 public class PsiApiController implements PsiApi {
@@ -36,6 +38,8 @@ public class PsiApiController implements PsiApi {
 	@Override
 	public ResponseEntity<User> rechercherParIdNational(String nationalId)
 			throws URISyntaxException, IOException, InterruptedException {
+		
+		log.info("Debut - rechercherParIdNational");
 
 		HttpClient client = HttpClient.newHttpClient();
 		String uri = amarPath + "/users";
@@ -46,6 +50,9 @@ public class PsiApiController implements PsiApi {
 		HttpHeaders headers = new HttpHeaders();
 
 		if (response != null) {
+			
+			log.info("response" + response);
+			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				ObjectMapper mapper = new ObjectMapper();
@@ -75,6 +82,8 @@ public class PsiApiController implements PsiApi {
 	public ResponseEntity<List<String>> rechercherNationalIdParTraitsIdentite(String lastName, String firstNames,
 			String genderCode, LocalDate birthdate, String birthTownCode, String birthCountryCode, String birthPlace)
 			throws URISyntaxException, IOException, InterruptedException {
+		
+		log.info("Debut - rechercherNationalIdParTraitsIdentite");
 
 		HttpClient client = HttpClient.newHttpClient();
 		String uri = psPath + "/user/identitytraits";
@@ -88,6 +97,9 @@ public class PsiApiController implements PsiApi {
 		HttpHeaders headers = new HttpHeaders();
 
 		if (response != null) {
+			
+			log.info("response" + response);
+			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				ObjectMapper mapper = new ObjectMapper();
@@ -116,6 +128,8 @@ public class PsiApiController implements PsiApi {
 
 	@Override
 	public ResponseEntity<Void> creerUser(User user) throws IOException, InterruptedException, URISyntaxException {
+		
+		log.info("Debut - creerUser");
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -132,6 +146,9 @@ public class PsiApiController implements PsiApi {
 		HttpHeaders headers = new HttpHeaders();
 
 		if (response != null) {
+			
+			log.info("response" + response);
+			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				return new ResponseEntity<>(HttpStatus.OK);
@@ -157,6 +174,8 @@ public class PsiApiController implements PsiApi {
 	@Override
 	public ResponseEntity<Void> updateUser(String nationalId, User user)
 			throws IOException, InterruptedException, URISyntaxException {
+		
+		log.info("Debut - updateUser");
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -173,6 +192,9 @@ public class PsiApiController implements PsiApi {
 		HttpHeaders headers = new HttpHeaders();
 
 		if (response != null) {
+			
+			log.info("response" + response);
+			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				return new ResponseEntity<>(HttpStatus.OK);
