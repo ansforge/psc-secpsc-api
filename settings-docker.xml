@@ -29,8 +29,8 @@
   <servers>
     <server>
       <id>github-prosanteconnect</id>
-      <username>prosanteconnect</username>
-      <password>${internal.repo.username}</password>
+      <username>GaultierEviden</username>
+      <password>${github.token}</password>
     </server>
   </servers>
 </settings>
