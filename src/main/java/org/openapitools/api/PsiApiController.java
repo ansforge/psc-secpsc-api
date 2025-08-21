@@ -7,6 +7,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,13 +86,24 @@ public class PsiApiController implements PsiApi {
 			throws URISyntaxException, IOException, InterruptedException {
 		
 		log.info("Debut - rechercherNationalIdParTraitsIdentite");
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 		HttpClient client = HttpClient.newHttpClient();
-		String uri = psPath + "/v2/ps/search";
+		String uri = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/search")
+				.queryParam("lastName", lastName)
+				.queryParam("firstNames", firstNames)
+		        .queryParam("genderCode", genderCode)
+		        .queryParam("birthdate", birthdate.toString())
+		        .queryParam("birthTownCode", birthTownCode)
+		        .queryParam("birthCountryCode", birthCountryCode)
+		        .queryParam("birthPlace", birthPlace)
+		        .build()
+		        .encode()
+		        .toUriString();
+
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
-				.headers("Content-Type", "application/json", "lastName", lastName, "firstNames", firstNames,
-						"genderCode", genderCode, "birthdate", birthdate.toString(), "birthTownCode", birthTownCode,
-						"birthCountryCode", birthCountryCode, "birthPlace", birthPlace)
+				.headers("Content-Type", "application/json")
 				.GET().build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
