@@ -41,7 +41,7 @@ public class PsiApiController implements PsiApi {
 	public ResponseEntity<User> rechercherParIdNational(String nationalId)
 			throws URISyntaxException, IOException, InterruptedException {
 		
-		log.info("Debut - rechercherParIdNational");
+		log.info("Start - rechercherParIdNational");
 
 		HttpClient client = HttpClient.newHttpClient();
 		String uri = amarPath + "/users";
@@ -85,7 +85,7 @@ public class PsiApiController implements PsiApi {
 			String genderCode, LocalDate birthdate, String birthTownCode, String birthCountryCode, String birthPlace)
 			throws URISyntaxException, IOException, InterruptedException {
 		
-		log.info("Debut - rechercherNationalIdParTraitsIdentite");
+		log.info("Start - rechercherNationalIdParTraitsIdentite");
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -142,7 +142,7 @@ public class PsiApiController implements PsiApi {
 	@Override
 	public ResponseEntity<Void> creerUser(User user) throws IOException, InterruptedException, URISyntaxException {
 		
-		log.info("Debut - creerUser");
+		log.info("Start - creerUser");
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -188,7 +188,7 @@ public class PsiApiController implements PsiApi {
 	public ResponseEntity<Void> updateUser(String nationalId, User user)
 			throws IOException, InterruptedException, URISyntaxException {
 		
-		log.info("Debut - updateUser");
+		log.info("Start - updateUser");
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -197,9 +197,15 @@ public class PsiApiController implements PsiApi {
 		String psJson = mapper.writeValueAsString(ps);
 
 		HttpClient client = HttpClient.newHttpClient();
-		String uri = psPath + "/v2/ps";
+		
+		String uri = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps")
+				.queryParam("extraId", nationalId)
+		        .build()
+		        .encode()
+		        .toUriString();
+		
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
-				.headers("Content-Type", "application/json", "extraId", nationalId)
+				.headers("Content-Type", "application/json")
 				.PUT(HttpRequest.BodyPublishers.ofString(psJson)).build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
