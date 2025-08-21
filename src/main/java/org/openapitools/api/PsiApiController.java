@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class PsiApiController implements PsiApi {
 
 	@Value("${openapi.pscAmar.base-path:/api}")
 	private String amarPath;
-	
+
 	@Value("${openapi.pscApiMajV2.base-path:/api}")
 	private String psPath;
 
@@ -36,29 +37,13 @@ public class PsiApiController implements PsiApi {
 	public ResponseEntity<User> rechercherParIdNational(String nationalId)
 			throws URISyntaxException, IOException, InterruptedException {
 
-		/*
-		 * Côté PSC
-		 * 
-		 * HttpClient client = HttpClient.newHttpClient(); String uri = psPath +
-		 * "/v2/ps?psId=" + nationalId; // HttpRequest request =
-		 * HttpRequest.newBuilder().uri(new // URI(uri)).header("nationalId",
-		 * nationalId).GET().build(); HttpRequest request =
-		 * HttpRequest.newBuilder().uri(new URI(uri)).header("Content-Type",
-		 * "application/json") .GET().build(); HttpResponse<String> response =
-		 * client.send(request, HttpResponse.BodyHandlers.ofString());
-		 * 
-		 * if (response != null) { if (response.statusCode() == 200) { String
-		 * jsonResponse = response.body(); ObjectMapper mapper = new ObjectMapper();
-		 * User userResponse = mapper.readValue(jsonResponse, User.class); return new
-		 * ResponseEntity<>(userResponse, HttpStatus.OK); } else { return new
-		 * ResponseEntity<>(HttpStatus.valueOf(response.statusCode())); } }
-		 */
-
 		HttpClient client = HttpClient.newHttpClient();
 		String uri = amarPath + "/users";
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
 				.headers("Content-Type", "application/json", "nationalId", nationalId).GET().build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		HttpHeaders headers = new HttpHeaders();
 
 		if (response != null) {
 			if (response.statusCode() == 200) {
@@ -67,12 +52,23 @@ public class PsiApiController implements PsiApi {
 				User userResponse = mapper.readValue(jsonResponse, User.class);
 				return new ResponseEntity<>(userResponse, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
+				if (response.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (response.statusCode() == 401) {
+					headers.add("X-Error-Message", "Utilisateur non autorisé");
+				} else if (response.statusCode() == 404) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé");
+				} else if (response.statusCode() == 409) {
+					headers.add("X-Error-Message", "L'utilisateur avec cet identifiant national existe déjà");
+				} else if (response.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(response.statusCode()));
 			}
 		}
 
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		//return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		// return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@Override
@@ -89,17 +85,29 @@ public class PsiApiController implements PsiApi {
 				.GET().build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+		HttpHeaders headers = new HttpHeaders();
+
 		if (response != null) {
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				ObjectMapper mapper = new ObjectMapper();
 				List<String> list = mapper.readValue(jsonResponse, new TypeReference<List<String>>() {
 				});
-				
+
 				return new ResponseEntity<>(list, HttpStatus.OK);
 			} else {
-				
-				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
+				if (response.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (response.statusCode() == 401) {
+					headers.add("X-Error-Message", "Utilisateur non autorisé");
+				} else if (response.statusCode() == 404) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé");
+				} else if (response.statusCode() == 409) {
+					headers.add("X-Error-Message", "Conflits");
+				} else if (response.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(response.statusCode()));
 			}
 		}
 
@@ -121,12 +129,25 @@ public class PsiApiController implements PsiApi {
 				.POST(HttpRequest.BodyPublishers.ofString(psJson)).build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+		HttpHeaders headers = new HttpHeaders();
+
 		if (response != null) {
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
+				if (response.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (response.statusCode() == 401) {
+					headers.add("X-Error-Message", "Utilisateur non autorisé");
+				} else if (response.statusCode() == 404) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé");
+				} else if (response.statusCode() == 409) {
+					headers.add("X-Error-Message", "Conflits");
+				} else if (response.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(response.statusCode()));
 			}
 		}
 
@@ -149,12 +170,25 @@ public class PsiApiController implements PsiApi {
 				.POST(HttpRequest.BodyPublishers.ofString(psJson)).build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+		HttpHeaders headers = new HttpHeaders();
+
 		if (response != null) {
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
+				if (response.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (response.statusCode() == 401) {
+					headers.add("X-Error-Message", "Utilisateur non autorisé");
+				} else if (response.statusCode() == 404) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé");
+				} else if (response.statusCode() == 409) {
+					headers.add("X-Error-Message", "L'utilisateur avec cet identifiant national existe déjà");
+				} else if (response.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(response.statusCode()));
 			}
 		}
 
