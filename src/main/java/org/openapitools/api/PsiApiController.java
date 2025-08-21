@@ -86,7 +86,7 @@ public class PsiApiController implements PsiApi {
 		log.info("Debut - rechercherNationalIdParTraitsIdentite");
 
 		HttpClient client = HttpClient.newHttpClient();
-		String uri = psPath + "/user/identitytraits";
+		String uri = psPath + "/v2/ps/search";
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
 				.headers("Content-Type", "application/json", "lastName", lastName, "firstNames", firstNames,
 						"genderCode", genderCode, "birthdate", birthdate.toString(), "birthTownCode", birthTownCode,
@@ -185,7 +185,8 @@ public class PsiApiController implements PsiApi {
 
 		HttpClient client = HttpClient.newHttpClient();
 		String uri = psPath + "/v2/ps";
-		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header("Content-Type", "application/json")
+		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
+				.headers("Content-Type", "application/json", "extraId", nationalId)
 				.POST(HttpRequest.BodyPublishers.ofString(psJson)).build();
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
