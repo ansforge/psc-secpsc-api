@@ -44,7 +44,12 @@ public class PsiApiController implements PsiApi {
 		log.info("Start - rechercherParIdNational");
 
 		HttpClient client = HttpClient.newHttpClient();
-		String uri = amarPath + "/users";
+		String uri = UriComponentsBuilder.fromHttpUrl(amarPath + "/users")
+				.queryParam("nationalId", nationalId)
+		        .build()
+		        .encode()
+		        .toUriString();
+		
 		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri))
 				.headers("Content-Type", "application/json", "nationalId", nationalId).GET().build();
 		
@@ -56,7 +61,7 @@ public class PsiApiController implements PsiApi {
 
 		if (response != null) {
 			
-			log.info("Response of [%s] : %s", uri, response);
+			log.info(String.format("Response of [%s] : %s", uri, response));
 			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
@@ -119,7 +124,7 @@ public class PsiApiController implements PsiApi {
 
 		if (response != null) {
 			
-			log.info("Response of [%s] : %s", uri, response);
+			log.info(String.format("Response of [%s] : %s", uri, response));
 			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
@@ -172,7 +177,7 @@ public class PsiApiController implements PsiApi {
 
 		if (response != null) {
 			
-			log.info("Response of [%s] : %s", uri, response);
+			log.info(String.format("Response of [%s] : %s", uri, response));
 			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
@@ -229,7 +234,7 @@ public class PsiApiController implements PsiApi {
 
 		if (response != null) {
 			
-			log.info("Response of [%s] : %s", uri, response);
+			log.info(String.format("Response of [%s] : %s", uri, response));
 			
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
