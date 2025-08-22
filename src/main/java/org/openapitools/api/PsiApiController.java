@@ -99,15 +99,25 @@ public class PsiApiController implements PsiApi {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 		HttpClient client = HttpClient.newHttpClient();
-		String uri = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/search")
-				.queryParam("lastName", lastName)
-				.queryParam("firstNames", firstNames)
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/search")
+		        .queryParam("lastName", lastName)
+		        .queryParam("firstNames", firstNames)
 		        .queryParam("genderCode", genderCode)
-		        .queryParam("birthdate", birthdate.toString())
-		        .queryParam("birthTownCode", birthTownCode)
-		        .queryParam("birthCountryCode", birthCountryCode)
-		        .queryParam("birthPlace", birthPlace)
-		        .build()
+		        .queryParam("birthdate", birthdate.toString());
+
+		if (birthTownCode != null && !birthTownCode.isEmpty()) {
+		    builder.queryParam("birthTownCode", birthTownCode);
+		}
+
+		if (birthCountryCode != null && !birthCountryCode.isEmpty()) {
+		    builder.queryParam("birthCountryCode", birthCountryCode);
+		}
+
+		if (birthPlace != null && !birthPlace.isEmpty()) {
+		    builder.queryParam("birthPlace", birthPlace);
+		}
+
+		String uri = builder.build()
 		        .encode()
 		        .toUriString();
 
