@@ -1,0 +1,443 @@
+openapi: 3.0.3
+info:
+  title: PSC PSI API
+  description: |
+    API PSI (ProSanté Connect - Plateforme de Services d'Identité) pour la gestion des utilisateurs
+    Cette API permet de rechercher, créer et mettre à jour les utilisateurs dans le système PSC PSI.
+  version: 1.0.0
+  contact:
+    name: ANS - Agence du Numérique en Santé
+    url: https://esante.gouv.fr
+  license:
+    name: Propriétaire ANS
+servers:
+  - url: http://localhost:8085/psc-psi-api/api
+    description: Serveur de développement local
+  - url: https://psc-psi-api.esante.gouv.fr/api
+    description: Serveur de production
+paths:
+  /user:
+    get:
+      operationId: rechercherParIdNational
+      summary: Rechercher un utilisateur par ID national
+      description: Retourne la personne (si trouvée) au SEC PSC sur la base de son identifiant national
+      tags:
+        - rechercher-user-controller
+      parameters:
+        - name: nationalId
+          in: query
+          required: true
+          description: L'identifiant national de l'utilisateur à rechercher
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '200':
+          description: Personne trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Données invalides ou absentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: L'utilisateur avec cet identifiant national existe déjà
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+
+    post:
+      operationId: creerUser
+      summary: Créer un nouvel utilisateur
+      description: Crée l'utilisateur au SEC PSC à partir de ses traits d'identité
+      tags:
+        - rechercher-user-controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              nationalId: "12345678901"
+              civilStatus:
+                firstName: "Jean"
+                lastName: "Dupont"
+                genderCode: "M"
+                birthDate: "1980-01-01"
+                birthPlace: "Paris"
+                birthTownCode: "75001"
+                birthCountryCode: "FR"
+              contactInfo:
+                email: "jean.dupont@example.com"
+                phone: "+33123456789"
+              practices:
+                - code: "PSY"
+                  description: "Psychologue"
+      responses:
+        '201':
+          description: Utilisateur créé
+        '400':
+          description: Données invalides ou absentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Conflits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+
+    put:
+      operationId: updateUser
+      summary: Mettre à jour un utilisateur
+      description: |
+        Met à jour les données de l'utilisateur comme son mail, son téléphone (tous 2 vérifiés), 
+        ses traits d'identité, l'id PSI (qui, coté SEC PSC, ajoutera l'id à la liste des identifiants de l'utilisateur)
+      tags:
+        - rechercher-user-controller
+      parameters:
+        - name: nationalId
+          in: query
+          required: true
+          description: Identifiant national de l'utilisateur
+          schema:
+            type: string
+            example: "12345678901"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Utilisateur mis à jour
+        '400':
+          description: Données invalides ou absentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: L'utilisateur avec cet identifiant national existe déjà
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+
+  /user/identitytraits:
+    get:
+      operationId: rechercherNationalIdParTraitsIdentite
+      summary: Rechercher par traits d'identité
+      description: Retourne l'id national de chaque personne trouvée sur la base des traits d'identité
+      tags:
+        - rechercher-user-controller
+      parameters:
+        - name: lastName
+          in: query
+          required: true
+          description: Nom de famille
+          schema:
+            type: string
+            example: "Dupont"
+        - name: firstNames
+          in: query
+          required: true
+          description: Prénoms
+          schema:
+            type: string
+            example: "Jean Pierre"
+        - name: genderCode
+          in: query
+          required: true
+          description: Code du genre (M/F)
+          schema:
+            type: string
+            enum: [M, F]
+            example: "M"
+        - name: birthdate
+          in: query
+          required: true
+          description: Date de naissance
+          schema:
+            type: string
+            format: date
+            example: "1980-01-01"
+        - name: birthTownCode
+          in: query
+          required: false
+          description: Code de la ville de naissance
+          schema:
+            type: string
+            example: "75001"
+        - name: birthCountryCode
+          in: query
+          required: false
+          description: Code du pays de naissance
+          schema:
+            type: string
+            example: "FR"
+        - name: birthPlace
+          in: query
+          required: false
+          description: Lieu de naissance
+          schema:
+            type: string
+            example: "Paris"
+      responses:
+        '200':
+          description: Au moins une personne a été trouvée, retourne donc un tableau d'id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: ["12345678901", "12345678902"]
+        '400':
+          description: Données invalides ou absentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Conflits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - nationalId
+      properties:
+        nationalId:
+          type: string
+          description: Identifiant national unique de l'utilisateur
+          example: "12345678901"
+        contactInfo:
+          $ref: '#/components/schemas/ContactInfo'
+        practices:
+          type: array
+          description: Liste des pratiques professionnelles
+          items:
+            $ref: '#/components/schemas/Practice'
+        civilStatus:
+          $ref: '#/components/schemas/CivilStatus'
+        alternativeIdentifiers:
+          type: array
+          description: Identifiants alternatifs
+          items:
+            $ref: '#/components/schemas/AlternativeIdentifier'
+
+    ContactInfo:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Adresse email vérifiée
+          example: "jean.dupont@example.com"
+        phone:
+          type: string
+          description: Numéro de téléphone vérifié
+          example: "+33123456789"
+
+    Practice:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code de la pratique professionnelle
+          example: "PSY"
+        description:
+          type: string
+          description: Description de la pratique
+          example: "Psychologue"
+
+    CivilStatus:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: Prénom(s)
+          example: "Jean Pierre"
+        lastName:
+          type: string
+          description: Nom de famille
+          example: "Dupont"
+        genderCode:
+          type: string
+          enum: [M, F]
+          description: Code du genre
+          example: "M"
+        birthDate:
+          type: string
+          format: date
+          description: Date de naissance
+          example: "1980-01-01"
+        birthPlace:
+          type: string
+          description: Lieu de naissance
+          example: "Paris"
+        birthTownCode:
+          type: string
+          description: Code de la ville de naissance
+          example: "75001"
+        birthCountryCode:
+          type: string
+          description: Code du pays de naissance
+          example: "FR"
+
+    AlternativeIdentifier:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type d'identifiant alternatif
+          example: "PSI"
+        value:
+          type: string
+          description: Valeur de l'identifiant
+          example: "PSI123456"
+
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code d'erreur
+          example: "USER_NOT_FOUND"
+        message:
+          type: string
+          description: Message d'erreur
+          example: "Utilisateur non trouvé"
+        timestamp:
+          type: string
+          format: date-time
+          description: Horodatage de l'erreur
+          example: "2024-01-15T10:30:00Z"
+
+    ErrorDto:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Type d'erreur
+          example: "Unauthorized"
+        message:
+          type: string
+          description: Message d'erreur détaillé
+          example: "Token d'authentification invalide"
+
+    GenericInternalServerErrorDto:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Erreur interne du serveur
+          example: "Internal Server Error"
+        message:
+          type: string
+          description: Message d'erreur technique
+          example: "Une erreur interne s'est produite"
+        trace:
+          type: string
+          description: Trace technique de l'erreur
+          example: "java.lang.Exception: Database connection failed"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: rechercher-user-controller
+    description: Contrôleur pour la recherche et gestion des utilisateurs PSI
