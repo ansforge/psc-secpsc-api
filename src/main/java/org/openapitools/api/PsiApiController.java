@@ -23,6 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 
 import fr.ans.psc.amar.model.CivilStatus;
 import fr.ans.psc.amar.model.User;
@@ -166,6 +167,7 @@ public class PsiApiController implements PsiApi {
 				if (responsePscPs.statusCode() == 200) {
 					String jsonResponse = responsePscPs.body();
 					ObjectMapper mapper = new ObjectMapper();
+					mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 					psResponse = mapper.readValue(jsonResponse, Ps.class);
 					// return new ResponseEntity<>(userResponse, HttpStatus.OK);
 				} else {
