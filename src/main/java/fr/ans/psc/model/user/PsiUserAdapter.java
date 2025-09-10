@@ -12,8 +12,6 @@ import fr.ans.psc.model.AttributeEncoding;
 import fr.ans.psc.model.Ps;
 
 public class PsiUserAdapter extends User {
-	
-	private final int DEFAULT_QUALITY = 1;
 
     public PsiUserAdapter(Ps ps) {
         ContactInfo contactInfo = new PsiContactInfoAdapter(ps);
@@ -21,36 +19,21 @@ public class PsiUserAdapter extends User {
         List<Practice> practices = new ArrayList<>();
         ps.getProfessions().forEach(profession -> practices.add(new PsiPracticeAdapter(profession)));
         List<AlternativeIdentifier> alternativeIdentifiers = new ArrayList<>();
-        ps.getIds().forEach(id ->
-        {
-            AlternativeIdentifier identifier = new AlternativeIdentifier();
-            identifier.setIdentifier(id);
-            identifier.setOrigine(getOriginFromId(id));
-            identifier.setQuality(DEFAULT_QUALITY);
-            alternativeIdentifiers.add(identifier);
-        });
+        // Utiliser les alternativeIds réels de la base qui contiennent les bonnes origines et qualités
+        if (ps.getAlternativeIds() != null) {
+            ps.getAlternativeIds().forEach(altId -> {
+                AlternativeIdentifier identifier = new AlternativeIdentifier();
+                identifier.setIdentifier(altId.getIdentifier());
+                identifier.setOrigine(altId.getOrigine());
+                identifier.setQuality(altId.getQuality());
+                alternativeIdentifiers.add(identifier);
+            });
+        }
 
         setNationalId(AttributeEncoding.encodeStringAttribute(ps.getNationalId()));
         setContactInfo(contactInfo);
         setCivilStatus(civilStatus);
         setPractices(practices);
         setAlternativeIdentifiers(alternativeIdentifiers);
-    }
-
-    private String getOriginFromId(String id) {
-        switch (id.charAt(0)) {
-            case ('0'):
-                return "ADELI";
-            case ('3'):
-                return "FINESS";
-            case ('4'):
-                return "SIREN";
-            case ('5'):
-                return "SIRET";
-            case ('8'):
-                return "RPPS";
-            default:
-                return "";
-        }
     }
 }
