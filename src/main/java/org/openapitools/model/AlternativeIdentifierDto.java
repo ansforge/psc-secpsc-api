@@ -28,8 +28,6 @@ public class AlternativeIdentifierDto {
 
   private @Nullable Integer quality;
 
-  private @Nullable Boolean showInToken;
-
   public AlternativeIdentifierDto identifier(@Nullable String identifier) {
     this.identifier = identifier;
     return this;
@@ -90,26 +88,6 @@ public class AlternativeIdentifierDto {
     this.quality = quality;
   }
 
-  public AlternativeIdentifierDto showInToken(@Nullable Boolean showInToken) {
-    this.showInToken = showInToken;
-    return this;
-  }
-
-  /**
-   * Get showInToken
-   * @return showInToken
-   */
-  
-  @Schema(name = "showInToken", required = false, description = "")
-  @JsonProperty("showInToken")
-  public @Nullable Boolean getShowInToken() {
-    return showInToken;
-  }
-
-  public void setShowInToken(@Nullable Boolean showInToken) {
-    this.showInToken = showInToken;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -121,13 +99,12 @@ public class AlternativeIdentifierDto {
     AlternativeIdentifierDto alternativeIdentifierDto = (AlternativeIdentifierDto) o;
     return Objects.equals(this.identifier, alternativeIdentifierDto.identifier) &&
         Objects.equals(this.origine, alternativeIdentifierDto.origine) &&
-        Objects.equals(this.quality, alternativeIdentifierDto.quality) &&
-        Objects.equals(this.showInToken, alternativeIdentifierDto.showInToken);
+        Objects.equals(this.quality, alternativeIdentifierDto.quality);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identifier, origine, quality, showInToken);
+    return Objects.hash(identifier, origine, quality);
   }
 
   @Override
@@ -137,7 +114,6 @@ public class AlternativeIdentifierDto {
     sb.append("    identifier: ").append(toIndentedString(identifier)).append("\n");
     sb.append("    origine: ").append(toIndentedString(origine)).append("\n");
     sb.append("    quality: ").append(toIndentedString(quality)).append("\n");
-    sb.append("    showInToken: ").append(toIndentedString(showInToken)).append("\n");
     sb.append("}");
     return sb.toString();
   }
