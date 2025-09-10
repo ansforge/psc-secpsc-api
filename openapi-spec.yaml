@@ -365,14 +365,18 @@ components:
     AlternativeIdentifier:
       type: object
       properties:
-        type:
-          type: string
-          description: Type d'identifiant alternatif
-          example: "PSI"
-        value:
+        identifier:
           type: string
           description: Valeur de l'identifiant
           example: "PSI123456"
+        origine:
+          type: string
+          description: Origine de l'identifiant alternatif
+          example: "PSI"
+        quality:
+          type: integer
+          description: Qualité de l'identifiant
+          example: 1
 
     Eim:
       type: object
