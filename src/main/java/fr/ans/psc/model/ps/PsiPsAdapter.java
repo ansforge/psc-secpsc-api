@@ -58,15 +58,26 @@ public class PsiPsAdapter extends Ps {
 
 		// Mapping Ids
 		List<String> ids = new ArrayList<String>();
-		user.getAlternativeIdentifiers().forEach(alternativeIdentifier -> {
-			ids.add(AttributeEncoding.encodeStringAttribute(alternativeIdentifier.getIdentifier()));
-		});
+		if (alternativeIdentifiers != null) {
+			alternativeIdentifiers.forEach(alternativeIdentifier -> {
+				if (alternativeIdentifier != null && alternativeIdentifier.getIdentifier() != null && !alternativeIdentifier.getIdentifier().trim().isEmpty()) {
+					String encodedId = AttributeEncoding.encodeStringAttribute(alternativeIdentifier.getIdentifier());
+					if (encodedId != null) {
+						ids.add(encodedId);
+					}
+				}
+			});
+		}
 		this.setIds(ids);
 
 		// Mapping AlternativeIdentifiers
-		if(practices != null && !practices.isEmpty()) {
+		if(alternativeIdentifiers != null && !alternativeIdentifiers.isEmpty()) {
 			List<fr.ans.psc.model.AlternativeIdentifier> alternativeIdentifierPS = new ArrayList<fr.ans.psc.model.AlternativeIdentifier>();
-			alternativeIdentifiers.forEach(alternativeIdentifier -> alternativeIdentifierPS.add(new PsiAlternativeIdentifierPsAdapter(alternativeIdentifier)));
+			alternativeIdentifiers.forEach(alternativeIdentifier -> {
+				if (alternativeIdentifier != null) {
+					alternativeIdentifierPS.add(new PsiAlternativeIdentifierPsAdapter(alternativeIdentifier));
+				}
+			});
 			this.setAlternativeIds(alternativeIdentifierPS);
 		}
 		
