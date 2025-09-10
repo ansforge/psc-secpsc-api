@@ -95,7 +95,7 @@ public interface PsiApi {
 	 * @param birthdate        (required)
 	 * @param birthTownCode    (optional)
 	 * @param birthCountryCode (optional)
-	 * @param birthPlace       (optional)
+	 * @param birthplace       (optional)
 	 * @return Au moins une personne a été trouvé, retourne donc un tableau d&#39;id
 	 *         (status code 200) or Données invalides ou absentes (status code 400)
 	 *         or Utilisateur non autorisé (status code 401) or Utilisateur non
@@ -137,7 +137,7 @@ public interface PsiApi {
 			@NotNull @Parameter(name = "birthdate", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthdate", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthdate,
 			@Parameter(name = "birthTownCode", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthTownCode", required = false) @Nullable String birthTownCode,
 			@Parameter(name = "birthCountryCode", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthCountryCode", required = false) @Nullable String birthCountryCode,
-			@Parameter(name = "birthPlace", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthPlace", required = false) @Nullable String birthPlace)
+			@Parameter(name = "birthplace", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "birthplace", required = false) @Nullable String birthplace)
 			throws JsonMappingException, JsonProcessingException, URISyntaxException, IOException, InterruptedException;
 
 	/**
@@ -172,7 +172,7 @@ public interface PsiApi {
 			"application/json" })
 
 	ResponseEntity<Void> creerUser(
-			@Parameter(name = "user", description = "", required = true) @Valid @RequestBody User user)
+			@Parameter(name = "user", description = "", required = true) @Valid @RequestBody org.openapitools.model.UserDto user)
 			throws JsonMappingException, JsonProcessingException, IOException, InterruptedException, URISyntaxException;
 
 	/**
@@ -211,5 +211,5 @@ public interface PsiApi {
 
 	ResponseEntity<Void> updateUser(
 			@NotNull @Parameter(name = "nationalId", description = "Identifiant national de l'utilisateur", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
-			@Parameter(name = "UpdateUserRequestDto", description = "", required = true) @Valid @RequestBody User updateUserRequestDto) throws IOException, InterruptedException, URISyntaxException;
+			@Parameter(name = "UpdateUserRequestDto", description = "", required = true) @Valid @RequestBody org.openapitools.model.UserDto updateUserRequestDto) throws IOException, InterruptedException, URISyntaxException;
 }

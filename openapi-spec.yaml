@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: PSC PSI API
+  title: SECPSC-PSI API
   description: |
-    API PSI (ProSanté Connect - Plateforme de Services d'Identité) pour la gestion des utilisateurs
+    SECPSC : API PSI (ProSanté Connect - Plateforme de Services d'Identité) pour la gestion des utilisateurs
     Cette API permet de rechercher, créer et mettre à jour les utilisateurs dans le système PSC PSI.
   version: 1.0.0
   contact:
@@ -81,22 +81,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
-            example:
-              nationalId: "12345678901"
-              civilStatus:
-                firstName: "Jean"
-                lastName: "Dupont"
-                genderCode: "M"
-                birthDate: "1980-01-01"
-                birthPlace: "Paris"
-                birthTownCode: "75001"
-                birthCountryCode: "FR"
-              contactInfo:
-                email: "jean.dupont@example.com"
-                phone: "+33123456789"
-              practices:
-                - code: "PSY"
-                  description: "Psychologue"
       responses:
         '201':
           description: Utilisateur créé
@@ -212,10 +196,10 @@ paths:
         - name: genderCode
           in: query
           required: true
-          description: Code du genre (M/F)
+          description: Code du genre (M/F/I)
           schema:
             type: string
-            enum: [M, F]
+            enum: [M, F, I]
             example: "M"
         - name: birthdate
           in: query
@@ -239,7 +223,7 @@ paths:
           schema:
             type: string
             example: "FR"
-        - name: birthPlace
+        - name: birthplace
           in: query
           required: false
           description: Lieu de naissance
@@ -312,6 +296,11 @@ components:
           description: Identifiants alternatifs
           items:
             $ref: '#/components/schemas/AlternativeIdentifier'
+        eims:
+          type: array
+          description: Liste des EIMs (Electronic Identity Management) associés à l'utilisateur
+          items:
+            $ref: '#/components/schemas/Eim'
 
     ContactInfo:
       type: object
@@ -329,48 +318,49 @@ components:
     Practice:
       type: object
       properties:
-        code:
+        professionCode:
           type: string
-          description: Code de la pratique professionnelle
-          example: "PSY"
-        description:
+        professionalCategoryCode:
           type: string
-          description: Description de la pratique
-          example: "Psychologue"
-
+        expertiseTypeCode:
+          type: string
+        expertiseCode:
+          type: string
+        professionalCivilityTitle:
+          type: string
+        professionalLastName:
+          type: string
+        professionalFirstName:
+          type: string
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
     CivilStatus:
       type: object
       properties:
-        firstName:
-          type: string
-          description: Prénom(s)
-          example: "Jean Pierre"
         lastName:
           type: string
-          description: Nom de famille
-          example: "Dupont"
-        genderCode:
+          minLength: 1
+        firstNames:
           type: string
-          enum: [M, F]
-          description: Code du genre
-          example: "M"
-        birthDate:
+          description: Prénoms séparés par des espaces
+          example: "Jean Pierre"
+        birthdate:
           type: string
-          format: date
-          description: Date de naissance
-          example: "1980-01-01"
-        birthPlace:
-          type: string
-          description: Lieu de naissance
-          example: "Paris"
+          example: "1980-10-01"
         birthTownCode:
           type: string
-          description: Code de la ville de naissance
-          example: "75001"
         birthCountryCode:
           type: string
-          description: Code du pays de naissance
-          example: "FR"
+        birthplace:
+          type: string
+        genderCode:
+          type: string
+        personalCivilityTitle:
+          type: string
+      required:
+        - lastName
 
     AlternativeIdentifier:
       type: object
@@ -383,6 +373,41 @@ components:
           type: string
           description: Valeur de l'identifiant
           example: "PSI123456"
+
+    Eim:
+      type: object
+      properties:
+        nationalId:
+          type: string
+          description: Identifiant national
+          example: "12345678901"
+        type:
+          type: string
+          description: Type d'EIM
+          example: "RPPS"
+        creationDate:
+          type: string
+          format: date-time
+          description: Date de création
+          example: "2025-09-05T15:40:38.688Z"
+        endOfValidityDate:
+          type: string
+          format: date-time
+          description: Date de fin de validité
+          example: "2025-09-05T15:40:38.688Z"
+        eidasLevel:
+          type: integer
+          description: Niveau eIDAS
+          example: 1
+        lastUsageDate:
+          type: string
+          format: date-time
+          description: Date de dernière utilisation
+          example: "2025-09-05T15:40:38.688Z"
+        attributes:
+          type: string
+          description: Attributs supplémentaires
+          example: "additional_attributes"
 
     ApiError:
       type: object
@@ -412,6 +437,70 @@ components:
           type: string
           description: Message d'erreur détaillé
           example: "Token d'authentification invalide"
+          
+    Activity:
+      type: object
+      properties:
+        professionalModeCode:
+          type: string
+        activitySectorCode:
+          type: string
+        pharmacistTableSectionCode:
+          type: string
+        roleCode:
+          type: string
+        activityTypeCode:
+          type: string
+        siretSiteNumber:
+          type: string
+        sirenSiteNumber:
+          type: string
+        finessSiteNumber:
+          type: string
+        finessLegalCompanyNumber:
+          type: string
+        companyTechnicalIdentifier:
+          type: string
+        companyName:
+          type: string
+        companyCommercialSign:
+          type: string
+        companyAdditionalAddress:
+          type: string
+        companyGeographicalPointComplement:
+          type: string
+        companyWayNumber:
+          type: string
+        companyRepeatIndex:
+          type: string
+        companyWayType:
+          type: string
+        companyWayLabel:
+          type: string
+        companyDistributionMention:
+          type: string
+        companyCedexOffice:
+          type: string
+        companyPostalCode:
+          type: string
+        companyTownCode:
+          type: string
+        companyCountryCode:
+          type: string
+        companyPhone1:
+          type: string
+        companyPhone2:
+          type: string
+        companyFax:
+          type: string
+        companyEmail:
+          type: string
+        companyCountyCode:
+          type: string
+        companyOldIdentifier:
+          type: string
+        companyRegistrationAuthority:
+          type: string
 
     GenericInternalServerErrorDto:
       type: object

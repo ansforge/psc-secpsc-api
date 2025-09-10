@@ -1,23 +1,12 @@
 package org.openapitools.model;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import javax.annotation.Generated;
 
 /**
@@ -29,17 +18,16 @@ public class CivilStatusDto {
 
   private @Nullable String lastName;
 
-  @Valid
-  private List<String> firstNames = new ArrayList<>();
+  private @Nullable String firstNames;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private @Nullable LocalDate birthDate;
+  private @Nullable LocalDate birthdate;
 
   private @Nullable String birthTownCode;
 
   private @Nullable String birthCountryCode;
 
-  private @Nullable String birthPlace;
+  private @Nullable String birthplace;
 
   private @Nullable String genderCode;
 
@@ -65,16 +53,8 @@ public class CivilStatusDto {
     this.lastName = lastName;
   }
 
-  public CivilStatusDto firstNames(List<String> firstNames) {
+  public CivilStatusDto firstNames(String firstNames) {
     this.firstNames = firstNames;
-    return this;
-  }
-
-  public CivilStatusDto addFirstNamesItem(String firstNamesItem) {
-    if (this.firstNames == null) {
-      this.firstNames = new ArrayList<>();
-    }
-    this.firstNames.add(firstNamesItem);
     return this;
   }
 
@@ -83,34 +63,34 @@ public class CivilStatusDto {
    * @return firstNames
    */
   
-  @Schema(name = "firstNames", required = false, description = "")
+  @Schema(name = "firstNames", required = false, description = "Prénoms séparés par des espaces")
   @JsonProperty("firstNames")
-  public List<String> getFirstNames() {
+  public @Nullable String getFirstNames() {
     return firstNames;
   }
 
-  public void setFirstNames(List<String> firstNames) {
+  public void setFirstNames(@Nullable String firstNames) {
     this.firstNames = firstNames;
   }
 
-  public CivilStatusDto birthDate(@Nullable LocalDate birthDate) {
-    this.birthDate = birthDate;
+  public CivilStatusDto birthdate(@Nullable LocalDate birthdate) {
+    this.birthdate = birthdate;
     return this;
   }
 
   /**
-   * Get birthDate
-   * @return birthDate
+   * Get birthdate
+   * @return birthdate
    */
   @Valid 
-  @Schema(name = "birthDate", required = false, description = "")
-  @JsonProperty("birthDate")
-  public @Nullable LocalDate getBirthDate() {
-    return birthDate;
+  @Schema(name = "birthdate", required = false, description = "")
+  @JsonProperty("birthdate")
+  public @Nullable LocalDate getBirthdate() {
+    return birthdate;
   }
 
-  public void setBirthDate(@Nullable LocalDate birthDate) {
-    this.birthDate = birthDate;
+  public void setBirthdate(@Nullable LocalDate birthdate) {
+    this.birthdate = birthdate;
   }
 
   public CivilStatusDto birthTownCode(@Nullable String birthTownCode) {
@@ -153,24 +133,24 @@ public class CivilStatusDto {
     this.birthCountryCode = birthCountryCode;
   }
 
-  public CivilStatusDto birthPlace(@Nullable String birthPlace) {
-    this.birthPlace = birthPlace;
+  public CivilStatusDto birthplace(@Nullable String birthplace) {
+    this.birthplace = birthplace;
     return this;
   }
 
   /**
-   * Get birthPlace
-   * @return birthPlace
+   * Get birthplace
+   * @return birthplace
    */
   
-  @Schema(name = "birthPlace", required = false, description = "")
-  @JsonProperty("birthPlace")
-  public @Nullable String getBirthPlace() {
-    return birthPlace;
+  @Schema(name = "birthplace", required = false, description = "")
+  @JsonProperty("birthplace")
+  public @Nullable String getBirthplace() {
+    return birthplace;
   }
 
-  public void setBirthPlace(@Nullable String birthPlace) {
-    this.birthPlace = birthPlace;
+  public void setBirthplace(@Nullable String birthplace) {
+    this.birthplace = birthplace;
   }
 
   public CivilStatusDto genderCode(@Nullable String genderCode) {
@@ -224,17 +204,17 @@ public class CivilStatusDto {
     CivilStatusDto civilStatusDto = (CivilStatusDto) o;
     return Objects.equals(this.lastName, civilStatusDto.lastName) &&
         Objects.equals(this.firstNames, civilStatusDto.firstNames) &&
-        Objects.equals(this.birthDate, civilStatusDto.birthDate) &&
+        Objects.equals(this.birthdate, civilStatusDto.birthdate) &&
         Objects.equals(this.birthTownCode, civilStatusDto.birthTownCode) &&
         Objects.equals(this.birthCountryCode, civilStatusDto.birthCountryCode) &&
-        Objects.equals(this.birthPlace, civilStatusDto.birthPlace) &&
+        Objects.equals(this.birthplace, civilStatusDto.birthplace) &&
         Objects.equals(this.genderCode, civilStatusDto.genderCode) &&
         Objects.equals(this.personalCivilityTitle, civilStatusDto.personalCivilityTitle);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(lastName, firstNames, birthDate, birthTownCode, birthCountryCode, birthPlace, genderCode, personalCivilityTitle);
+    return Objects.hash(lastName, firstNames, birthdate, birthTownCode, birthCountryCode, birthplace, genderCode, personalCivilityTitle);
   }
 
   @Override
@@ -243,10 +223,10 @@ public class CivilStatusDto {
     sb.append("class CivilStatusDto {\n");
     sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
     sb.append("    firstNames: ").append(toIndentedString(firstNames)).append("\n");
-    sb.append("    birthDate: ").append(toIndentedString(birthDate)).append("\n");
+    sb.append("    birthdate: ").append(toIndentedString(birthdate)).append("\n");
     sb.append("    birthTownCode: ").append(toIndentedString(birthTownCode)).append("\n");
     sb.append("    birthCountryCode: ").append(toIndentedString(birthCountryCode)).append("\n");
-    sb.append("    birthPlace: ").append(toIndentedString(birthPlace)).append("\n");
+    sb.append("    birthplace: ").append(toIndentedString(birthplace)).append("\n");
     sb.append("    genderCode: ").append(toIndentedString(genderCode)).append("\n");
     sb.append("    personalCivilityTitle: ").append(toIndentedString(personalCivilityTitle)).append("\n");
     sb.append("}");

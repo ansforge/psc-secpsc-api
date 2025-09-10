@@ -8,6 +8,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.ans.psc.amar.model.User;
 import fr.ans.psc.model.Ps;
 import fr.ans.psc.model.ps.PsiPsAdapter;
+import org.openapitools.model.UserDto;
+import org.openapitools.model.CivilStatusDto;
+import fr.ans.psc.amar.model.CivilStatus;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -36,6 +40,102 @@ public class PsiApiController implements PsiApi {
 
 	@Value("${openapi.pscApiMajV2.base-path:/api}")
 	private String psPath;
+	
+	/**
+	 * Convertit une chaîne de prénoms avec espaces vers une liste de prénoms
+	 * @param firstNamesString Prénoms séparés par des espaces (ex: "Jean Pierre")
+	 * @return Liste de prénoms (ex: ["Jean", "Pierre"])
+	 */
+	private List<String> convertFirstNamesStringToList(String firstNamesString) {
+		if (firstNamesString == null || firstNamesString.trim().isEmpty()) {
+			return new ArrayList<>();
+		}
+		List<String> result = new ArrayList<>();
+		String[] names = firstNamesString.split(" ");
+		for (String name : names) {
+			name = name.trim();
+			if (!name.isEmpty()) {
+				result.add(name);
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Convertit une liste de prénoms vers une chaîne avec espaces
+	 * @param firstNamesList Liste de prénoms (ex: ["Jean", "Pierre"])
+	 * @return Prénoms séparés par des espaces (ex: "Jean Pierre")
+	 */
+	private String convertFirstNamesListToString(List<String> firstNamesList) {
+		if (firstNamesList == null || firstNamesList.isEmpty()) {
+			return "";
+		}
+		return String.join(" ", firstNamesList);
+	}
+	
+	/**
+	 * Convertit un UserDto (nouveau format PSI) vers un User (format AMAR)
+	 * @param userDto Le UserDto reçu depuis l'API PSI  
+	 * @return Un User compatible avec le format AMAR
+	 */
+	private User convertUserDtoToUser(UserDto userDto) {
+		User user = new User();
+		
+		// Mapping de base
+		user.setNationalId(userDto.getNationalId());
+		
+		// Mapping CivilStatus
+		if (userDto.getCivilStatus() != null) {
+			CivilStatus civilStatus = new CivilStatus();
+			CivilStatusDto dto = userDto.getCivilStatus();
+			
+			civilStatus.setLastName(dto.getLastName());
+			civilStatus.setGenderCode(dto.getGenderCode());
+			civilStatus.setBirthplace(dto.getBirthplace());
+			civilStatus.setBirthTownCode(dto.getBirthTownCode());
+			civilStatus.setBirthCountryCode(dto.getBirthCountryCode());
+			civilStatus.setPersonalCivilityTitle(dto.getPersonalCivilityTitle());
+			
+			// Conversion de la date : ISO (yyyy-MM-dd) vers format français (dd/MM/yyyy)
+			if (dto.getBirthdate() != null) {
+				DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				String frenchDateFormat = dto.getBirthdate().format(outputFormatter);
+				civilStatus.setBirthdate(frenchDateFormat);
+			}
+			
+			// Conversion des prénoms : String -> List<String>
+			if (dto.getFirstNames() != null && !dto.getFirstNames().trim().isEmpty()) {
+				civilStatus.setFirstNames(convertFirstNamesStringToList(dto.getFirstNames()));
+			}
+			
+			user.setCivilStatus(civilStatus);
+		}
+		
+		// Mapping ContactInfo
+		if (userDto.getContactInfo() != null) {
+			fr.ans.psc.amar.model.ContactInfo contactInfo = new fr.ans.psc.amar.model.ContactInfo();
+			contactInfo.setEmail(userDto.getContactInfo().getEmail());
+			contactInfo.setPhone(userDto.getContactInfo().getPhone());
+			user.setContactInfo(contactInfo);
+		}
+		
+		// Mapping AlternativeIdentifiers
+		if (userDto.getAlternativeIdentifiers() != null) {
+			List<fr.ans.psc.amar.model.AlternativeIdentifier> alternativeIds = new ArrayList<>();
+			userDto.getAlternativeIdentifiers().forEach(dto -> {
+				fr.ans.psc.amar.model.AlternativeIdentifier altId = new fr.ans.psc.amar.model.AlternativeIdentifier();
+				altId.setIdentifier(dto.getIdentifier());
+				altId.setOrigine(dto.getOrigine());
+				altId.setQuality(dto.getQuality() != null ? dto.getQuality() : 1); // Utilise quality du DTO ou 1 par défaut
+				alternativeIds.add(altId);
+			});
+			user.setAlternativeIdentifiers(alternativeIds);
+		}
+		
+		// TODO: Ajouter mapping pour practices et eims si nécessaire
+		
+		return user;
+	}
 
 	@Override
 	public ResponseEntity<User> rechercherParIdNational(String nationalId)
@@ -91,7 +191,7 @@ public class PsiApiController implements PsiApi {
 
 	@Override
 	public ResponseEntity<List<String>> rechercherNationalIdParTraitsIdentite(String lastName, String firstNames,
-			String genderCode, LocalDate birthdate, String birthTownCode, String birthCountryCode, String birthPlace)
+			String genderCode, LocalDate birthdate, String birthTownCode, String birthCountryCode, String birthplace)
 			throws URISyntaxException, IOException, InterruptedException {
 		
 		log.info("Start - rechercherNationalIdParTraitsIdentite");
@@ -113,8 +213,8 @@ public class PsiApiController implements PsiApi {
 		    builder.queryParam("birthCountryCode", birthCountryCode);
 		}
 
-		if (birthPlace != null && !birthPlace.isEmpty()) {
-		    builder.queryParam("birthPlace", birthPlace);
+		if (birthplace != null && !birthplace.isEmpty()) {
+		    builder.queryParam("birthplace", birthplace);
 		}
 
 		String uri = builder.build()
@@ -126,8 +226,8 @@ public class PsiApiController implements PsiApi {
 				.GET().build();
 		
 		log.info(String.format(
-		    "Send request to [%s] with parameters: lastName=%s, firstNames=%s, genderCode=%s, birthTownCode=%s, birthCountryCode=%s, birthPlace=%s",
-		    uri, lastName, firstNames, genderCode, birthTownCode, birthCountryCode, birthPlace
+		    "Send request to [%s] with parameters: lastName=%s, firstNames=%s, genderCode=%s, birthTownCode=%s, birthCountryCode=%s, birthplace=%s",
+		    uri, lastName, firstNames, genderCode, birthTownCode, birthCountryCode, birthplace
 		));
 		
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -164,12 +264,15 @@ public class PsiApiController implements PsiApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> creerUser(User user) throws IOException, InterruptedException, URISyntaxException {
+	public ResponseEntity<Void> creerUser(UserDto userDto) throws IOException, InterruptedException, URISyntaxException {
 		
 		log.info("Start - creerUser");
 
 		ObjectMapper mapper = new ObjectMapper();
 
+		// Conversion UserDto -> User (format AMAR)
+		User user = convertUserDtoToUser(userDto);
+		
 		// Mapping
 		Ps ps = new PsiPsAdapter(user);
 		String psJson = mapper.writeValueAsString(ps);
@@ -213,13 +316,16 @@ public class PsiApiController implements PsiApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> updateUser(String nationalId, User user)
+	public ResponseEntity<Void> updateUser(String nationalId, UserDto userDto)
 			throws IOException, InterruptedException, URISyntaxException {
 		
 		log.info("Start - updateUser");
 
 		ObjectMapper mapper = new ObjectMapper();
 
+		// Conversion UserDto -> User (format AMAR)
+		User user = convertUserDtoToUser(userDto);
+		
 		// Mapping
 		Ps ps = new PsiPsAdapter(user);
 		String psJson = mapper.writeValueAsString(ps);
