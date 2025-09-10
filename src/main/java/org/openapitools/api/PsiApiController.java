@@ -162,7 +162,7 @@ public class PsiApiController implements PsiApi {
 
 				log.info(String.format("Response of [%s] : %s", uriPscPs, responsePscPs));
 
-				Ps psResponse;
+				Ps psResponse = new Ps();
 				if (responsePscPs.statusCode() == 200) {
 					String jsonResponse = responsePscPs.body();
 					ObjectMapper mapper = new ObjectMapper();
