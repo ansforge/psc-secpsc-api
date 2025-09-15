@@ -409,9 +409,21 @@ components:
           description: Date de dernière utilisation
           example: "2025-09-05T15:40:38.688Z"
         attributes:
-          type: string
-          description: Attributs supplémentaires
-          example: "additional_attributes"
+           type: object
+           description: Attributs supplémentaires
+           properties:
+             deviceName:
+               type: string
+               example: "iPhone 14"
+             operatingSystem:
+                type: string
+                example: "iOS 18.5"
+             appVersion:
+                type: string
+                example: "3.12.7"
+             activationMode:
+                type: string
+                example: "CARD"
 
     ApiError:
       type: object

@@ -20,6 +20,8 @@ import fr.ans.psc.model.AttributeEncoding;
 import fr.ans.psc.model.FirstName;
 import fr.ans.psc.model.Ps;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +30,7 @@ public class PsiCivilStatusAdapter extends CivilStatus {
     public PsiCivilStatusAdapter(Ps ps) {
         setLastName(AttributeEncoding.encodeStringAttribute(ps.getLastName()));
         setFirstNames(extractNames(ps.getFirstNames()));
-        setBirthdate(AttributeEncoding.encodeStringAttribute(ps.getDateOfBirth()));
+        setBirthdate(convertDateToIsoFormat(ps.getDateOfBirth()));
         setBirthplace(AttributeEncoding.encodeStringAttribute(ps.getBirthAddress()));
         setBirthCountryCode(AttributeEncoding.encodeStringAttribute(ps.getBirthCountryCode()));
         setBirthTownCode(AttributeEncoding.encodeStringAttribute(ps.getBirthAddressCode()));
@@ -44,5 +46,26 @@ public class PsiCivilStatusAdapter extends CivilStatus {
 
     private int compareFirstNames(FirstName fn1, FirstName fn2) {
         return fn1.getOrder().compareTo(fn2.getOrder());
+    }
+
+    /**
+     * Convertit une date du format français (dd/MM/yyyy) vers le format ISO (yyyy-MM-dd)
+     * @param frenchDate Date au format français (ex: "01/01/2000")
+     * @return Date au format ISO (ex: "2000-01-01") ou null si la date est invalide
+     */
+    private String convertDateToIsoFormat(String frenchDate) {
+        if (frenchDate == null || frenchDate.trim().isEmpty()) {
+            return null;
+        }
+        
+        try {
+            DateTimeFormatter frenchFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter isoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(frenchDate, frenchFormatter);
+            return date.format(isoFormatter);
+        } catch (Exception e) {
+            // Si la conversion échoue, retourner la date originale
+            return frenchDate;
+        }
     }
 }

@@ -47,8 +47,8 @@ public class PsiPracticeAdapter extends Practice {
     private Expertise extractExpertise(Profession profession) {
         String[] acceptedExpertises = {"S", "CEX", "PAC"};
         List<Expertise> expertises = profession.getExpertises().stream()
-                .filter(expertise -> Arrays.stream(acceptedExpertises)
-                        .anyMatch(s -> expertise.getTypeCode().equals(s)))
+                .filter(expertise -> expertise.getTypeCode() != null && Arrays.stream(acceptedExpertises)
+                        .anyMatch(s -> s.equals(expertise.getTypeCode())))
                 .collect(Collectors.toList());
 
         return expertises.isEmpty() ? null : expertises.get(0);

@@ -138,7 +138,54 @@ public class PsiApiController implements PsiApi {
 			user.setAlternativeIdentifiers(alternativeIds);
 		}
 
-		// TODO: Ajouter mapping pour practices et eims si nécessaire
+		// Mapping Practices
+		if (userDto.getPractices() != null) {
+			List<fr.ans.psc.amar.model.Practice> practices = new ArrayList<>();
+			userDto.getPractices().forEach(practiceDto -> {
+				fr.ans.psc.amar.model.Practice practice = new fr.ans.psc.amar.model.Practice();
+				
+				practice.setProfessionCode(practiceDto.getProfessionCode());
+				practice.setProfessionalCategoryCode(practiceDto.getProfessionalCategoryCode());
+				practice.setExpertiseTypeCode(practiceDto.getExpertiseTypeCode());
+				practice.setExpertiseCode(practiceDto.getExpertiseCode());
+				practice.setProfessionalCivilityTitle(practiceDto.getProfessionalCivilityTitle());
+				practice.setProfessionalLastName(practiceDto.getProfessionalLastName());
+				practice.setProfessionalFirstName(practiceDto.getProfessionalFirstName());
+				
+				// Mapping Activities si elles existent
+				if (practiceDto.getActivities() != null) {
+					List<fr.ans.psc.amar.model.Activity> activities = new ArrayList<>();
+					practiceDto.getActivities().forEach(activityDto -> {
+						fr.ans.psc.amar.model.Activity activity = new fr.ans.psc.amar.model.Activity();
+						
+						activity.setProfessionalModeCode(activityDto.getProfessionalModeCode());
+						activity.setActivitySectorCode(activityDto.getActivitySectorCode());
+						activity.setRoleCode(activityDto.getRoleCode());
+						activity.setActivityTypeCode(activityDto.getActivityTypeCode());
+						activity.setSiretSiteNumber(activityDto.getSiretSiteNumber());
+						activity.setSirenSiteNumber(activityDto.getSirenSiteNumber());
+						activity.setFinessSiteNumber(activityDto.getFinessSiteNumber());
+						activity.setCompanyName(activityDto.getCompanyName());
+						activity.setCompanyWayNumber(activityDto.getCompanyWayNumber());
+						activity.setCompanyWayType(activityDto.getCompanyWayType());
+						activity.setCompanyWayLabel(activityDto.getCompanyWayLabel());
+						activity.setCompanyPostalCode(activityDto.getCompanyPostalCode());
+						activity.setCompanyTownCode(activityDto.getCompanyTownCode());
+						activity.setCompanyCountryCode(activityDto.getCompanyCountryCode());
+						activity.setCompanyPhone1(activityDto.getCompanyPhone1());
+						activity.setCompanyEmail(activityDto.getCompanyEmail());
+						
+						activities.add(activity);
+					});
+					practice.setActivities(activities);
+				}
+				
+				practices.add(practice);
+			});
+			user.setPractices(practices);
+		}
+
+		// TODO: Ajouter mapping pour eims si nécessaire
 
 		return user;
 	}
