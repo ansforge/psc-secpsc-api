@@ -17,7 +17,9 @@ public class PsiUserAdapter extends User {
         ContactInfo contactInfo = new PsiContactInfoAdapter(ps);
         CivilStatus civilStatus = new PsiCivilStatusAdapter(ps);
         List<Practice> practices = new ArrayList<>();
-        ps.getProfessions().forEach(profession -> practices.add(new PsiPracticeAdapter(profession)));
+        if (ps.getProfessions() != null) {
+            ps.getProfessions().forEach(profession -> practices.add(new PsiPracticeAdapter(profession)));
+        }
         List<AlternativeIdentifier> alternativeIdentifiers = new ArrayList<>();
         // Utiliser les alternativeIds réels de la base qui contiennent les bonnes origines et qualités
         if (ps.getAlternativeIds() != null) {
