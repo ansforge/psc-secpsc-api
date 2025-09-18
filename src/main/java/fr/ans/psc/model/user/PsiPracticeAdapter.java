@@ -15,8 +15,8 @@
  */
 package fr.ans.psc.model.user;
 
-import fr.ans.psc.amar.model.Activity;
-import fr.ans.psc.amar.model.Practice;
+import fr.ans.psc.amar.v2.model.Activity;
+import fr.ans.psc.amar.v2.model.Practice;
 import fr.ans.psc.model.AttributeEncoding;
 import fr.ans.psc.model.Expertise;
 import fr.ans.psc.model.Profession;

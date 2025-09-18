@@ -32,7 +32,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import fr.ans.psc.amar.model.User;
+import fr.ans.psc.amar.v2.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

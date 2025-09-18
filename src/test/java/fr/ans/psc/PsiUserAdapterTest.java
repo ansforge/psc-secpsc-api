@@ -7,13 +7,14 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.ans.psc.amar.model.Activity;
-import fr.ans.psc.amar.model.CivilStatus;
-import fr.ans.psc.amar.model.ContactInfo;
-import fr.ans.psc.amar.model.Practice;
-import fr.ans.psc.amar.model.User;
+import fr.ans.psc.amar.v2.model.Activity;
+import fr.ans.psc.amar.v2.model.CivilStatus;
+import fr.ans.psc.amar.v2.model.ContactInfo;
+import fr.ans.psc.amar.v2.model.Practice;
+import fr.ans.psc.amar.v2.model.User;
 import fr.ans.psc.model.Ps;
 import fr.ans.psc.model.ps.PsiPsAdapter;
+import fr.ans.psc.model.user.AmarContactInfoAdapter;
 import fr.ans.psc.model.user.PsiUserAdapter;
 
 public class PsiUserAdapterTest implements PsiAdapterDefaultTestValue {
@@ -56,8 +57,9 @@ public class PsiUserAdapterTest implements PsiAdapterDefaultTestValue {
 
 		assertEquals(userByPs.getNationalId(), user.getNationalId());
 
-		ContactInfo userContactInfo = user.getContactInfo();
-		ContactInfo userByPsContactInfo = userByPs.getContactInfo();
+		// Récupération des données de contact depuis CivilStatus (nouveau modèle AMAR v2)
+		ContactInfo userContactInfo = new AmarContactInfoAdapter(user.getCivilStatus());
+		ContactInfo userByPsContactInfo = ((PsiUserAdapter) userByPs).getContactInfo();
 
 		assertEquals(userByPsContactInfo.getEmail(), userContactInfo.getEmail());
 		assertEquals(userByPsContactInfo.getPhone(), userContactInfo.getPhone());
@@ -139,13 +141,13 @@ public class PsiUserAdapterTest implements PsiAdapterDefaultTestValue {
 			}
 		}
 
-		List<fr.ans.psc.amar.model.AlternativeIdentifier> userAlternativeIdentifiers = user.getAlternativeIdentifiers();
-		List<fr.ans.psc.amar.model.AlternativeIdentifier> userByPsAlternativeIdentifiers = userByPs
+		List<fr.ans.psc.amar.v2.model.AlternativeIdentifier> userAlternativeIdentifiers = user.getAlternativeIdentifiers();
+		List<fr.ans.psc.amar.v2.model.AlternativeIdentifier> userByPsAlternativeIdentifiers = userByPs
 				.getAlternativeIdentifiers();
 		for (int i = 0; i < userByPsAlternativeIdentifiers.size(); i++) {
 
-			fr.ans.psc.amar.model.AlternativeIdentifier userAlternativeIdentifier = userAlternativeIdentifiers.get(i);
-			fr.ans.psc.amar.model.AlternativeIdentifier userByPsAlternativeIdentifier = userByPsAlternativeIdentifiers
+			fr.ans.psc.amar.v2.model.AlternativeIdentifier userAlternativeIdentifier = userAlternativeIdentifiers.get(i);
+			fr.ans.psc.amar.v2.model.AlternativeIdentifier userByPsAlternativeIdentifier = userByPsAlternativeIdentifiers
 					.get(i);
 
 			assertEquals(userAlternativeIdentifier.getIdentifier(), userByPsAlternativeIdentifier.getIdentifier());

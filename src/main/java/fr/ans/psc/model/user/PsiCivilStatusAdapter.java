@@ -15,7 +15,7 @@
  */
 package fr.ans.psc.model.user;
 
-import fr.ans.psc.amar.model.CivilStatus;
+import fr.ans.psc.amar.v2.model.CivilStatus;
 import fr.ans.psc.model.AttributeEncoding;
 import fr.ans.psc.model.FirstName;
 import fr.ans.psc.model.Ps;

@@ -1,6 +1,6 @@
 package fr.ans.psc.model.ps;
 
-import fr.ans.psc.amar.model.User;
+import fr.ans.psc.amar.v2.model.User;
 import fr.ans.psc.model.Expertise;
 
 public class PsiExpertiseAdapter extends Expertise {

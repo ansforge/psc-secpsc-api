@@ -1,6 +1,6 @@
 package fr.ans.psc.model.ps;
 
-import fr.ans.psc.amar.model.Activity;
+import fr.ans.psc.amar.v2.model.Activity;
 import fr.ans.psc.model.AttributeEncoding;
 import fr.ans.psc.model.Structure;
 import fr.ans.psc.model.WorkSituation;

@@ -4,7 +4,7 @@ import fr.ans.psc.model.AttributeEncoding;
 
 public class PsiAlternativeIdentifierPsAdapter extends fr.ans.psc.model.AlternativeIdentifier {
 
-	public PsiAlternativeIdentifierPsAdapter(fr.ans.psc.amar.model.AlternativeIdentifier alternativeIdentifierAmar) {
+	public PsiAlternativeIdentifierPsAdapter(fr.ans.psc.amar.v2.model.AlternativeIdentifier alternativeIdentifierAmar) {
 		this.setIdentifier(AttributeEncoding.encodeStringAttribute(alternativeIdentifierAmar.getIdentifier()));
 		this.setOrigine(AttributeEncoding.encodeStringAttribute(alternativeIdentifierAmar.getOrigine()));
 		this.setQuality(alternativeIdentifierAmar.getQuality());

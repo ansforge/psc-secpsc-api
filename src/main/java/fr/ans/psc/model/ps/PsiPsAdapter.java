@@ -3,10 +3,9 @@ package fr.ans.psc.model.ps;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.ans.psc.amar.model.CivilStatus;
-import fr.ans.psc.amar.model.ContactInfo;
-import fr.ans.psc.amar.model.Practice;
-import fr.ans.psc.amar.model.User;
+import fr.ans.psc.amar.v2.model.CivilStatus;
+import fr.ans.psc.amar.v2.model.Practice;
+import fr.ans.psc.amar.v2.model.User;
 import fr.ans.psc.model.AttributeEncoding;
 import fr.ans.psc.model.FirstName;
 import fr.ans.psc.model.Profession;
@@ -19,9 +18,8 @@ public class PsiPsAdapter extends Ps {
 		// Mapping Identifier
 		this.setNationalId(AttributeEncoding.encodeStringAttribute(user.getNationalId()));
 		CivilStatus civilStatus = user.getCivilStatus();
-		ContactInfo contactInfo = user.getContactInfo();
 		List<Practice> practices = user.getPractices();
-		List<fr.ans.psc.amar.model.AlternativeIdentifier> alternativeIdentifiers = user.getAlternativeIdentifiers();
+		List<fr.ans.psc.amar.v2.model.AlternativeIdentifier> alternativeIdentifiers = user.getAlternativeIdentifiers();
 
 		// Mapping CivilStatus
 		if(civilStatus != null) {
@@ -36,17 +34,17 @@ public class PsiPsAdapter extends Ps {
 			// Mapping FirstName
 			int i = 0;
 			List<FirstName> firstNames = new ArrayList<FirstName>();
-			for (String firstname : civilStatus.getFirstNames()) {
-				firstNames.add(new PsiFirstNameAdapter(AttributeEncoding.encodeStringAttribute(firstname), i));
-				i++;
+			if (civilStatus.getFirstNames() != null) {
+				for (String firstname : civilStatus.getFirstNames()) {
+					firstNames.add(new PsiFirstNameAdapter(AttributeEncoding.encodeStringAttribute(firstname), i));
+					i++;
+				}
 			}
 			this.setFirstNames(firstNames);
-		}
-
-		// Mapping ContactInfos
-		if(contactInfo != null) {
-			this.setPhone(AttributeEncoding.encodeStringAttribute(contactInfo.getPhone()));
-			this.setEmail(AttributeEncoding.encodeStringAttribute(contactInfo.getEmail()));
+			
+			// Mapping ContactInfos depuis CivilStatus (nouveau modèle AMAR v2)
+			this.setPhone(AttributeEncoding.encodeStringAttribute(civilStatus.getPhone()));
+			this.setEmail(AttributeEncoding.encodeStringAttribute(civilStatus.getEmail()));
 		}
 
 		// Mapping Practice

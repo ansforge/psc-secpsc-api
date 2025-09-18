@@ -25,8 +25,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
-import fr.ans.psc.amar.model.CivilStatus;
-import fr.ans.psc.amar.model.User;
+import fr.ans.psc.amar.v2.model.CivilStatus;
+import fr.ans.psc.amar.v2.model.User;
 import fr.ans.psc.model.Ps;
 import fr.ans.psc.model.ps.PsiPsAdapter;
 import fr.ans.psc.model.user.PsiUserAdapter;
@@ -116,19 +116,17 @@ public class PsiApiController implements PsiApi {
 			user.setCivilStatus(civilStatus);
 		}
 
-		// Mapping ContactInfo
-		if (userDto.getContactInfo() != null) {
-			fr.ans.psc.amar.model.ContactInfo contactInfo = new fr.ans.psc.amar.model.ContactInfo();
-			contactInfo.setEmail(userDto.getContactInfo().getEmail());
-			contactInfo.setPhone(userDto.getContactInfo().getPhone());
-			user.setContactInfo(contactInfo);
+		// Mapping ContactInfo vers CivilStatus
+		if (userDto.getContactInfo() != null && user.getCivilStatus() != null) {
+			user.getCivilStatus().setEmail(userDto.getContactInfo().getEmail());
+			user.getCivilStatus().setPhone(userDto.getContactInfo().getPhone());
 		}
 
 		// Mapping AlternativeIdentifiers
 		if (userDto.getAlternativeIdentifiers() != null) {
-			List<fr.ans.psc.amar.model.AlternativeIdentifier> alternativeIds = new ArrayList<>();
+			List<fr.ans.psc.amar.v2.model.AlternativeIdentifier> alternativeIds = new ArrayList<>();
 			userDto.getAlternativeIdentifiers().forEach(dto -> {
-				fr.ans.psc.amar.model.AlternativeIdentifier altId = new fr.ans.psc.amar.model.AlternativeIdentifier();
+				fr.ans.psc.amar.v2.model.AlternativeIdentifier altId = new fr.ans.psc.amar.v2.model.AlternativeIdentifier();
 				altId.setIdentifier(dto.getIdentifier());
 				altId.setOrigine(dto.getOrigine());
 				altId.setQuality(dto.getQuality() != null ? dto.getQuality() : 1); // Utilise quality du DTO ou 1 par
@@ -140,9 +138,9 @@ public class PsiApiController implements PsiApi {
 
 		// Mapping Practices
 		if (userDto.getPractices() != null) {
-			List<fr.ans.psc.amar.model.Practice> practices = new ArrayList<>();
+			List<fr.ans.psc.amar.v2.model.Practice> practices = new ArrayList<>();
 			userDto.getPractices().forEach(practiceDto -> {
-				fr.ans.psc.amar.model.Practice practice = new fr.ans.psc.amar.model.Practice();
+				fr.ans.psc.amar.v2.model.Practice practice = new fr.ans.psc.amar.v2.model.Practice();
 				
 				practice.setProfessionCode(practiceDto.getProfessionCode());
 				practice.setProfessionalCategoryCode(practiceDto.getProfessionalCategoryCode());
@@ -154,9 +152,9 @@ public class PsiApiController implements PsiApi {
 				
 				// Mapping Activities si elles existent
 				if (practiceDto.getActivities() != null) {
-					List<fr.ans.psc.amar.model.Activity> activities = new ArrayList<>();
+					List<fr.ans.psc.amar.v2.model.Activity> activities = new ArrayList<>();
 					practiceDto.getActivities().forEach(activityDto -> {
-						fr.ans.psc.amar.model.Activity activity = new fr.ans.psc.amar.model.Activity();
+						fr.ans.psc.amar.v2.model.Activity activity = new fr.ans.psc.amar.v2.model.Activity();
 						
 						activity.setProfessionalModeCode(activityDto.getProfessionalModeCode());
 						activity.setActivitySectorCode(activityDto.getActivitySectorCode());

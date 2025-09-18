@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.ans.psc.amar.model.User;
+import fr.ans.psc.amar.v2.model.User;
 import fr.ans.psc.model.Expertise;
 import fr.ans.psc.model.FirstName;
 import fr.ans.psc.model.Profession;

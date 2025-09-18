@@ -6,11 +6,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import fr.ans.psc.amar.model.Activity;
-import fr.ans.psc.amar.model.CivilStatus;
-import fr.ans.psc.amar.model.ContactInfo;
-import fr.ans.psc.amar.model.Practice;
-import fr.ans.psc.amar.model.User;
+import fr.ans.psc.amar.v2.model.Activity;
+import fr.ans.psc.amar.v2.model.CivilStatus;
+import fr.ans.psc.amar.v2.model.ContactInfo;
+import fr.ans.psc.amar.v2.model.Practice;
+import fr.ans.psc.amar.v2.model.User;
 import fr.ans.psc.model.Expertise;
 import fr.ans.psc.model.FirstName;
 import fr.ans.psc.model.Profession;
@@ -152,9 +152,9 @@ public class PsiAdapterDefaultTestValueService implements PsiAdapterDefaultTestV
 		user.setNationalId(NATIONAL_ID);
 		
 		
-		List<fr.ans.psc.amar.model.AlternativeIdentifier> alternativeIdentifiers = new ArrayList<fr.ans.psc.amar.model.AlternativeIdentifier>();
+		List<fr.ans.psc.amar.v2.model.AlternativeIdentifier> alternativeIdentifiers = new ArrayList<fr.ans.psc.amar.v2.model.AlternativeIdentifier>();
 		for (Map<String, Object> identifier : IDENTIFIERS) {
-			fr.ans.psc.amar.model.AlternativeIdentifier alternativeIdentifier = new fr.ans.psc.amar.model.AlternativeIdentifier();
+			fr.ans.psc.amar.v2.model.AlternativeIdentifier alternativeIdentifier = new fr.ans.psc.amar.v2.model.AlternativeIdentifier();
 			alternativeIdentifier.setIdentifier(identifier.get("identifier").toString());
 			alternativeIdentifier.setOrigine(identifier.get("origine").toString());
 			alternativeIdentifier.setQuality(Integer.valueOf(identifier.get("quality").toString()));
@@ -163,9 +163,13 @@ public class PsiAdapterDefaultTestValueService implements PsiAdapterDefaultTestV
 		user.setAlternativeIdentifiers(alternativeIdentifiers);
 
 		ContactInfo contactInfo = buildTestUserContactInfo();
-		user.setContactInfo(contactInfo);
 		
 		CivilStatus civilStatus = buildTestUserCivilStatus();
+		// Intégrer les données de contact dans CivilStatus (nouveau modèle AMAR v2)
+		if (contactInfo != null) {
+			civilStatus.setEmail(contactInfo.getEmail());
+			civilStatus.setPhone(contactInfo.getPhone());
+		}
 		user.setCivilStatus(civilStatus);
 		
 		List<Practice> practices = buildTestUserPracticeSetup();

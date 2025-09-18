@@ -16,13 +16,18 @@
 package fr.ans.psc.model.user;
 
 import fr.ans.psc.amar.v2.model.ContactInfo;
-import fr.ans.psc.model.AttributeEncoding;
-import fr.ans.psc.model.Ps;
+import fr.ans.psc.amar.v2.model.CivilStatus;
 
-public class PsiContactInfoAdapter extends ContactInfo {
+/**
+ * Adapter qui mappe les données de contact depuis CivilStatus (modèle AMAR v2) 
+ * vers ContactInfo (modèle PSI-API) pour maintenir la compatibilité
+ */
+public class AmarContactInfoAdapter extends ContactInfo {
 
-    public PsiContactInfoAdapter(Ps ps) {
-        setEmail(AttributeEncoding.encodeStringAttribute(ps.getEmail()));
-        setPhone(AttributeEncoding.encodeStringAttribute(ps.getPhone()));
+    public AmarContactInfoAdapter(CivilStatus civilStatus) {
+        if (civilStatus != null) {
+            setEmail(civilStatus.getEmail());
+            setPhone(civilStatus.getPhone());
+        }
     }
 }
