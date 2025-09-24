@@ -99,7 +99,6 @@ EOF
         cpu = 500
         memory = 2560
       }
-
       service {
         name = "$\u007BNOMAD_NAMESPACE\u007D-$\u007BNOMAD_JOB_NAME\u007D"
         tags = ["urlprefix-{{ with secret \"psc-ecosystem/${nomad_namespace}/psc-psi-api\" }}{{ .Data.data.public_hostname }}{{ end }}/psc-psi-api/api/ proto=http"]
