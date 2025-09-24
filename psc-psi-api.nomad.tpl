@@ -102,7 +102,7 @@ EOF
 
       service {
         name = "$\u007BNOMAD_NAMESPACE\u007D-$\u007BNOMAD_JOB_NAME\u007D"
-        tags = ["urlprefix-psi-api.preprod.psc.api.esante.gouv.fr/psc-psi-api/api/ proto=http"]
+        tags = ["urlprefix-{{ with secret "psc-ecosystem/${nomad_namespace}/admin" }}{{ .Data.data.public_hostname }}{{ end }}/psc-psi-api/api/ proto=http"]
         port = "http"
         check {
           type = "tcp"
