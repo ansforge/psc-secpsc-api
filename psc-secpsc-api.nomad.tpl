@@ -1,4 +1,4 @@
-job "psc-psi-api" {
+job "psc-secpsc-api" {
   datacenters = [
     "${datacenter}"]
   type = "service"
@@ -15,7 +15,7 @@ job "psc-psi-api" {
     value = "standard"
   }
 
-  group "psc-psi-api" {
+  group "psc-secpsc-api" {
     count = "1"
     restart {
       attempts = 3
@@ -45,7 +45,7 @@ job "psc-psi-api" {
         cooldown = "180s"
         check "few_requests" {
           source = "prometheus"
-          query = "min(max(http_server_requests_seconds_max{_app='psc-psi-api'}!= 0)by(instance))"
+          query = "min(max(http_server_requests_seconds_max{_app='psc-secpsc-api'}!= 0)by(instance))"
           strategy "threshold" {
             upper_bound = 2
             delta = -1
@@ -54,7 +54,7 @@ job "psc-psi-api" {
 
         check "many_requests" {
           source = "prometheus"
-          query = "min(max(http_server_requests_seconds_max{_app='psc-psi-api'}!= 0)by(instance))"
+          query = "min(max(http_server_requests_seconds_max{_app='psc-secpsc-api'}!= 0)by(instance))"
           strategy "threshold" {
             lower_bound = 0.5
             delta = 1
@@ -63,7 +63,7 @@ job "psc-psi-api" {
       }
     }
 
-    task "psc-psi-api" {
+    task "psc-secpsc-api" {
       driver = "docker"
       config {
         image = "${artifact.image}:${artifact.tag}"
@@ -75,15 +75,15 @@ job "psc-psi-api" {
         destination = "local/file.env"
         env = true
         data = <<EOH
-PUBLIC_HOSTNAME={{ with secret "psc-ecosystem/${nomad_namespace}/psc-psi-api" }}{{ .Data.data.public_hostname }}{{ end }}
+PUBLIC_HOSTNAME={{ with secret "psc-ecosystem/${nomad_namespace}/psc-secpsc-api" }}{{ .Data.data.public_hostname }}{{ end }}
 JAVA_TOOL_OPTIONS="-Xms256m -Xmx2g -XX:+UseG1GC -Dspring.config.location=/secrets/application.properties"
 EOH
       }
 
       template {
         data = <<EOF
-spring.application.name=psc-psi-api
-server.servlet.context-path=/psc-psi-api
+spring.application.name=psc-secpsc-api
+server.servlet.context-path=/psc-secpsc-api
 openapi.pscApiMajV2.base-path=http://{{ range service "${nomad_namespace}-psc-api-maj-v2" }}{{ .Address }}:{{ .Port }}{{ end }}/psc-api-maj/api
 logging.level.org.springframework.data.mongodb.core.MongoTemplate=INFO
 spring.data.mongodb.host={{ range service "${nomad_namespace}-psc-mongodb" }}{{ .Address }}{{ end }}
@@ -101,7 +101,7 @@ EOF
       }
       service {
         name = "$\u007BNOMAD_NAMESPACE\u007D-$\u007BNOMAD_JOB_NAME\u007D"
-        tags = ["urlprefix-sec-psc.api.preprod.esante.gouv.fr/psc-psi-api/api/ proto=http"]
+        tags = ["urlprefix-sec-psc.api.preprod.esante.gouv.fr/psc-secpsc-api/api/ proto=http"]
         port = "http"
         check {
           type = "tcp"
