@@ -31,7 +31,7 @@ FROM openjdk:11-slim-buster
 WORKDIR /usr/app
 
 # Copie du jar depuis la phase build
-COPY --from=build /usr/src/app/target/psc-secpsc-api.jar ./psc-secpsc-api.jar
+COPY --from=build /usr/src/app/target/psc-secpsc-api-v2.jar ./psc-secpsc-api.jar
 
 # Utilisateur non-root
 USER daemon
