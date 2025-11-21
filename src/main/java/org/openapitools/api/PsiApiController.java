@@ -6,10 +6,12 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openapitools.model.CivilStatusDto;
 import org.openapitools.model.UserDto;
@@ -44,6 +46,24 @@ public class PsiApiController implements PsiApi {
 	private String psPath;
 
 	/**
+	 * Normalise une chaîne pour la comparaison : supprime les accents et met en majuscules
+	 * 
+	 * @param text Texte à normaliser
+	 * @return Texte sans accents et en majuscules
+	 */
+	private String normalizeForComparison(String text) {
+		if (text == null) {
+			return null;
+		}
+		// Décompose les caractères accentués en caractère de base + accent
+		String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
+		// Supprime les accents (catégorie Unicode "Mn" = Nonspacing_Mark)
+		normalized = normalized.replaceAll("\\p{Mn}", "");
+		// Met en majuscules
+		return normalized.toUpperCase();
+	}
+
+	/**
 	 * Convertit une chaîne de prénoms avec espaces vers une liste de prénoms
 	 * 
 	 * @param firstNamesString Prénoms séparés par des espaces (ex: "Jean Pierre")
@@ -62,6 +82,58 @@ public class PsiApiController implements PsiApi {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Vérifie si les prénoms d'un PS correspondent exactement aux prénoms recherchés
+	 * La correspondance est exacte : même nombre de prénoms, mêmes valeurs ET même ordre
+	 * Insensible à la casse et aux accents
+	 * 
+	 * @param ps Le professionnel de santé à vérifier
+	 * @param searchedFirstNames Liste des prénoms recherchés
+	 * @return true si correspondance exacte, false sinon
+	 */
+	private boolean hasExactFirstNamesMatch(Ps ps, List<String> searchedFirstNames) {
+		if (ps.getFirstNames() == null || ps.getFirstNames().isEmpty()) {
+			return searchedFirstNames.isEmpty();
+		}
+		
+		// Extraire les prénoms du PS (objets FirstName) en respectant l'ordre
+		List<String> psFirstNames = ps.getFirstNames().stream()
+				.sorted((fn1, fn2) -> {
+					// Tri par ordre si disponible, sinon par ordre d'apparition
+					if (fn1.getOrder() != null && fn2.getOrder() != null) {
+						return fn1.getOrder().compareTo(fn2.getOrder());
+					}
+					return 0;
+				})
+				.map(fn -> fn.getFirstName())
+				.filter(name -> name != null && !name.trim().isEmpty())
+				.collect(Collectors.toList());
+		
+		log.debug("PS firstNames (ordered): {}, Searched firstNames: {}", psFirstNames, searchedFirstNames);
+		
+		// Vérification 1 : Même nombre de prénoms
+		if (psFirstNames.size() != searchedFirstNames.size()) {
+			log.debug("Different number of firstNames: PS has {}, search has {}", 
+					psFirstNames.size(), searchedFirstNames.size());
+			return false;
+		}
+		
+		// Vérification 2 : Correspondance exacte des prénoms dans le même ordre (insensible à la casse et aux accents)
+		for (int i = 0; i < psFirstNames.size(); i++) {
+			String psFirstName = normalizeForComparison(psFirstNames.get(i).trim());
+			String searchedFirstName = normalizeForComparison(searchedFirstNames.get(i).trim());
+			
+			if (!psFirstName.equals(searchedFirstName)) {
+				log.debug("FirstName mismatch at position {}: PS has '{}', search has '{}'", 
+						i, psFirstNames.get(i), searchedFirstNames.get(i));
+				return false;
+			}
+		}
+		
+		log.debug("Exact match with order respected: true");
+		return true;
 	}
 
 	/**
@@ -279,6 +351,10 @@ public class PsiApiController implements PsiApi {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+		// Étape 1 : Convertir les prénoms recherchés en liste pour comparaison exacte
+		List<String> searchedFirstNames = convertFirstNamesStringToList(firstNames);
+		log.debug("Searched firstNames as list: {}", searchedFirstNames);
+
 		HttpClient client = HttpClient.newHttpClient();
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/search")
 				.queryParam("lastName", lastName).queryParam("firstNames", firstNames)
@@ -314,10 +390,44 @@ public class PsiApiController implements PsiApi {
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
 				ObjectMapper mapper = new ObjectMapper();
-				List<String> list = mapper.readValue(jsonResponse, new TypeReference<List<String>>() {
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				
+				// Étape 2 : Récupérer la liste des IDs potentiels
+				List<String> candidateIds = mapper.readValue(jsonResponse, new TypeReference<List<String>>() {
 				});
+				
+				log.debug("Candidate IDs from ps-api: {}", candidateIds);
+				
+				// Étape 3 : Filtrer pour ne garder que les correspondances exactes
+				List<String> exactMatchIds = new ArrayList<>();
+				
+				for (String nationalId : candidateIds) {
+					// Récupérer le PS complet pour vérifier les prénoms
+					String psUri = psPath + "/v2/ps/" + nationalId;
+					HttpRequest psRequest = HttpRequest.newBuilder()
+							.uri(new URI(psUri))
+							.headers("Content-Type", "application/json")
+							.GET()
+							.build();
+					
+					HttpResponse<String> psResponse = client.send(psRequest, HttpResponse.BodyHandlers.ofString());
+					
+					if (psResponse.statusCode() == 200) {
+						Ps ps = mapper.readValue(psResponse.body(), Ps.class);
+						
+						// Vérifier la correspondance exacte des prénoms
+						if (ps != null && hasExactFirstNamesMatch(ps, searchedFirstNames)) {
+							exactMatchIds.add(nationalId);
+							log.debug("Exact match found for nationalId: {}", nationalId);
+						} else {
+							log.debug("Filtered out nationalId {} (firstNames don't match exactly)", nationalId);
+						}
+					}
+				}
+				
+				log.info("Exact match IDs after filtering: {}", exactMatchIds);
 
-				return new ResponseEntity<>(list, HttpStatus.OK);
+				return new ResponseEntity<>(exactMatchIds, HttpStatus.OK);
 			} else {
 				HttpHeaders headers = new HttpHeaders();
 				if (response.statusCode() == 400) {
