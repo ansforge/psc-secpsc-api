@@ -1,5 +1,5 @@
 # ---------- Build Stage ----------
-FROM maven:3-jdk-11 AS build
+FROM maven:3.8.6-eclipse-temurin-11 AS build
 
 # Argument reçu au moment du build (via --build-arg)
 ARG PROSANTECONNECT_PACKAGE_GITHUB_TOKEN
@@ -26,7 +26,7 @@ RUN mvn -gs /usr/share/maven/ref/settings-docker.xml \
     -DskipTests clean package spring-boot:repackage
 
 # ---------- Runtime Stage ----------
-FROM openjdk:11-slim-buster
+FROM eclipse-temurin:11-jre-jammy
 
 WORKDIR /usr/app
 
