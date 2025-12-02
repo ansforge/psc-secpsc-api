@@ -212,4 +212,34 @@ public interface PsiApi {
 	ResponseEntity<Void> updateUser(
 			@NotNull @Parameter(name = "nationalId", description = "Identifiant national de l'utilisateur", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
 			@Parameter(name = "UpdateUserRequestDto", description = "", required = true) @Valid @RequestBody org.openapitools.model.UserDto updateUserRequestDto) throws IOException, InterruptedException, URISyntaxException;
+
+	/**
+	 * DELETE /user : Désactive l&#39;utilisateur dans le système (soft delete)
+	 *
+	 * @param nationalId Identifiant national de l&#39;utilisateur à supprimer (required)
+	 * @return Utilisateur supprimé avec succès (status code 204)
+	 *         or Données invalides ou absentes (status code 400)
+	 *         or Utilisateur non autorisé (status code 401)
+	 *         or Utilisateur non trouvé ou déjà supprimé (status code 410)
+	 *         or Erreur interne serveur (status code 500)
+	 * @throws URISyntaxException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	@Operation(operationId = "deleteUser", summary = "Supprimer un utilisateur", description = "Désactive l'utilisateur dans le système (soft delete). L'utilisateur n'est pas physiquement supprimé mais marqué comme désactivé.", tags = {
+			"rechercher-user-controller" }, responses = {
+					@ApiResponse(responseCode = "204", description = "Utilisateur supprimé avec succès"),
+					@ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)) }),
+					@ApiResponse(responseCode = "410", description = "Utilisateur non trouvé ou déjà supprimé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
+	@RequestMapping(method = RequestMethod.DELETE, value = "/user", produces = { "application/json" })
+
+	ResponseEntity<Void> deleteUser(
+			@NotNull @Parameter(name = "nationalId", description = "Identifiant national de l'utilisateur à supprimer", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId)
+			throws URISyntaxException, IOException, InterruptedException;
 }

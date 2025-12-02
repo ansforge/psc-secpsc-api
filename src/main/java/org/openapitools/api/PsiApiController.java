@@ -553,4 +553,46 @@ public class PsiApiController implements PsiApi {
 
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
+
+	@Override
+	public ResponseEntity<Void> deleteUser(String nationalId)
+			throws URISyntaxException, IOException, InterruptedException {
+
+		log.info("Start - deleteUser with nationalId: {}", nationalId);
+
+		HttpClient client = HttpClient.newHttpClient();
+		String uriPscPs = psPath + "/v2/ps/" + nationalId;
+		
+		HttpRequest requestPscPs = HttpRequest.newBuilder()
+				.uri(new URI(uriPscPs))
+				.headers("Content-Type", "application/json")
+				.DELETE()
+				.build();
+
+		log.info("Send DELETE request to [{}] with nationalId: {}", uriPscPs, nationalId);
+
+		HttpResponse<String> responsePscPs = client.send(requestPscPs, HttpResponse.BodyHandlers.ofString());
+
+		if (responsePscPs != null) {
+			log.info("Response of [{}]: status={}", uriPscPs, responsePscPs.statusCode());
+
+			if (responsePscPs.statusCode() == 204) {
+				log.info("User {} successfully deleted", nationalId);
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			} else {
+				HttpHeaders headers = new HttpHeaders();
+				if (responsePscPs.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (responsePscPs.statusCode() == 410) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé ou déjà supprimé");
+				} else if (responsePscPs.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(responsePscPs.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }
