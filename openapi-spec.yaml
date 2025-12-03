@@ -192,28 +192,12 @@ paths:
           description: Utilisateur supprimé avec succès
         '400':
           description: Données invalides ou absentes
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
         '401':
           description: Utilisateur non autorisé
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
         '410':
           description: Utilisateur non trouvé ou déjà supprimé
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiError'
         '500':
           description: Erreur interne serveur
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GenericInternalServerErrorDto'
 
   /user/identitytraits:
     get:
