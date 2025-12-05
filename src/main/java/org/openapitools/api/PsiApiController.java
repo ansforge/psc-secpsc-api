@@ -300,10 +300,19 @@ public class PsiApiController implements PsiApi {
 					return new ResponseEntity<>(headers, HttpStatus.valueOf(responsePscPs.statusCode()));
 				}
 
+				// Créer le User depuis le Ps
 				User user = new PsiUserAdapter(psResponse);
+				
+				// Extraire email et phone avant de les retirer de civilStatus
+				String email = (psResponse.getEmail() != null) ? psResponse.getEmail() : null;
+				String phone = (psResponse.getPhone() != null) ? psResponse.getPhone() : null;
+				
+				// Créer un UserWithContactInfo qui expose contactInfo séparément
+				// et nettoie email/phone de civilStatus
+				User userResponse = new fr.ans.psc.model.user.UserWithContactInfo(user, email, phone);
 
 				// TODO : A ENLEVER QUAND ON AURA LE AMAR
-				return new ResponseEntity<>(user, HttpStatus.OK);
+				return new ResponseEntity<>(userResponse, HttpStatus.OK);
 
 				// Récupérer le MIE de Amar
 
