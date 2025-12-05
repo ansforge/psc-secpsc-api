@@ -1,18 +1,30 @@
 package fr.ans.psc.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.ans.psc.amar.v2.model.CivilStatus;
 import fr.ans.psc.amar.v2.model.ContactInfo;
 import fr.ans.psc.amar.v2.model.User;
 
 /**
  * Extension de User AMAR qui expose contactInfo séparément
- * et nettoie les email/phone de civilStatus pour éviter la duplication
+ * et masque les email/phone de civilStatus pour éviter la duplication
  */
 public class UserWithContactInfo extends User {
     
     @JsonProperty("contactInfo")
     private ContactInfo contactInfo;
+    
+    /**
+     * Override getCivilStatus pour masquer email et phone dans la sérialisation JSON
+     */
+    @Override
+    @JsonProperty("civilStatus")
+    @JsonIgnoreProperties({"email", "phone"})
+    public CivilStatus getCivilStatus() {
+        return super.getCivilStatus();
+    }
     
     public UserWithContactInfo(User user, String email, String phone) {
         // Copier toutes les propriétés du User source
@@ -27,11 +39,8 @@ public class UserWithContactInfo extends User {
         this.contactInfo.setEmail(email);
         this.contactInfo.setPhone(phone);
         
-        // Nettoyer email et phone de civilStatus pour éviter la duplication
-        if (this.getCivilStatus() != null) {
-            this.getCivilStatus().setEmail(null);
-            this.getCivilStatus().setPhone(null);
-        }
+        // Note: email et phone restent dans civilStatus en interne (modèle AMAR v2)
+        // mais sont masqués lors de la sérialisation JSON grâce à @JsonIgnoreProperties
     }
     
     public ContactInfo getContactInfo() {
