@@ -36,6 +36,9 @@ public class PsiCivilStatusAdapter extends CivilStatus {
         setBirthTownCode(AttributeEncoding.encodeStringAttribute(ps.getBirthAddressCode()));
         setGenderCode(AttributeEncoding.encodeStringAttribute(ps.getGenderCode()));
         setPersonalCivilityTitle(AttributeEncoding.encodeStringAttribute(ps.getSalutationCode()));
+        // Ajouter email et phone dans civilStatus conformément au modèle AMAR v2
+        setEmail(AttributeEncoding.encodeStringAttribute(ps.getEmail()));
+        setPhone(AttributeEncoding.encodeStringAttribute(ps.getPhone()));
     }
 
     private List<String> extractNames(List<FirstName> firstNames) {

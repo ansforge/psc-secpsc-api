@@ -63,11 +63,11 @@ public class PsiPsAdapterTest implements PsiAdapterDefaultTestValue {
 		assertEquals(psByUser.getBirthAddress(), ps.getBirthAddress());
 		assertEquals(psByUser.getGenderCode(), ps.getGenderCode());
 		assertEquals(psByUser.getSalutationCode(), ps.getSalutationCode());
-		// Note: phone et email sont null dans PsiPsAdapter car ils sont nettoyés de CivilStatus
-		// par PsiUserAdapter.cleanContactInfoFromCivilStatus() pour éviter la duplication
-		// Les données de contact sont accessibles via getContactInfo() dans PsiUserAdapter
-		assertEquals(psByUser.getPhone(), null);
-		assertEquals(psByUser.getEmail(), null);
+		// Note: phone et email sont stockés dans CivilStatus (modèle AMAR v2)
+		// et récupérés correctement par PsiPsAdapter
+		// Dans l'API PSI, UserWithContactInfo les expose séparément dans contactInfo
+		assertEquals(psByUser.getPhone(), ps.getPhone());
+		assertEquals(psByUser.getEmail(), ps.getEmail());
 
 		assertEquals(psByUser.getIds(), ps.getIds());
 
