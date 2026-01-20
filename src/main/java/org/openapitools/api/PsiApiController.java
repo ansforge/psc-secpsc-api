@@ -271,8 +271,8 @@ public class PsiApiController implements PsiApi {
 
 		if (nationalId != null) {
 			HttpClient client = HttpClient.newHttpClient();
-			String uriPscPs = psPath + "/v2/ps/" + nationalId;
-			HttpRequest requestPscPs = HttpRequest.newBuilder().uri(new URI(uriPscPs))
+			String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/" + nationalId).build().toUriString();
+			HttpRequest requestPscPs = HttpRequest.newBuilder().uri(URI.create(uriPscPs))
 					.headers("Content-Type", "application/json").GET().build();
 
 			log.info(String.format("Send request to [%s] with in headers: nationalId=%s", uriPscPs, nationalId));
@@ -384,9 +384,9 @@ public class PsiApiController implements PsiApi {
 			builder.queryParam("birthplace", birthplace);
 		}
 
-		String uri = builder.build().encode().toUriString();
+		String uri = builder.build().toUriString();
 
-		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).headers("Content-Type", "application/json")
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).headers("Content-Type", "application/json")
 				.GET().build();
 
 		log.info(String.format(
@@ -415,9 +415,9 @@ public class PsiApiController implements PsiApi {
 				
 				for (String nationalId : candidateIds) {
 					// Récupérer le PS complet pour vérifier les prénoms
-					String psUri = psPath + "/v2/ps/" + nationalId;
+					String psUri = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/" + nationalId).build().toUriString();
 					HttpRequest psRequest = HttpRequest.newBuilder()
-							.uri(new URI(psUri))
+							.uri(URI.create(psUri))
 							.headers("Content-Type", "application/json")
 							.GET()
 							.build();
@@ -477,7 +477,7 @@ public class PsiApiController implements PsiApi {
 
 		HttpClient client = HttpClient.newHttpClient();
 		String uri = psPath + "/v2/ps";
-		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header("Content-Type", "application/json")
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).header("Content-Type", "application/json")
 				.POST(HttpRequest.BodyPublishers.ofString(psJson)).build();
 
 		log.info(String.format("Send request to [%s] with in body: %s", uri, psJson));
@@ -529,9 +529,9 @@ public class PsiApiController implements PsiApi {
 		HttpClient client = HttpClient.newHttpClient();
 
 		String uri = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps").queryParam("extraId", nationalId).build()
-				.encode().toUriString();
+				.toUriString();
 
-		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).headers("Content-Type", "application/json")
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).headers("Content-Type", "application/json")
 				.PUT(HttpRequest.BodyPublishers.ofString(psJson)).build();
 
 		log.info(String.format("Send request to [%s] with in parameters : extraId=%s and in body: %s", uri, nationalId,
@@ -573,10 +573,10 @@ public class PsiApiController implements PsiApi {
 		log.info("Start - deleteUser with nationalId: {}", nationalId);
 
 		HttpClient client = HttpClient.newHttpClient();
-		String uriPscPs = psPath + "/v2/ps/" + nationalId;
+		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/" + nationalId).build().toUriString();
 		
 		HttpRequest requestPscPs = HttpRequest.newBuilder()
-				.uri(new URI(uriPscPs))
+				.uri(URI.create(uriPscPs))
 				.headers("Content-Type", "application/json")
 				.DELETE()
 				.build();
@@ -623,10 +623,10 @@ public class PsiApiController implements PsiApi {
 		}
 
 		HttpClient client = HttpClient.newHttpClient();
-		String uriPscPs = psPath + "/v2/ps/force/" + nationalId;
+		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/force/" + nationalId).build().toUriString();
 		
 		HttpRequest requestPscPs = HttpRequest.newBuilder()
-				.uri(new URI(uriPscPs))
+				.uri(URI.create(uriPscPs))
 				.headers("Content-Type", "application/json")
 				.DELETE()
 				.build();
