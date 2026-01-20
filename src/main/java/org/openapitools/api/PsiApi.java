@@ -242,4 +242,37 @@ public interface PsiApi {
 	ResponseEntity<Void> deleteUser(
 			@NotNull @Parameter(name = "nationalId", description = "Identifiant national de l'utilisateur à supprimer", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId)
 			throws URISyntaxException, IOException, InterruptedException;
+
+	/**
+	 * DELETE /user/force : Supprime physiquement l&#39;utilisateur de la base de données (hard delete) - PREPROD UNIQUEMENT
+	 *
+	 * @param nationalId Identifiant national de l&#39;utilisateur à supprimer définitivement (required)
+	 * @return Utilisateur supprimé définitivement avec succès (status code 204)
+	 *         or Données invalides ou absentes (status code 400)
+	 *         or Utilisateur non autorisé (status code 401)
+	 *         or Endpoint non disponible dans cet environnement (status code 403)
+	 *         or Utilisateur non trouvé (status code 410)
+	 *         or Erreur interne serveur (status code 500)
+	 * @throws URISyntaxException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	@Operation(operationId = "forceDeleteUser", summary = "Supprimer définitivement un utilisateur (PREPROD UNIQUEMENT)", description = "**⚠️ PREPROD UNIQUEMENT** - Supprime physiquement l'utilisateur de la base de données (hard delete). Cette opération est irréversible. Cet endpoint n'est disponible qu'en environnement de préproduction.", tags = {
+			"rechercher-user-controller" }, responses = {
+					@ApiResponse(responseCode = "204", description = "Utilisateur supprimé définitivement avec succès"),
+					@ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)) }),
+					@ApiResponse(responseCode = "403", description = "Endpoint non disponible dans cet environnement (production)", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "410", description = "Utilisateur non trouvé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
+	@RequestMapping(method = RequestMethod.DELETE, value = "/user/force", produces = { "application/json" })
+
+	ResponseEntity<Void> forceDeleteUser(
+			@NotNull @Parameter(name = "nationalId", description = "Identifiant national de l'utilisateur à supprimer définitivement", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId)
+			throws URISyntaxException, IOException, InterruptedException;
 }

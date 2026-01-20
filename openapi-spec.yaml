@@ -199,6 +199,42 @@ paths:
         '500':
           description: Erreur interne serveur
 
+  /user/force:
+    delete:
+      operationId: forceDeleteUser
+      summary: Supprimer définitivement un utilisateur (PREPROD UNIQUEMENT)
+      description: |
+        **⚠️ PREPROD UNIQUEMENT - Désactivé en production**
+        
+        Supprime physiquement l'utilisateur de la base de données (hard delete). 
+        Cette opération est irréversible. L'utilisateur et toutes ses données seront définitivement effacés.
+        
+        Cet endpoint n'est disponible qu'en environnement de préproduction.
+        En production, il retourne une erreur 403 Forbidden.
+      tags:
+        - rechercher-user-controller
+      parameters:
+        - name: nationalId
+          in: query
+          required: true
+          description: Identifiant national de l'utilisateur à supprimer définitivement
+          schema:
+            type: string
+            example: "12345678901"
+      responses:
+        '204':
+          description: Utilisateur supprimé définitivement avec succès
+        '400':
+          description: Données invalides ou absentes
+        '401':
+          description: Utilisateur non autorisé
+        '403':
+          description: Endpoint non disponible dans cet environnement (production)
+        '410':
+          description: Utilisateur non trouvé
+        '500':
+          description: Erreur interne serveur
+
   /user/identitytraits:
     get:
       operationId: rechercherNationalIdParTraitsIdentite

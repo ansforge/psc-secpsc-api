@@ -77,6 +77,7 @@ job "psc-secpsc-api" {
         data = <<EOH
 PUBLIC_HOSTNAME={{ with secret "psc-ecosystem/${nomad_namespace}/psc-secpsc-api" }}{{ .Data.data.public_hostname }}{{ end }}
 JAVA_TOOL_OPTIONS="-Xms256m -Xmx2g -XX:+UseG1GC -Dspring.config.location=/secrets/application.properties"
+NOMAD_NAMESPACE=${nomad_namespace}
 EOH
       }
 
@@ -90,6 +91,8 @@ spring.data.mongodb.host={{ range service "${nomad_namespace}-psc-mongodb" }}{{ 
 spring.data.mongodb.port={{ range service "${nomad_namespace}-psc-mongodb" }}{{ .Port }}{{ end }}
 spring.data.mongodb.database=mongodb
 {{ with secret "psc-ecosystem/${nomad_namespace}/mongodb" }}spring.data.mongodb.username={{ .Data.data.root_user }} {{ end }}
+# Enable force delete in preprod environment
+%{ if nomad_namespace == "preprod" || nomad_namespace == "psc-preprod" || nomad_namespace == "secpsc-preprod" }force.delete.enabled=true%{ else }force.delete.enabled=false%{ endif }
 EOF
         destination = "secrets/application.properties"
         change_mode = "restart"

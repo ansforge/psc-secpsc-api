@@ -45,6 +45,9 @@ public class PsiApiController implements PsiApi {
 	@Value("${openapi.pscApiMajV2.base-path:/api}")
 	private String psPath;
 
+	@Value("${force.delete.enabled:false}")
+	private boolean forceDeleteEnabled;
+
 	/**
 	 * Normalise une chaîne pour la comparaison : supprime les accents et met en majuscules
 	 * 
@@ -594,6 +597,56 @@ public class PsiApiController implements PsiApi {
 					headers.add("X-Error-Message", "Données invalides ou absentes");
 				} else if (responsePscPs.statusCode() == 410) {
 					headers.add("X-Error-Message", "Utilisateur non trouvé ou déjà supprimé");
+				} else if (responsePscPs.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(responsePscPs.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@Override
+	public ResponseEntity<Void> forceDeleteUser(String nationalId)
+			throws URISyntaxException, IOException, InterruptedException {
+
+		log.info("Start - forceDeleteUser with nationalId: {}", nationalId);
+
+		// Check if force delete is enabled (only in preprod)
+		if (!forceDeleteEnabled) {
+			log.warn("Force delete is disabled. This endpoint is only available in preprod environment.");
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("X-Error-Message", "Force delete is not available in this environment");
+			return new ResponseEntity<>(headers, HttpStatus.FORBIDDEN);
+		}
+
+		HttpClient client = HttpClient.newHttpClient();
+		String uriPscPs = psPath + "/v2/ps/force/" + nationalId;
+		
+		HttpRequest requestPscPs = HttpRequest.newBuilder()
+				.uri(new URI(uriPscPs))
+				.headers("Content-Type", "application/json")
+				.DELETE()
+				.build();
+
+		log.info("Send force DELETE request to [{}] with nationalId: {}", uriPscPs, nationalId);
+
+		HttpResponse<String> responsePscPs = client.send(requestPscPs, HttpResponse.BodyHandlers.ofString());
+
+		if (responsePscPs != null) {
+			log.info("Response of [{}]: status={}", uriPscPs, responsePscPs.statusCode());
+
+			if (responsePscPs.statusCode() == 204) {
+				log.info("User {} successfully force deleted", nationalId);
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			} else {
+				HttpHeaders headers = new HttpHeaders();
+				if (responsePscPs.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (responsePscPs.statusCode() == 410) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé");
 				} else if (responsePscPs.statusCode() == 500) {
 					headers.add("X-Error-Message", "Erreur interne serveur");
 				}
