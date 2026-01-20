@@ -3,9 +3,11 @@ package org.openapitools.api;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -271,10 +273,13 @@ public class PsiApiController implements PsiApi {
 
 		if (nationalId != null) {
 			HttpClient client = HttpClient.newHttpClient();
+			// URLEncoder.encode pour pre-encoder avant buildAndExpand, car psc-ps-api fait un URLDecoder.decode
+			String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
 			String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
 					.path("/v2/ps/{nationalId}")
-					.buildAndExpand(nationalId)
+					.buildAndExpand(encodedNationalId)
 					.toUriString();
+			log.info("Constructed URI for getPsById: {} (original nationalId: {})", uriPscPs, nationalId);
 			HttpRequest requestPscPs = HttpRequest.newBuilder().uri(URI.create(uriPscPs))
 					.headers("Content-Type", "application/json").GET().build();
 
@@ -387,7 +392,7 @@ public class PsiApiController implements PsiApi {
 			builder.queryParam("birthplace", birthplace);
 		}
 
-		String uri = builder.build().toUriString();
+		String uri = builder.encode().build().toUriString();
 
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).headers("Content-Type", "application/json")
 				.GET().build();
@@ -418,9 +423,11 @@ public class PsiApiController implements PsiApi {
 				
 				for (String nationalId : candidateIds) {
 					// Récupérer le PS complet pour vérifier les prénoms
+					// URLEncoder.encode pour pre-encoder avant buildAndExpand, car psc-ps-api fait un URLDecoder.decode
+					String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
 					String psUri = UriComponentsBuilder.fromHttpUrl(psPath)
 							.path("/v2/ps/{nationalId}")
-							.buildAndExpand(nationalId)
+							.buildAndExpand(encodedNationalId)
 							.toUriString();
 					HttpRequest psRequest = HttpRequest.newBuilder()
 							.uri(URI.create(psUri))
@@ -579,9 +586,11 @@ public class PsiApiController implements PsiApi {
 		log.info("Start - deleteUser with nationalId: {}", nationalId);
 
 		HttpClient client = HttpClient.newHttpClient();
+		// URLEncoder.encode pour pre-encoder avant buildAndExpand, car psc-ps-api fait un URLDecoder.decode
+		String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
 		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
 				.path("/v2/ps/{nationalId}")
-				.buildAndExpand(nationalId)
+				.buildAndExpand(encodedNationalId)
 				.toUriString();
 		
 		HttpRequest requestPscPs = HttpRequest.newBuilder()
@@ -632,9 +641,11 @@ public class PsiApiController implements PsiApi {
 		}
 
 		HttpClient client = HttpClient.newHttpClient();
+		// URLEncoder.encode pour pre-encoder avant buildAndExpand, car psc-ps-api fait un URLDecoder.decode
+		String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
 		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
 				.path("/v2/ps/force/{nationalId}")
-				.buildAndExpand(nationalId)
+				.buildAndExpand(encodedNationalId)
 				.toUriString();
 		
 		HttpRequest requestPscPs = HttpRequest.newBuilder()
