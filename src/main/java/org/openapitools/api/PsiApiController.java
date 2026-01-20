@@ -271,7 +271,10 @@ public class PsiApiController implements PsiApi {
 
 		if (nationalId != null) {
 			HttpClient client = HttpClient.newHttpClient();
-			String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/" + nationalId).build().toUriString();
+			String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
+					.path("/v2/ps/{nationalId}")
+					.buildAndExpand(nationalId)
+					.toUriString();
 			HttpRequest requestPscPs = HttpRequest.newBuilder().uri(URI.create(uriPscPs))
 					.headers("Content-Type", "application/json").GET().build();
 
@@ -415,7 +418,10 @@ public class PsiApiController implements PsiApi {
 				
 				for (String nationalId : candidateIds) {
 					// Récupérer le PS complet pour vérifier les prénoms
-					String psUri = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/" + nationalId).build().toUriString();
+					String psUri = UriComponentsBuilder.fromHttpUrl(psPath)
+							.path("/v2/ps/{nationalId}")
+							.buildAndExpand(nationalId)
+							.toUriString();
 					HttpRequest psRequest = HttpRequest.newBuilder()
 							.uri(URI.create(psUri))
 							.headers("Content-Type", "application/json")
@@ -573,7 +579,10 @@ public class PsiApiController implements PsiApi {
 		log.info("Start - deleteUser with nationalId: {}", nationalId);
 
 		HttpClient client = HttpClient.newHttpClient();
-		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/" + nationalId).build().toUriString();
+		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
+				.path("/v2/ps/{nationalId}")
+				.buildAndExpand(nationalId)
+				.toUriString();
 		
 		HttpRequest requestPscPs = HttpRequest.newBuilder()
 				.uri(URI.create(uriPscPs))
@@ -623,7 +632,10 @@ public class PsiApiController implements PsiApi {
 		}
 
 		HttpClient client = HttpClient.newHttpClient();
-		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/force/" + nationalId).build().toUriString();
+		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
+				.path("/v2/ps/force/{nationalId}")
+				.buildAndExpand(nationalId)
+				.toUriString();
 		
 		HttpRequest requestPscPs = HttpRequest.newBuilder()
 				.uri(URI.create(uriPscPs))
