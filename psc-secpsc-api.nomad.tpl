@@ -104,7 +104,7 @@ EOF
       }
       service {
         name = "$\u007BNOMAD_NAMESPACE\u007D-$\u007BNOMAD_JOB_NAME\u007D"
-        tags = ["urlprefix-sec-psc.api.preprod.esante.gouv.fr/psc-secpsc-api/api/ proto=http"]
+        tags = ["urlprefix-$\u007BPUBLIC_HOSTNAME\u007D/psc-secpsc-api/api/ proto=http"]
         port = "http"
         check {
           type = "tcp"
