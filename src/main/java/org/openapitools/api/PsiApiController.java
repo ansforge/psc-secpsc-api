@@ -500,10 +500,10 @@ public class PsiApiController implements PsiApi {
 			}
 
 			// Validation: origine doit être "PSI"
-			if (altId.getOrigine() == null || !"PSI".equals(altId.getOrigine())) {
-				headers.add("X-Error-Message", "L'origine dans alternativeIdentifiers doit être 'PSI'");
-				return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
-			}
+			//if (altId.getOrigine() == null || !"PSI".equals(altId.getOrigine())) {
+				//headers.add("X-Error-Message", "L'origine dans alternativeIdentifiers doit être 'PSI'");
+				//return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+			//}
 
 			// Validation: quality doit être 1 ou 2
 			if (altId.getQuality() == null || (altId.getQuality() != 1 && altId.getQuality() != 2)) {
