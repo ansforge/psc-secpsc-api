@@ -473,11 +473,59 @@ public class PsiApiController implements PsiApi {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
+	/**
+	 * Valide les données du UserDto pour la création (POST)
+	 * 
+	 * @param userDto Le UserDto à valider
+	 * @return ResponseEntity avec un code d'erreur si validation échoue, null sinon
+	 */
+	private ResponseEntity<Void> validateUserDtoForCreation(UserDto userDto) {
+		HttpHeaders headers = new HttpHeaders();
+
+		// Validation: alternativeIdentifiers est obligatoire
+		if (userDto.getAlternativeIdentifiers() == null || userDto.getAlternativeIdentifiers().isEmpty()) {
+			headers.add("X-Error-Message", "Le champ alternativeIdentifiers est obligatoire pour la création");
+			return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+		}
+
+		String nationalId = userDto.getNationalId();
+
+		// Validation de chaque alternativeIdentifier
+		for (org.openapitools.model.AlternativeIdentifierDto altId : userDto.getAlternativeIdentifiers()) {
+			// Validation: identifier doit être égal au nationalId
+			if (altId.getIdentifier() == null || !altId.getIdentifier().equals(nationalId)) {
+				headers.add("X-Error-Message",
+						"L'identifier dans alternativeIdentifiers doit être égal au nationalId");
+				return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+			}
+
+			// Validation: origine doit être "PSI"
+			if (altId.getOrigine() == null || !"PSI".equals(altId.getOrigine())) {
+				headers.add("X-Error-Message", "L'origine dans alternativeIdentifiers doit être 'PSI'");
+				return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+			}
+
+			// Validation: quality doit être 1 ou 2
+			if (altId.getQuality() == null || (altId.getQuality() != 1 && altId.getQuality() != 2)) {
+				headers.add("X-Error-Message", "La quality dans alternativeIdentifiers doit être 1 ou 2");
+				return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		return null; // Validation réussie
+	}
+
 	@Override
 	public ResponseEntity<Void> creerUser(UserDto userDto)
 			throws IOException, InterruptedException, URISyntaxException {
 
 		log.info("Start - creerUser");
+
+		// Validation des données pour la création
+		ResponseEntity<Void> validationResult = validateUserDtoForCreation(userDto);
+		if (validationResult != null) {
+			return validationResult;
+		}
 
 		ObjectMapper mapper = new ObjectMapper();
 
