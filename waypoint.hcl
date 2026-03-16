@@ -1,4 +1,4 @@
-project = "${workspace.name}/psc-psi-api"
+project = "${workspace.name}/psc-secpsc-api"
 
 # Labels can be specified for organizational purposes.
 labels = {
@@ -9,7 +9,7 @@ runner {
   enabled = true
   profile = "secpsc-${workspace.name}"
   data_source "git" {
-    url = "https://github.com/ansforge/psc-psi-api.git"
+    url = "https://github.com/ansforge/psc-secpsc-api.git"
     ref = "${workspace.name}"
   }
   poll {
@@ -18,17 +18,16 @@ runner {
 }
 
 # An application to deploy.
-app "prosanteconnect/psc-psi-api" {
+app "prosanteconnect/psc-secpsc-api" {
   build {
     use "docker" {
-      build_args = {
-        "proxy_address" = var.proxy_address
-      }
+      build_args = {"PROSANTECONNECT_PACKAGE_GITHUB_TOKEN"="${var.github_token}"}
       dockerfile = "${path.app}/${var.dockerfile_path}"
+      disable_entrypoint = true
     }
     registry {
       use "docker" {
-        image = "${var.registry_username}/psc-psi-api"
+        image = "${var.registry_username}/psc-secpsc-api"
         tag = gitrefpretty()
         username = var.registry_username
         password = var.registry_password
@@ -40,7 +39,7 @@ app "prosanteconnect/psc-psi-api" {
   # Deploy to Nomad
   deploy {
     use "nomad-jobspec" {
-      jobspec = templatefile("${path.app}/psc-psi-api.nomad.tpl", {
+      jobspec = templatefile("${path.app}/psc-secpsc-api.nomad.tpl", {
         datacenter = var.datacenter
         nomad_namespace = var.nomad_namespace
       })
@@ -82,4 +81,11 @@ variable "proxy_address" {
 variable "dockerfile_path" {
   type = string
   default = "Dockerfile"
+}
+
+variable "github_token" {
+  type = string
+  default = ""
+  env = ["PROSANTECONNECT_PACKAGE_GITHUB_TOKEN"]
+  sensitive = true
 }

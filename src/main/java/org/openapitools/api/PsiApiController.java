@@ -3,69 +3,671 @@ package org.openapitools.api;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.openapitools.model.RechercherMiesResponseDto;
-import org.openapitools.model.TrouverUserResponseDto;
-import org.openapitools.model.UpdateEimsRequestDto;
+import org.openapitools.model.CivilStatusDto;
 import org.openapitools.model.UserDto;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-04T14:42:58.339608400+02:00[Europe/Paris]")
+import fr.ans.psc.amar.v2.model.CivilStatus;
+import fr.ans.psc.amar.v2.model.User;
+import fr.ans.psc.model.Ps;
+import fr.ans.psc.model.ps.PsiPsAdapter;
+import fr.ans.psc.model.user.PsiUserAdapter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping("${openapi.pscPsi.base-path:/api}")
 public class PsiApiController implements PsiApi {
-	
-	@Value("${openapi.pscApiMajV2.base-path}:/api")
+
+	@Value("${openapi.pscAmar.base-path:/api}")
+	private String amarPath;
+
+	@Value("${openapi.pscApiMajV2.base-path:/api}")
 	private String psPath;
 
-	@Override
-	public ResponseEntity<Void> creerUser(@Valid UserDto userDto) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	@Value("${force.delete.enabled:false}")
+	private boolean forceDeleteEnabled;
+
+	/**
+	 * Normalise une chaîne pour la comparaison : supprime les accents et met en majuscules
+	 * 
+	 * @param text Texte à normaliser
+	 * @return Texte sans accents et en majuscules
+	 */
+	private String normalizeForComparison(String text) {
+		if (text == null) {
+			return null;
+		}
+		// Décompose les caractères accentués en caractère de base + accent
+		String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
+		// Supprime les accents (catégorie Unicode "Mn" = Nonspacing_Mark)
+		normalized = normalized.replaceAll("\\p{Mn}", "");
+		// Met en majuscules
+		return normalized.toUpperCase();
+	}
+
+	/**
+	 * Convertit une chaîne de prénoms avec espaces vers une liste de prénoms
+	 * 
+	 * @param firstNamesString Prénoms séparés par des espaces (ex: "Jean Pierre")
+	 * @return Liste de prénoms (ex: ["Jean", "Pierre"])
+	 */
+	private List<String> convertFirstNamesStringToList(String firstNamesString) {
+		if (firstNamesString == null || firstNamesString.trim().isEmpty()) {
+			return new ArrayList<>();
+		}
+		List<String> result = new ArrayList<>();
+		String[] names = firstNamesString.split(" ");
+		for (String name : names) {
+			name = name.trim();
+			if (!name.isEmpty()) {
+				result.add(name);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Vérifie si les prénoms d'un PS correspondent exactement aux prénoms recherchés
+	 * La correspondance est exacte : même nombre de prénoms, mêmes valeurs ET même ordre
+	 * Insensible à la casse et aux accents
+	 * 
+	 * @param ps Le professionnel de santé à vérifier
+	 * @param searchedFirstNames Liste des prénoms recherchés
+	 * @return true si correspondance exacte, false sinon
+	 */
+	private boolean hasExactFirstNamesMatch(Ps ps, List<String> searchedFirstNames) {
+		if (ps.getFirstNames() == null || ps.getFirstNames().isEmpty()) {
+			return searchedFirstNames.isEmpty();
+		}
+		
+		// Extraire les prénoms du PS (objets FirstName) en respectant l'ordre
+		List<String> psFirstNames = ps.getFirstNames().stream()
+				.sorted((fn1, fn2) -> {
+					// Tri par ordre si disponible, sinon par ordre d'apparition
+					if (fn1.getOrder() != null && fn2.getOrder() != null) {
+						return fn1.getOrder().compareTo(fn2.getOrder());
+					}
+					return 0;
+				})
+				.map(fn -> fn.getFirstName())
+				.filter(name -> name != null && !name.trim().isEmpty())
+				.collect(Collectors.toList());
+		
+		log.debug("PS firstNames (ordered): {}, Searched firstNames: {}", psFirstNames, searchedFirstNames);
+		
+		// Vérification 1 : Même nombre de prénoms
+		if (psFirstNames.size() != searchedFirstNames.size()) {
+			log.debug("Different number of firstNames: PS has {}, search has {}", 
+					psFirstNames.size(), searchedFirstNames.size());
+			return false;
+		}
+		
+		// Vérification 2 : Correspondance exacte des prénoms dans le même ordre (insensible à la casse et aux accents)
+		for (int i = 0; i < psFirstNames.size(); i++) {
+			String psFirstName = normalizeForComparison(psFirstNames.get(i).trim());
+			String searchedFirstName = normalizeForComparison(searchedFirstNames.get(i).trim());
+			
+			if (!psFirstName.equals(searchedFirstName)) {
+				log.debug("FirstName mismatch at position {}: PS has '{}', search has '{}'", 
+						i, psFirstNames.get(i), searchedFirstNames.get(i));
+				return false;
+			}
+		}
+		
+		log.debug("Exact match with order respected: true");
+		return true;
+	}
+
+	/**
+	 * Convertit une liste de prénoms vers une chaîne avec espaces
+	 * 
+	 * @param firstNamesList Liste de prénoms (ex: ["Jean", "Pierre"])
+	 * @return Prénoms séparés par des espaces (ex: "Jean Pierre")
+	 */
+	private String convertFirstNamesListToString(List<String> firstNamesList) {
+		if (firstNamesList == null || firstNamesList.isEmpty()) {
+			return "";
+		}
+		return String.join(" ", firstNamesList);
+	}
+
+	/**
+	 * Convertit un UserDto (nouveau format PSI) vers un User (format AMAR)
+	 * 
+	 * @param userDto Le UserDto reçu depuis l'API PSI
+	 * @return Un User compatible avec le format AMAR
+	 */
+	private User convertUserDtoToUser(UserDto userDto) {
+		User user = new User();
+
+		// Mapping de base
+		user.setNationalId(userDto.getNationalId());
+
+		// Mapping CivilStatus
+		if (userDto.getCivilStatus() != null) {
+			CivilStatus civilStatus = new CivilStatus();
+			CivilStatusDto dto = userDto.getCivilStatus();
+
+			civilStatus.setLastName(dto.getLastName());
+			civilStatus.setGenderCode(dto.getGenderCode());
+			civilStatus.setBirthplace(dto.getBirthplace());
+			civilStatus.setBirthTownCode(dto.getBirthTownCode());
+			civilStatus.setBirthCountryCode(dto.getBirthCountryCode());
+			civilStatus.setPersonalCivilityTitle(dto.getPersonalCivilityTitle());
+
+			// Conversion de la date : ISO (yyyy-MM-dd) vers format français (dd/MM/yyyy)
+			if (dto.getBirthdate() != null) {
+				DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				String frenchDateFormat = dto.getBirthdate().format(outputFormatter);
+				civilStatus.setBirthdate(frenchDateFormat);
+			}
+
+			// Conversion des prénoms : String -> List<String>
+			if (dto.getFirstNames() != null && !dto.getFirstNames().trim().isEmpty()) {
+				civilStatus.setFirstNames(convertFirstNamesStringToList(dto.getFirstNames()));
+			}
+
+			user.setCivilStatus(civilStatus);
+		}
+
+		// Mapping ContactInfo vers CivilStatus
+		if (userDto.getContactInfo() != null && user.getCivilStatus() != null) {
+			user.getCivilStatus().setEmail(userDto.getContactInfo().getEmail());
+			user.getCivilStatus().setPhone(userDto.getContactInfo().getPhone());
+		}
+
+		// Mapping AlternativeIdentifiers
+		if (userDto.getAlternativeIdentifiers() != null) {
+			List<fr.ans.psc.amar.v2.model.AlternativeIdentifier> alternativeIds = new ArrayList<>();
+			userDto.getAlternativeIdentifiers().forEach(dto -> {
+				fr.ans.psc.amar.v2.model.AlternativeIdentifier altId = new fr.ans.psc.amar.v2.model.AlternativeIdentifier();
+				altId.setIdentifier(dto.getIdentifier());
+				altId.setOrigine(dto.getOrigine());
+				altId.setQuality(dto.getQuality() != null ? dto.getQuality() : 1); // Utilise quality du DTO ou 1 par
+																					// défaut
+				alternativeIds.add(altId);
+			});
+			user.setAlternativeIdentifiers(alternativeIds);
+		}
+
+		// Mapping Practices
+		if (userDto.getPractices() != null) {
+			List<fr.ans.psc.amar.v2.model.Practice> practices = new ArrayList<>();
+			userDto.getPractices().forEach(practiceDto -> {
+				fr.ans.psc.amar.v2.model.Practice practice = new fr.ans.psc.amar.v2.model.Practice();
+				
+				practice.setProfessionCode(practiceDto.getProfessionCode());
+				practice.setProfessionalCategoryCode(practiceDto.getProfessionalCategoryCode());
+				practice.setExpertiseTypeCode(practiceDto.getExpertiseTypeCode());
+				practice.setExpertiseCode(practiceDto.getExpertiseCode());
+				practice.setProfessionalCivilityTitle(practiceDto.getProfessionalCivilityTitle());
+				practice.setProfessionalLastName(practiceDto.getProfessionalLastName());
+				practice.setProfessionalFirstName(practiceDto.getProfessionalFirstName());
+				
+				// Mapping Activities si elles existent
+				if (practiceDto.getActivities() != null) {
+					List<fr.ans.psc.amar.v2.model.Activity> activities = new ArrayList<>();
+					practiceDto.getActivities().forEach(activityDto -> {
+						fr.ans.psc.amar.v2.model.Activity activity = new fr.ans.psc.amar.v2.model.Activity();
+						
+						activity.setProfessionalModeCode(activityDto.getProfessionalModeCode());
+						activity.setActivitySectorCode(activityDto.getActivitySectorCode());
+						activity.setRoleCode(activityDto.getRoleCode());
+						activity.setActivityTypeCode(activityDto.getActivityTypeCode());
+						activity.setSiretSiteNumber(activityDto.getSiretSiteNumber());
+						activity.setSirenSiteNumber(activityDto.getSirenSiteNumber());
+						activity.setFinessSiteNumber(activityDto.getFinessSiteNumber());
+						activity.setCompanyName(activityDto.getCompanyName());
+						activity.setCompanyWayNumber(activityDto.getCompanyWayNumber());
+						activity.setCompanyWayType(activityDto.getCompanyWayType());
+						activity.setCompanyWayLabel(activityDto.getCompanyWayLabel());
+						activity.setCompanyPostalCode(activityDto.getCompanyPostalCode());
+						activity.setCompanyTownCode(activityDto.getCompanyTownCode());
+						activity.setCompanyCountryCode(activityDto.getCompanyCountryCode());
+						activity.setCompanyPhone1(activityDto.getCompanyPhone1());
+						activity.setCompanyEmail(activityDto.getCompanyEmail());
+						
+						activities.add(activity);
+					});
+					practice.setActivities(activities);
+				}
+				
+				practices.add(practice);
+			});
+			user.setPractices(practices);
+		}
+
+		// TODO: Ajouter mapping pour eims si nécessaire
+
+		return user;
 	}
 
 	@Override
-	public ResponseEntity<RechercherMiesResponseDto> rechercherEims(@NotNull @Valid String nationalId) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	@Override
-	public ResponseEntity<TrouverUserResponseDto> rechercherParIdNational(@NotNull @Valid String nationalId)
+	public ResponseEntity<User> rechercherParIdNational(String nationalId)
 			throws URISyntaxException, IOException, InterruptedException {
 
+		log.info("Start - rechercherParIdNational");
+
+		if (nationalId != null) {
+			HttpClient client = HttpClient.newHttpClient();
+			// URLEncoder.encode pour pre-encoder avant buildAndExpand, car psc-ps-api fait un URLDecoder.decode
+			String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
+			String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
+					.path("/v2/ps/{nationalId}")
+					.buildAndExpand(encodedNationalId)
+					.toUriString();
+			log.info("Constructed URI for getPsById: {} (original nationalId: {})", uriPscPs, nationalId);
+			HttpRequest requestPscPs = HttpRequest.newBuilder().uri(URI.create(uriPscPs))
+					.headers("Content-Type", "application/json").GET().build();
+
+			log.info(String.format("Send request to [%s] with in headers: nationalId=%s", uriPscPs, nationalId));
+
+			HttpResponse<String> responsePscPs = client.send(requestPscPs, HttpResponse.BodyHandlers.ofString());
+
+			if (responsePscPs != null) {
+
+				log.info(String.format("Response of [%s] : %s", uriPscPs, responsePscPs));
+
+				Ps psResponse = new Ps();
+				if (responsePscPs.statusCode() == 200) {
+					String jsonResponse = responsePscPs.body();
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+					psResponse = mapper.readValue(jsonResponse, Ps.class);
+					// return new ResponseEntity<>(userResponse, HttpStatus.OK);
+				} else {
+					HttpHeaders headers = new HttpHeaders();
+					if (responsePscPs.statusCode() == 400) {
+						headers.add("X-Error-Message", "Bad Request");
+					} else if (responsePscPs.statusCode() == 410) {
+						headers.add("X-Error-Message", "Not Found");
+					} else if (responsePscPs.statusCode() == 500) {
+						headers.add("X-Error-Message", "Erreur interne serveur");
+					}
+
+					return new ResponseEntity<>(headers, HttpStatus.valueOf(responsePscPs.statusCode()));
+				}
+
+				// Créer le User depuis le Ps
+				User user = new PsiUserAdapter(psResponse);
+				
+				// Extraire email et phone avant de les retirer de civilStatus
+				String email = (psResponse.getEmail() != null) ? psResponse.getEmail() : null;
+				String phone = (psResponse.getPhone() != null) ? psResponse.getPhone() : null;
+				
+				// Créer un UserWithContactInfo qui expose contactInfo séparément
+				// et nettoie email/phone de civilStatus
+				User userResponse = new fr.ans.psc.model.user.UserWithContactInfo(user, email, phone);
+
+				// TODO : A ENLEVER QUAND ON AURA LE AMAR
+				return new ResponseEntity<>(userResponse, HttpStatus.OK);
+
+				// Récupérer le MIE de Amar
+
+//				String uriPscAmar = UriComponentsBuilder.fromHttpUrl(amarPath + "/users/eims").queryParam("nationalId", nationalId)
+//						.build().encode().toUriString();
+//
+//				HttpRequest requestPscAmar = HttpRequest.newBuilder().uri(new URI(uriPscAmar))
+//						.headers("Content-Type", "application/json", "nationalId", nationalId).GET().build();
+//				
+//				log.info(String.format("Send request to [%s] with in headers: nationalId=%s", uriPscAmar, nationalId));
+//
+//				HttpResponse<String> responsePscAmar = client.send(requestPscAmar, HttpResponse.BodyHandlers.ofString());
+//
+//				if (responsePscAmar.statusCode() == 200) {
+//					String jsonResponse = responsePscAmar.body();
+//					ObjectMapper mapper = new ObjectMapper();
+//					HashMap<?,?> mieResponse = mapper.readValue(jsonResponse, HashMap.class);
+//					//List<MIE> eims = mieResponse.get("data"); // MAPPING
+//					user.etEims(eims);
+//					
+//					return new ResponseEntity<>(user, HttpStatus.OK);
+//				} else {
+//					HttpHeaders headers = new HttpHeaders();
+//					if (responsePscAmar.statusCode() == 400) {
+//						headers.add("X-Error-Message", "Données invalides ou absentes");
+//					} else if (responsePscAmar.statusCode() == 404) {
+//						headers.add("X-Error-Message", "Utilisateur non trouvé");
+//					} else if (responsePscAmar.statusCode() == 500) {
+//						headers.add("X-Error-Message", "Erreur interne serveur");
+//					}
+//					return new ResponseEntity<>(headers, HttpStatus.valueOf(responsePscAmar.statusCode()));
+//				}
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@Override
+	public ResponseEntity<List<String>> rechercherNationalIdParTraitsIdentite(String lastName, String firstNames,
+			String genderCode, LocalDate birthdate, String birthTownCode, String birthCountryCode, String birthplace)
+			throws URISyntaxException, IOException, InterruptedException {
+
+		log.info("Start - rechercherNationalIdParTraitsIdentite");
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		// Étape 1 : Convertir les prénoms recherchés en liste pour comparaison exacte
+		List<String> searchedFirstNames = convertFirstNamesStringToList(firstNames);
+		log.debug("Searched firstNames as list: {}", searchedFirstNames);
+
 		HttpClient client = HttpClient.newHttpClient();
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps/search")
+				.queryParam("lastName", lastName).queryParam("firstNames", firstNames)
+				.queryParam("genderCode", genderCode).queryParam("birthdate", birthdate.toString());
 
-		String uri = psPath + "/v2/ps/psId=" + nationalId;
+		if (birthTownCode != null && !birthTownCode.isEmpty()) {
+			builder.queryParam("birthTownCode", birthTownCode);
+		}
 
-		HttpRequest request = HttpRequest.newBuilder().uri(new URI(uri)).header(nationalId, nationalId).GET().build();
+		if (birthCountryCode != null && !birthCountryCode.isEmpty()) {
+			builder.queryParam("birthCountryCode", birthCountryCode);
+		}
+
+		if (birthplace != null && !birthplace.isEmpty()) {
+			builder.queryParam("birthplace", birthplace);
+		}
+
+		String uri = builder.encode().build().toUriString();
+
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).headers("Content-Type", "application/json")
+				.GET().build();
+
+		log.info(String.format(
+				"Send request to [%s] with parameters: lastName=%s, firstNames=%s, genderCode=%s, birthTownCode=%s, birthCountryCode=%s, birthplace=%s",
+				uri, lastName, firstNames, genderCode, birthTownCode, birthCountryCode, birthplace));
 
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		if (response != null) {
+
+			log.info(String.format("Response of [%s] : %s", uri, response));
+
 			if (response.statusCode() == 200) {
 				String jsonResponse = response.body();
-
 				ObjectMapper mapper = new ObjectMapper();
-				//TrouverUserResponseDto userResponse = mapper.readValue(jsonResponse, TrouverUserResponseDto.class);
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 				
-				//return new ResponseEntity<>(userResponse, HttpStatus.OK);
+				// Étape 2 : Récupérer la liste des IDs potentiels
+				List<String> candidateIds = mapper.readValue(jsonResponse, new TypeReference<List<String>>() {
+				});
+				
+				log.debug("Candidate IDs from ps-api: {}", candidateIds);
+				
+				// Étape 3 : Filtrer pour ne garder que les correspondances exactes
+				List<String> exactMatchIds = new ArrayList<>();
+				
+				for (String nationalId : candidateIds) {
+					// Récupérer le PS complet pour vérifier les prénoms
+					// URLEncoder.encode pour pre-encoder avant buildAndExpand, car psc-ps-api fait un URLDecoder.decode
+					String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
+					String psUri = UriComponentsBuilder.fromHttpUrl(psPath)
+							.path("/v2/ps/{nationalId}")
+							.buildAndExpand(encodedNationalId)
+							.toUriString();
+					HttpRequest psRequest = HttpRequest.newBuilder()
+							.uri(URI.create(psUri))
+							.headers("Content-Type", "application/json")
+							.GET()
+							.build();
+					
+					HttpResponse<String> psResponse = client.send(psRequest, HttpResponse.BodyHandlers.ofString());
+					
+					if (psResponse.statusCode() == 200) {
+						Ps ps = mapper.readValue(psResponse.body(), Ps.class);
+						
+						// Vérifier la correspondance exacte des prénoms
+						if (ps != null && hasExactFirstNamesMatch(ps, searchedFirstNames)) {
+							exactMatchIds.add(nationalId);
+							log.debug("Exact match found for nationalId: {}", nationalId);
+						} else {
+							log.debug("Filtered out nationalId {} (firstNames don't match exactly)", nationalId);
+						}
+					}
+				}
+				
+				log.info("Exact match IDs after filtering: {}", exactMatchIds);
 
-				return new ResponseEntity<>(null, HttpStatus.OK);
+				return new ResponseEntity<>(exactMatchIds, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
+				HttpHeaders headers = new HttpHeaders();
+				if (response.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (response.statusCode() == 401) {
+					headers.add("X-Error-Message", "Utilisateur non autorisé");
+				} else if (response.statusCode() == 404) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé");
+				} else if (response.statusCode() == 409) {
+					headers.add("X-Error-Message", "Conflits");
+				} else if (response.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(response.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Valide les données du UserDto pour la création (POST)
+	 * 
+	 * @param userDto Le UserDto à valider
+	 * @return ResponseEntity avec un code d'erreur si validation échoue, null sinon
+	 */
+	private ResponseEntity<Void> validateUserDtoForCreation(UserDto userDto) {
+		HttpHeaders headers = new HttpHeaders();
+
+		// Validation: alternativeIdentifiers est obligatoire
+		if (userDto.getAlternativeIdentifiers() == null || userDto.getAlternativeIdentifiers().isEmpty()) {
+			headers.add("X-Error-Message", "Le champ alternativeIdentifiers est obligatoire pour la création");
+			return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+		}
+
+		String nationalId = userDto.getNationalId();
+
+		// Validation de chaque alternativeIdentifier
+		for (org.openapitools.model.AlternativeIdentifierDto altId : userDto.getAlternativeIdentifiers()) {
+			// Validation: identifier doit être égal au nationalId
+			if (altId.getIdentifier() == null || !altId.getIdentifier().equals(nationalId)) {
+				headers.add("X-Error-Message",
+						"L'identifier dans alternativeIdentifiers doit être égal au nationalId");
+				return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+			}
+
+			// Validation: origine doit être "PSI"
+			//if (altId.getOrigine() == null || !"PSI".equals(altId.getOrigine())) {
+				//headers.add("X-Error-Message", "L'origine dans alternativeIdentifiers doit être 'PSI'");
+				//return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+			//}
+
+			// Validation: quality doit être 1 ou 2
+			if (altId.getQuality() == null || (altId.getQuality() != 1 && altId.getQuality() != 2)) {
+				headers.add("X-Error-Message", "La quality dans alternativeIdentifiers doit être 1 ou 2");
+				return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		return null; // Validation réussie
+	}
+
+	@Override
+	public ResponseEntity<Void> creerUser(UserDto userDto)
+			throws IOException, InterruptedException, URISyntaxException {
+
+		log.info("Start - creerUser");
+
+		// Validation des données pour la création
+		ResponseEntity<Void> validationResult = validateUserDtoForCreation(userDto);
+		if (validationResult != null) {
+			return validationResult;
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		// Conversion UserDto -> User (format AMAR)
+		User user = convertUserDtoToUser(userDto);
+
+		// Mapping
+		Ps ps = new PsiPsAdapter(user);
+		String psJson = mapper.writeValueAsString(ps);
+
+		HttpClient client = HttpClient.newHttpClient();
+		String uri = psPath + "/v2/ps";
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString(psJson)).build();
+
+		log.info(String.format("Send request to [%s] with in body: %s", uri, psJson));
+
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		if (response != null) {
+
+			log.info(String.format("Response of [%s] : %s", uri, response));
+
+			if (response.statusCode() == 200) {
+				String jsonResponse = response.body();
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				HttpHeaders headers = new HttpHeaders();
+				if (response.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (response.statusCode() == 401) {
+					headers.add("X-Error-Message", "Utilisateur non autorisé");
+				} else if (response.statusCode() == 404) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé");
+				} else if (response.statusCode() == 409) {
+					headers.add("X-Error-Message", "Conflits");
+				} else if (response.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(response.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@Override
+	public ResponseEntity<Void> updateUser(String nationalId, UserDto userDto)
+			throws IOException, InterruptedException, URISyntaxException {
+
+		log.info("Start - updateUser");
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		// Conversion UserDto -> User (format AMAR)
+		User user = convertUserDtoToUser(userDto);
+
+		// Mapping
+		Ps ps = new PsiPsAdapter(user);
+		String psJson = mapper.writeValueAsString(ps);
+
+		HttpClient client = HttpClient.newHttpClient();
+
+		String uri = UriComponentsBuilder.fromHttpUrl(psPath + "/v2/ps").queryParam("extraId", nationalId).build()
+				.toUriString();
+
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).headers("Content-Type", "application/json")
+				.PUT(HttpRequest.BodyPublishers.ofString(psJson)).build();
+
+		log.info(String.format("Send request to [%s] with in parameters : extraId=%s and in body: %s", uri, nationalId,
+				psJson));
+
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		if (response != null) {
+
+			log.info(String.format("Response of [%s] : %s", uri, response));
+
+			if (response.statusCode() == 200) {
+				String jsonResponse = response.body();
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				HttpHeaders headers = new HttpHeaders();
+				if (response.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (response.statusCode() == 401) {
+					headers.add("X-Error-Message", "Utilisateur non autorisé");
+				} else if (response.statusCode() == 404) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé");
+				} else if (response.statusCode() == 409) {
+					headers.add("X-Error-Message", "L'utilisateur avec cet identifiant national existe déjà");
+				} else if (response.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(response.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@Override
+	public ResponseEntity<Void> deleteUser(String nationalId)
+			throws URISyntaxException, IOException, InterruptedException {
+
+		log.info("Start - deleteUser with nationalId: {}", nationalId);
+
+		HttpClient client = HttpClient.newHttpClient();
+		// URLEncoder.encode pour pre-encoder avant buildAndExpand, car psc-ps-api fait un URLDecoder.decode
+		String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
+		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
+				.path("/v2/ps/{nationalId}")
+				.buildAndExpand(encodedNationalId)
+				.toUriString();
+		
+		HttpRequest requestPscPs = HttpRequest.newBuilder()
+				.uri(URI.create(uriPscPs))
+				.headers("Content-Type", "application/json")
+				.DELETE()
+				.build();
+
+		log.info("Send DELETE request to [{}] with nationalId: {}", uriPscPs, nationalId);
+
+		HttpResponse<String> responsePscPs = client.send(requestPscPs, HttpResponse.BodyHandlers.ofString());
+
+		if (responsePscPs != null) {
+			log.info("Response of [{}]: status={}", uriPscPs, responsePscPs.statusCode());
+
+			if (responsePscPs.statusCode() == 204) {
+				log.info("User {} successfully deleted", nationalId);
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			} else {
+				HttpHeaders headers = new HttpHeaders();
+				if (responsePscPs.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (responsePscPs.statusCode() == 410) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé ou déjà supprimé");
+				} else if (responsePscPs.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(responsePscPs.statusCode()));
 			}
 		}
 
@@ -73,15 +675,57 @@ public class PsiApiController implements PsiApi {
 	}
 
 	@Override
-	public ResponseEntity<TrouverUserResponseDto> rechercherParTraitsIdentite1(@NotNull @Valid String lastName,
-			@NotNull @Valid String firstNames, @NotNull @Valid String genderCode, @NotNull @Valid LocalDate birthdate,
-			@NotNull @Valid String birthTownCode, @NotNull @Valid String birthCountryCode) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	public ResponseEntity<Void> forceDeleteUser(String nationalId)
+			throws URISyntaxException, IOException, InterruptedException {
 
-	@Override
-	public ResponseEntity<Void> updateEims(@NotNull @Valid String nationalId,
-			@Valid UpdateEimsRequestDto updateEimsRequestDto) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		log.info("Start - forceDeleteUser with nationalId: {}", nationalId);
+
+		// Check if force delete is enabled (only in preprod)
+		if (!forceDeleteEnabled) {
+			log.warn("Force delete is disabled. This endpoint is only available in preprod environment.");
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("X-Error-Message", "Force delete is not available in this environment");
+			return new ResponseEntity<>(headers, HttpStatus.FORBIDDEN);
+		}
+
+		HttpClient client = HttpClient.newHttpClient();
+		// URLEncoder.encode pour pre-encoder avant buildAndExpand, car psc-ps-api fait un URLDecoder.decode
+		String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
+		String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
+				.path("/v2/ps/force/{nationalId}")
+				.buildAndExpand(encodedNationalId)
+				.toUriString();
+		
+		HttpRequest requestPscPs = HttpRequest.newBuilder()
+				.uri(URI.create(uriPscPs))
+				.headers("Content-Type", "application/json")
+				.DELETE()
+				.build();
+
+		log.info("Send force DELETE request to [{}] with nationalId: {}", uriPscPs, nationalId);
+
+		HttpResponse<String> responsePscPs = client.send(requestPscPs, HttpResponse.BodyHandlers.ofString());
+
+		if (responsePscPs != null) {
+			log.info("Response of [{}]: status={}", uriPscPs, responsePscPs.statusCode());
+
+			if (responsePscPs.statusCode() == 204) {
+				log.info("User {} successfully force deleted", nationalId);
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			} else {
+				HttpHeaders headers = new HttpHeaders();
+				if (responsePscPs.statusCode() == 400) {
+					headers.add("X-Error-Message", "Données invalides ou absentes");
+				} else if (responsePscPs.statusCode() == 410) {
+					headers.add("X-Error-Message", "Utilisateur non trouvé");
+				} else if (responsePscPs.statusCode() == 500) {
+					headers.add("X-Error-Message", "Erreur interne serveur");
+				}
+
+				return new ResponseEntity<>(headers, HttpStatus.valueOf(responsePscPs.statusCode()));
+			}
+		}
+
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

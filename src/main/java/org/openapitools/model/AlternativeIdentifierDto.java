@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import javax.validation.Valid;
@@ -18,16 +19,16 @@ import javax.annotation.Generated;
  * AlternativeIdentifierDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-11T14:56:49.312778+02:00[Europe/Paris]", comments = "Generator version: 7.6.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class AlternativeIdentifierDto {
 
-  private String identifier;
+  private @Nullable String identifier;
 
-  private String origine;
+  private @Nullable String origine;
 
-  private Integer quality;
+  private @Nullable Integer quality;
 
-  public AlternativeIdentifierDto identifier(String identifier) {
+  public AlternativeIdentifierDto identifier(@Nullable String identifier) {
     this.identifier = identifier;
     return this;
   }
@@ -35,19 +36,19 @@ public class AlternativeIdentifierDto {
   /**
    * Get identifier
    * @return identifier
-  */
+   */
   
-  @Schema(name = "identifier", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "identifier", required = false, description = "")
   @JsonProperty("identifier")
-  public String getIdentifier() {
+  public @Nullable String getIdentifier() {
     return identifier;
   }
 
-  public void setIdentifier(String identifier) {
+  public void setIdentifier(@Nullable String identifier) {
     this.identifier = identifier;
   }
 
-  public AlternativeIdentifierDto origine(String origine) {
+  public AlternativeIdentifierDto origine(@Nullable String origine) {
     this.origine = origine;
     return this;
   }
@@ -55,19 +56,19 @@ public class AlternativeIdentifierDto {
   /**
    * Get origine
    * @return origine
-  */
+   */
   
-  @Schema(name = "origine", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "origine", required = false, description = "")
   @JsonProperty("origine")
-  public String getOrigine() {
+  public @Nullable String getOrigine() {
     return origine;
   }
 
-  public void setOrigine(String origine) {
+  public void setOrigine(@Nullable String origine) {
     this.origine = origine;
   }
 
-  public AlternativeIdentifierDto quality(Integer quality) {
+  public AlternativeIdentifierDto quality(@Nullable Integer quality) {
     this.quality = quality;
     return this;
   }
@@ -75,15 +76,15 @@ public class AlternativeIdentifierDto {
   /**
    * Get quality
    * @return quality
-  */
+   */
   
-  @Schema(name = "quality", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "quality", required = false, description = "")
   @JsonProperty("quality")
-  public Integer getQuality() {
+  public @Nullable Integer getQuality() {
     return quality;
   }
 
-  public void setQuality(Integer quality) {
+  public void setQuality(@Nullable Integer quality) {
     this.quality = quality;
   }
 

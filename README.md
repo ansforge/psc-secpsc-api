@@ -25,3 +25,43 @@ public interface PetClient extends PetApi {
 
 }
 ```
+## Configuration
+
+### Force Delete Endpoint (Preprod Only)
+
+L'endpoint `DELETE /user/force` permet la suppression physique (hard delete) d'un utilisateur de la base de données.
+
+**⚠️ Attention** : Cet endpoint est **désactivé par défaut** et ne doit être activé qu'en environnement de préproduction.
+
+#### Activation automatique avec Waypoint/Nomad
+
+L'endpoint est automatiquement activé lorsque le déploiement Nomad utilise le namespace **`secpsc-preprod`**.
+
+Le template Nomad (`psc-secpsc-api.nomad.tpl`) configure automatiquement `force.delete.enabled=true` pour les namespaces :
+- `preprod`
+- `psc-preprod`
+- `secpsc-preprod`
+
+#### Activation manuelle (développement local)
+
+Pour activer cet endpoint en local, définissez la variable d'environnement :
+
+```bash
+export FORCE_DELETE_ENABLED=true
+```
+
+Ou via argument JVM :
+```bash
+java -jar psc-secpsc-api.jar -DFORCE_DELETE_ENABLED=true
+```
+
+#### En production
+
+En production, l'endpoint retournera une erreur **403 Forbidden** car `force.delete.enabled=false` par défaut.
+
+#### Endpoints disponibles
+
+| Endpoint | Type | Disponibilité |
+|----------|------|---------------|
+| `DELETE /user?nationalId=X` | Soft delete | Tous environnements |
+| `DELETE /user/force?nationalId=X` | Hard delete | **Preprod uniquement** |
