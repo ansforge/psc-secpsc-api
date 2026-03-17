@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import org.openapitools.model.ApiError;
 import org.openapitools.model.ErrorDto;
 import org.openapitools.model.GenericInternalServerErrorDto;
+import org.openapitools.model.PsNameSearchResultDto;
 import org.openapitools.model.TrouverUserResponseDto;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -274,5 +275,20 @@ public interface PsiApi {
 
 	ResponseEntity<Void> forceDeleteUser(
 			@NotNull @Parameter(name = "nationalId", description = "Identifiant national de l'utilisateur à supprimer définitivement", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId)
+			throws URISyntaxException, IOException, InterruptedException;
+
+	@Operation(operationId = "rechercherParNomPrenom", summary = "Recherche des PS par nom et/ou prénom", tags = {
+			"rechercher-user-controller" }, responses = {
+					@ApiResponse(responseCode = "200", description = "Liste de PS avec leurs identifiants nationaux et raisons sociales", content = {
+							@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PsNameSearchResultDto.class))) }),
+					@ApiResponse(responseCode = "400", description = "Données invalides ou absentes", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
+	@RequestMapping(method = RequestMethod.GET, value = "/user/search", produces = { "application/json" })
+
+	ResponseEntity<List<PsNameSearchResultDto>> rechercherParNomPrenom(
+			@Parameter(name = "lastName", description = "Nom de famille", in = ParameterIn.QUERY) @Valid @RequestParam(value = "lastName", required = false) @Nullable String lastName,
+			@Parameter(name = "firstNames", description = "Prénom(s) séparés par des espaces", in = ParameterIn.QUERY) @Valid @RequestParam(value = "firstNames", required = false) @Nullable String firstNames)
 			throws URISyntaxException, IOException, InterruptedException;
 }
