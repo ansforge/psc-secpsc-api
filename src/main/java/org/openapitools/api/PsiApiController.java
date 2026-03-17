@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.openapitools.model.CivilStatusDto;
+import org.openapitools.model.PsNameSearchResultDto;
 import org.openapitools.model.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -727,5 +728,39 @@ public class PsiApiController implements PsiApi {
 		}
 
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@Override
+	public ResponseEntity<List<PsNameSearchResultDto>> rechercherParNomPrenom(String lastName, String firstNames)
+			throws URISyntaxException, IOException, InterruptedException {
+
+		log.info("Start - rechercherParNomPrenom lastName={} firstNames={}", lastName, firstNames);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(psPath).path("/v2/ps/search/name");
+		if (lastName != null && !lastName.isBlank()) {
+			builder.queryParam("lastName", lastName);
+		}
+		if (firstNames != null && !firstNames.isBlank()) {
+			builder.queryParam("firstNames", firstNames);
+		}
+		String uri = builder.encode().build().toUriString();
+
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri))
+				.headers("Content-Type", "application/json").GET().build();
+
+		log.info("Send request to [{}]", uri);
+
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		if (response.statusCode() == 200) {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			List<PsNameSearchResultDto> results = mapper.readValue(response.body(),
+					new TypeReference<List<PsNameSearchResultDto>>() {});
+			return new ResponseEntity<>(results, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
 	}
 }
