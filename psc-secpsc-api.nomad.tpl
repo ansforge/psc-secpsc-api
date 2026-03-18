@@ -91,8 +91,8 @@ spring.data.mongodb.host={{ range service "${nomad_namespace}-psc-mongodb" }}{{ 
 spring.data.mongodb.port={{ range service "${nomad_namespace}-psc-mongodb" }}{{ .Port }}{{ end }}
 spring.data.mongodb.database=mongodb
 {{ with secret "psc-ecosystem/${nomad_namespace}/mongodb" }}spring.data.mongodb.username={{ .Data.data.root_user }} {{ end }}
-# Enable force delete in preprod environment
-%{ if nomad_namespace == "preprod" || nomad_namespace == "psc-preprod" || nomad_namespace == "secpsc-preprod" }force.delete.enabled=true%{ else }force.delete.enabled=false%{ endif }
+# Enable force delete (configurable via Vault secret FORCE_DELETE_ENABLED)
+{{ with secret "psc-ecosystem/${nomad_namespace}/psc-secpsc-api" }}force.delete.enabled={{ .Data.data.force_delete_enabled | default "false" }}{{ end }}
 EOF
         destination = "secrets/application.properties"
         change_mode = "restart"
