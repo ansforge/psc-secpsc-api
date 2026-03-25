@@ -4,7 +4,8 @@ info:
   description: |
     SECPSC : API PSI (ProSanté Connect - Plateforme de Services d'Identité) pour la gestion des utilisateurs
     Cette API permet de rechercher, créer et mettre à jour les utilisateurs dans le système PSC PSI.
-  version: 1.0.0
+    - Mise à jour du 17/03/2026 : Ajout d'un endpoint de recherche de professionnels de santé par nom et/ou prénom, qui retourne leurs identifiants nationaux et raisons sociales.
+  version: 1.1.0
   contact:
     name: ANS - Agence du Numérique en Santé
     url: https://esante.gouv.fr
@@ -13,7 +14,7 @@ info:
 servers:
   - url: http://localhost:8085/psc-psi-api/api
     description: Serveur de développement local
-  - url: https://psc-psi-api.esante.gouv.fr/api
+  - url: https://psc-secpsc-api.esante.gouv.fr/api
     description: Serveur de production
 paths:
   /user:
@@ -204,13 +205,10 @@ paths:
       operationId: forceDeleteUser
       summary: Supprimer définitivement un utilisateur (PREPROD UNIQUEMENT)
       description: |
-        **⚠️ PREPROD UNIQUEMENT - Désactivé en production**
-        
-        Supprime physiquement l'utilisateur de la base de données (hard delete). 
+        Supprime physiquement l'utilisateur de la base de données (hard delete).
         Cette opération est irréversible. L'utilisateur et toutes ses données seront définitivement effacés.
         
-        Cet endpoint n'est disponible qu'en environnement de préproduction.
-        En production, il retourne une erreur 403 Forbidden.
+        Cet endpoint est activé ou désactivé via la configuration `force.delete.enabled`.
       tags:
         - rechercher-user-controller
       parameters:
