@@ -4,7 +4,8 @@ info:
   description: |
     SECPSC : API PSI (ProSanté Connect - Plateforme de Services d'Identité) pour la gestion des utilisateurs
     Cette API permet de rechercher, créer et mettre à jour les utilisateurs dans le système PSC PSI.
-  version: 1.0.0
+    - Mise à jour du 17/03/2026 : Ajout d'un endpoint de recherche de professionnels de santé par nom et/ou prénom, qui retourne leurs identifiants nationaux et raisons sociales.
+  version: 1.1.0
   contact:
     name: ANS - Agence du Numérique en Santé
     url: https://esante.gouv.fr
@@ -13,7 +14,7 @@ info:
 servers:
   - url: http://localhost:8085/psc-psi-api/api
     description: Serveur de développement local
-  - url: https://psc-psi-api.esante.gouv.fr/api
+  - url: https://psc-secpsc-api.esante.gouv.fr/api
     description: Serveur de production
 paths:
   /user:
@@ -204,13 +205,10 @@ paths:
       operationId: forceDeleteUser
       summary: Supprimer définitivement un utilisateur (PREPROD UNIQUEMENT)
       description: |
-        **⚠️ PREPROD UNIQUEMENT - Désactivé en production**
-        
-        Supprime physiquement l'utilisateur de la base de données (hard delete). 
+        Supprime physiquement l'utilisateur de la base de données (hard delete).
         Cette opération est irréversible. L'utilisateur et toutes ses données seront définitivement effacés.
         
-        Cet endpoint n'est disponible qu'en environnement de préproduction.
-        En production, il retourne une erreur 403 Forbidden.
+        Cet endpoint est activé ou désactivé via la configuration `force.delete.enabled`.
       tags:
         - rechercher-user-controller
       parameters:
@@ -324,6 +322,50 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         '409':
           description: Conflits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+
+  /user/search:
+    get:
+      operationId: rechercherParNomPrenom
+      summary: Rechercher des PS par nom et/ou prénom
+      description: Retourne la liste des professionnels de santé correspondant au nom et/ou prénom, avec leurs identifiants nationaux et raisons sociales.
+      tags:
+        - rechercher-user-controller
+      parameters:
+        - name: lastName
+          in: query
+          required: false
+          description: Nom de famille
+          schema:
+            type: string
+            example: "DUPONT"
+        - name: firstNames
+          in: query
+          required: false
+          description: Prénom(s) séparés par des espaces
+          schema:
+            type: string
+            example: "JEAN PIERRE"
+      responses:
+        '200':
+          description: Liste de PS avec leurs identifiants nationaux et raisons sociales
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PsNameSearchResultDto'
+        '400':
+          description: Données invalides ou absentes
           content:
             application/json:
               schema:
@@ -597,6 +639,20 @@ components:
           type: string
           description: Trace technique de l'erreur
           example: "java.lang.Exception: Database connection failed"
+
+    PsNameSearchResultDto:
+      type: object
+      properties:
+        nationalId:
+          type: string
+          description: Identifiant national du professionnel de santé
+          example: "12345678901"
+        companyNames:
+          type: array
+          description: Liste des raisons sociales des structures du PS
+          items:
+            type: string
+          example: ["Cabinet Dupont", "Clinique Saint-Louis"]
 
   securitySchemes:
     bearerAuth:
