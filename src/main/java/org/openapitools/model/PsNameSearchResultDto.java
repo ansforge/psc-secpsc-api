@@ -13,12 +13,12 @@ public class PsNameSearchResultDto {
     private String nationalId;
 
     @JsonProperty("companyNames")
-    private List<String> companyNames;
+    private List<WorkLocationDto> companyNames;
 
     public PsNameSearchResultDto() {
     }
 
-    public PsNameSearchResultDto(String nationalId, List<String> companyNames) {
+    public PsNameSearchResultDto(String nationalId, List<WorkLocationDto> companyNames) {
         this.nationalId = nationalId;
         this.companyNames = companyNames;
     }
@@ -31,11 +31,11 @@ public class PsNameSearchResultDto {
         this.nationalId = nationalId;
     }
 
-    public List<String> getCompanyNames() {
+    public List<WorkLocationDto> getCompanyNames() {
         return companyNames;
     }
 
-    public void setCompanyNames(List<String> companyNames) {
+    public void setCompanyNames(List<WorkLocationDto> companyNames) {
         this.companyNames = companyNames;
     }
 }

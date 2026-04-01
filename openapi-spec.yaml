@@ -32,6 +32,13 @@ paths:
           schema:
             type: string
             example: "12345678901"
+        - name: includeDeactivated
+          in: query
+          required: false
+          description: Si true, retourne le compte même s'il est désactivé
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: Personne trouvée
@@ -649,10 +656,21 @@ components:
           example: "12345678901"
         companyNames:
           type: array
-          description: Liste des raisons sociales des structures du PS
+          description: Liste des lieux d'exercice avec code profession et raison sociale
           items:
-            type: string
-          example: ["Cabinet Dupont", "Clinique Saint-Louis"]
+            $ref: '#/components/schemas/WorkLocationDto'
+    WorkLocationDto:
+      type: object
+      properties:
+        professionCode:
+          type: string
+          description: Code de la profession
+        companyName:
+          type: string
+          description: Raison sociale de la structure
+        companyCedexOffice:
+          type: string
+          description: Code cedex de la structure
 
   securitySchemes:
     bearerAuth:
