@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 import org.openapitools.model.CivilStatusDto;
 import org.openapitools.model.PsNameSearchResultDto;
+import org.openapitools.model.PsSearchResultFromPsApiDto;
+import org.openapitools.model.WorkLocationDto;
 import org.openapitools.model.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -267,7 +269,7 @@ public class PsiApiController implements PsiApi {
 	}
 
 	@Override
-	public ResponseEntity<User> rechercherParIdNational(String nationalId)
+	public ResponseEntity<User> rechercherParIdNational(String nationalId, Boolean includeDeactivated)
 			throws URISyntaxException, IOException, InterruptedException {
 
 		log.info("Start - rechercherParIdNational");
@@ -276,11 +278,13 @@ public class PsiApiController implements PsiApi {
 			HttpClient client = HttpClient.newHttpClient();
 			// URLEncoder.encode pour pre-encoder avant buildAndExpand, car psc-ps-api fait un URLDecoder.decode
 			String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
-			String uriPscPs = UriComponentsBuilder.fromHttpUrl(psPath)
-					.path("/v2/ps/{nationalId}")
-					.buildAndExpand(encodedNationalId)
-					.toUriString();
-			log.info("Constructed URI for getPsById: {} (original nationalId: {})", uriPscPs, nationalId);
+			UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(psPath)
+					.path("/v2/ps/{nationalId}");
+			if (Boolean.TRUE.equals(includeDeactivated)) {
+				uriBuilder.queryParam("includeDeactivated", "true");
+			}
+			String uriPscPs = uriBuilder.buildAndExpand(encodedNationalId).toUriString();
+			log.info("Constructed URI for getPsById: {} (original nationalId: {}, includeDeactivated: {})", uriPscPs, nationalId, includeDeactivated);
 			HttpRequest requestPscPs = HttpRequest.newBuilder().uri(URI.create(uriPscPs))
 					.headers("Content-Type", "application/json").GET().build();
 
@@ -756,8 +760,15 @@ public class PsiApiController implements PsiApi {
 		if (response.statusCode() == 200) {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			List<PsNameSearchResultDto> results = mapper.readValue(response.body(),
-					new TypeReference<List<PsNameSearchResultDto>>() {});
+			List<PsSearchResultFromPsApiDto> psResults = mapper.readValue(response.body(),
+					new TypeReference<List<PsSearchResultFromPsApiDto>>() {});
+			List<PsNameSearchResultDto> results = psResults.stream().map(ps -> {
+				List<WorkLocationDto> companyNames = ps.getWorkLocations() == null ? java.util.List.of()
+						: ps.getWorkLocations().stream()
+								.map(wl -> new WorkLocationDto(ps.getProfessionCode(), wl.getCompanyName(), wl.getCompanyCedexOffice()))
+								.collect(Collectors.toList());
+				return new PsNameSearchResultDto(ps.getNationalId(), companyNames);
+			}).collect(Collectors.toList());
 			return new ResponseEntity<>(results, HttpStatus.OK);
 		}
 
