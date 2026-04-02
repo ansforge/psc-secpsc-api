@@ -128,7 +128,8 @@ paths:
       summary: Mettre à jour un utilisateur
       description: |
         Met à jour les données de l'utilisateur comme son mail, son téléphone (tous 2 vérifiés), 
-        ses traits d'identité, l'id PSI (qui, coté SEC PSC, ajoutera l'id à la liste des identifiants de l'utilisateur)
+        ses traits d'identité, l'id PSI (qui, coté SEC PSC, ajoutera l'id à la liste des identifiants de l'utilisateur).
+        Si le compte est désactivé, il est automatiquement réactivé avant d'appliquer la mise à jour.
       tags:
         - rechercher-user-controller
       parameters:
