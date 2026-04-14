@@ -26,6 +26,8 @@ import javax.annotation.Generated;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-13T15:21:27.382698+02:00[Europe/Paris]", comments = "Generator version: 7.14.0")
 public class PracticeDto {
 
+  private @Nullable String sourceId;
+
   private @Nullable String professionCode;
 
   private @Nullable String professionalCategoryCode;
@@ -42,6 +44,21 @@ public class PracticeDto {
 
   @Valid
   private List<@Valid ActivityDto> activities = new ArrayList<>();
+
+  public PracticeDto sourceId(@Nullable String sourceId) {
+    this.sourceId = sourceId;
+    return this;
+  }
+
+  @Schema(name = "sourceId", required = false, description = "Identifier of the source from which this practice originates")
+  @JsonProperty("sourceId")
+  public @Nullable String getSourceId() {
+    return sourceId;
+  }
+
+  public void setSourceId(@Nullable String sourceId) {
+    this.sourceId = sourceId;
+  }
 
   public PracticeDto professionCode(@Nullable String professionCode) {
     this.professionCode = professionCode;

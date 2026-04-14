@@ -80,7 +80,7 @@ public class PsiPsAdapterTest implements PsiAdapterDefaultTestValue {
 
 		List<Profession> psProfessions = ps.getProfessions();
 		List<Profession> psByUserProfessions = psByUser.getProfessions();
-		for (int i = 0; i < firstNamePs.size(); i++) {
+		for (int i = 0; i < psProfessions.size(); i++) {
 
 			Profession psProfession = psProfessions.get(i);
 			Profession psByUserProfession = psByUserProfessions.get(i);

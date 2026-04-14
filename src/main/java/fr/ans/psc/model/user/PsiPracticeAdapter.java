@@ -15,6 +15,7 @@
  */
 package fr.ans.psc.model.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.ans.psc.amar.v2.model.Activity;
 import fr.ans.psc.amar.v2.model.Practice;
 import fr.ans.psc.model.AttributeEncoding;
@@ -28,6 +29,12 @@ import java.util.stream.Collectors;
 
 public class PsiPracticeAdapter extends Practice {
 
+    @JsonProperty("sourceId")
+    private String sourceId;
+
+    public String getSourceId() { return sourceId; }
+    public void setSourceId(String sourceId) { this.sourceId = sourceId; }
+
     public PsiPracticeAdapter(Profession profession) {
         setProfessionCode(AttributeEncoding.encodeStringAttribute(profession.getCode()));
         setProfessionalCategoryCode(AttributeEncoding.encodeStringAttribute(profession.getCategoryCode()));
@@ -40,13 +47,17 @@ public class PsiPracticeAdapter extends Practice {
         setExpertiseTypeCode(mainExpertise != null ? mainExpertise.getTypeCode() : null);
 
         List<Activity> activities = new ArrayList<>();
-        profession.getWorkSituations().forEach(workSituation -> activities.add(new PsiActivityAdapter(workSituation)));
+        if (profession.getWorkSituations() != null) {
+            profession.getWorkSituations().forEach(workSituation -> activities.add(new PsiActivityAdapter(workSituation)));
+        }
         setActivities(activities);
+
+        setSourceId(profession.getSourceId());
     }
 
     private Expertise extractExpertise(Profession profession) {
         String[] acceptedExpertises = {"S", "CEX", "PAC"};
-        List<Expertise> expertises = profession.getExpertises().stream()
+        List<Expertise> expertises = (profession.getExpertises() != null ? profession.getExpertises() : new ArrayList<Expertise>()).stream()
                 .filter(expertise -> expertise.getTypeCode() != null && Arrays.stream(acceptedExpertises)
                         .anyMatch(s -> s.equals(expertise.getTypeCode())))
                 .collect(Collectors.toList());
