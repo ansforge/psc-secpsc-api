@@ -38,7 +38,7 @@ public interface PsiAdapterDefaultTestValue {
 	public final static String PROFESSION1_FIRST_NAME = "Jean";
 	
 	public final static String EXPERTISE1_CODE = "C01";
-	public final static String EXPERTISE1_TYPE_CODE = "CARDIO";
+	public final static String EXPERTISE1_TYPE_CODE = "S";
 	
 
 	
