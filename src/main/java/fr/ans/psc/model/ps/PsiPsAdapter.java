@@ -24,6 +24,7 @@ public class PsiPsAdapter extends Ps {
 		// Mapping CivilStatus
 		if(civilStatus != null) {
 			this.setLastName(AttributeEncoding.encodeStringAttribute(civilStatus.getLastName()));
+			this.setUsualLastName(AttributeEncoding.encodeStringAttribute(civilStatus.getUsualLastName()));
 			this.setDateOfBirth(AttributeEncoding.encodeStringAttribute(civilStatus.getBirthdate()));
 			this.setBirthAddressCode(AttributeEncoding.encodeStringAttribute(civilStatus.getBirthTownCode()));
 			this.setBirthCountryCode(AttributeEncoding.encodeStringAttribute(civilStatus.getBirthCountryCode()));

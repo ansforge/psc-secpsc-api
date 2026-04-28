@@ -29,6 +29,7 @@ public class PsiCivilStatusAdapter extends CivilStatus {
 
     public PsiCivilStatusAdapter(Ps ps) {
         setLastName(AttributeEncoding.encodeStringAttribute(ps.getLastName()));
+        setUsualLastName(AttributeEncoding.encodeStringAttribute(ps.getUsualLastName()));
         setFirstNames(extractNames(ps.getFirstNames()));
         setBirthdate(convertDateToIsoFormat(ps.getDateOfBirth()));
         setBirthplace(AttributeEncoding.encodeStringAttribute(ps.getBirthAddress()));
