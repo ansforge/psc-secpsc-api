@@ -216,6 +216,36 @@ public interface PsiApi {
 			@Parameter(name = "UpdateUserRequestDto", description = "", required = true) @Valid @RequestBody org.openapitools.model.UserDto updateUserRequestDto) throws IOException, InterruptedException, URISyntaxException;
 
 	/**
+	 * PUT /user/activity : Upsert une practice identifiée par son sourceId
+	 *
+	 * @param nationalId Identifiant national du compte cible (required)
+	 * @param practiceDto Practice à upsert (sourceId obligatoire) (required)
+	 * @return Activité upsert avec succès (status code 200)
+	 *         or sourceId manquant ou body invalide (status code 400)
+	 *         or Utilisateur non trouvé (status code 410)
+	 * @throws URISyntaxException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	@Operation(operationId = "upsertUserActivity", summary = "Ajouter ou modifier une activité (practice) sur le compte", description = "Upsert d'une practice identifiée par son `sourceId` (obligatoire dans le body). Si une practice stockée a le même sourceId, elle est remplacée. Sinon, elle est ajoutée. Le sourceId doit être non-UUID.", tags = {
+			"rechercher-user-controller" }, responses = {
+					@ApiResponse(responseCode = "200", description = "Activité upsert avec succès"),
+					@ApiResponse(responseCode = "400", description = "sourceId manquant ou body invalide", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "401", description = "Utilisateur non autorisé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)) }),
+					@ApiResponse(responseCode = "410", description = "Utilisateur non trouvé", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)) }),
+					@ApiResponse(responseCode = "500", description = "Erreur interne serveur", content = {
+							@Content(mediaType = "application/json", schema = @Schema(implementation = GenericInternalServerErrorDto.class)) }) })
+	@RequestMapping(method = RequestMethod.PUT, value = "/user/activity", produces = { "application/json" }, consumes = {
+			"application/json" })
+
+	ResponseEntity<Void> upsertUserActivity(
+			@NotNull @Parameter(name = "nationalId", description = "Identifiant national de l'utilisateur cible", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "nationalId", required = true) String nationalId,
+			@Parameter(name = "PracticeDto", description = "Practice à upsert (sourceId obligatoire)", required = true) @Valid @RequestBody org.openapitools.model.PracticeDto practiceDto) throws IOException, InterruptedException, URISyntaxException;
+
+	/**
 	 * DELETE /user : Désactive l&#39;utilisateur dans le système (soft delete)
 	 *
 	 * @param nationalId Identifiant national de l&#39;utilisateur à supprimer (required)

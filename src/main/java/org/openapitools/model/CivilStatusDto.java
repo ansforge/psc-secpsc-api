@@ -18,6 +18,8 @@ public class CivilStatusDto {
 
   private @Nullable String lastName;
 
+  private @Nullable String usualLastName;
+
   private @Nullable String firstNames;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -51,6 +53,26 @@ public class CivilStatusDto {
 
   public void setLastName(@Nullable String lastName) {
     this.lastName = lastName;
+  }
+
+  public CivilStatusDto usualLastName(@Nullable String usualLastName) {
+    this.usualLastName = usualLastName;
+    return this;
+  }
+
+  /**
+   * Nom d'usage (ex. nom marital). Fourni par l'équipe PSI à la création ; distinct du nom légal (lastName).
+   * @return usualLastName
+   */
+
+  @Schema(name = "usualLastName", required = false, description = "Nom d'usage (ex. nom marital). Fourni par l'équipe PSI à la création ; distinct du nom légal (lastName).")
+  @JsonProperty("usualLastName")
+  public @Nullable String getUsualLastName() {
+    return usualLastName;
+  }
+
+  public void setUsualLastName(@Nullable String usualLastName) {
+    this.usualLastName = usualLastName;
   }
 
   public CivilStatusDto firstNames(String firstNames) {
@@ -203,6 +225,7 @@ public class CivilStatusDto {
     }
     CivilStatusDto civilStatusDto = (CivilStatusDto) o;
     return Objects.equals(this.lastName, civilStatusDto.lastName) &&
+        Objects.equals(this.usualLastName, civilStatusDto.usualLastName) &&
         Objects.equals(this.firstNames, civilStatusDto.firstNames) &&
         Objects.equals(this.birthdate, civilStatusDto.birthdate) &&
         Objects.equals(this.birthTownCode, civilStatusDto.birthTownCode) &&
@@ -214,7 +237,7 @@ public class CivilStatusDto {
 
   @Override
   public int hashCode() {
-    return Objects.hash(lastName, firstNames, birthdate, birthTownCode, birthCountryCode, birthplace, genderCode, personalCivilityTitle);
+    return Objects.hash(lastName, usualLastName, firstNames, birthdate, birthTownCode, birthCountryCode, birthplace, genderCode, personalCivilityTitle);
   }
 
   @Override
@@ -222,6 +245,7 @@ public class CivilStatusDto {
     StringBuilder sb = new StringBuilder();
     sb.append("class CivilStatusDto {\n");
     sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
+    sb.append("    usualLastName: ").append(toIndentedString(usualLastName)).append("\n");
     sb.append("    firstNames: ").append(toIndentedString(firstNames)).append("\n");
     sb.append("    birthdate: ").append(toIndentedString(birthdate)).append("\n");
     sb.append("    birthTownCode: ").append(toIndentedString(birthTownCode)).append("\n");

@@ -17,6 +17,7 @@ public class PsiProfessionAdapter extends Profession {
 		this.setSalutationCode(AttributeEncoding.encodeStringAttribute(practice.getProfessionalCivilityTitle()));
 		this.setLastName(AttributeEncoding.encodeStringAttribute(practice.getProfessionalLastName()));
 		this.setFirstName(AttributeEncoding.encodeStringAttribute(practice.getProfessionalFirstName()));
+		this.setSourceId(AttributeEncoding.encodeStringAttribute(practice.getSourceId()));
 
 		// Expertises
 		Expertise mainExpertise = new Expertise();
