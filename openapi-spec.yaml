@@ -208,6 +208,58 @@ paths:
         '500':
           description: Erreur interne serveur
 
+  /user/activity:
+    put:
+      operationId: upsertUserActivity
+      summary: Ajouter ou modifier une activité (practice) sur le compte
+      description: |
+        Upsert d'une practice identifiée par son `sourceId` (obligatoire dans le body).
+        Si une practice stockée a le même sourceId, elle est remplacée. Sinon, elle est ajoutée.
+        Les autres practices (avec un sourceId différent) restent intactes.
+        Le `sourceId` doit être non-UUID (les practices PSI-sourcées ne sont plus autorisées).
+      tags:
+        - rechercher-user-controller
+      parameters:
+        - name: nationalId
+          in: query
+          required: true
+          description: Identifiant national de l'utilisateur cible
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Practice'
+      responses:
+        '200':
+          description: Activité upsert avec succès
+        '400':
+          description: sourceId manquant ou body invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Utilisateur non autorisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+        '410':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Erreur interne serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericInternalServerErrorDto'
+
   /user/force:
     delete:
       operationId: forceDeleteUser
@@ -456,6 +508,9 @@ components:
         lastName:
           type: string
           minLength: 1
+        usualLastName:
+          type: string
+          description: Nom d'usage (ex. nom marital). Fourni par l'équipe PSI à la création ; distinct du nom légal (lastName).
         firstNames:
           type: string
           description: Prénoms séparés par des espaces

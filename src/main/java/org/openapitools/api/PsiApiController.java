@@ -175,6 +175,14 @@ public class PsiApiController implements PsiApi {
 			CivilStatusDto dto = userDto.getCivilStatus();
 
 			civilStatus.setLastName(dto.getLastName());
+			// Règle de gestion : si usualLastName non fourni → fallback sur lastName.
+			// Idempotent (côté ps-api, createNewPs applique déjà le même fallback pour les PSI ;
+			// pour le PUT updateUser, c'est ici qu'on garantit la valeur).
+			String usualLastName = dto.getUsualLastName();
+			if (usualLastName == null || usualLastName.isEmpty()) {
+				usualLastName = dto.getLastName();
+			}
+			civilStatus.setUsualLastName(usualLastName);
 			civilStatus.setGenderCode(dto.getGenderCode());
 			civilStatus.setBirthplace(dto.getBirthplace());
 			civilStatus.setBirthTownCode(dto.getBirthTownCode());
@@ -219,53 +227,70 @@ public class PsiApiController implements PsiApi {
 		// Mapping Practices
 		if (userDto.getPractices() != null) {
 			List<fr.ans.psc.amar.v2.model.Practice> practices = new ArrayList<>();
-			userDto.getPractices().forEach(practiceDto -> {
-				fr.ans.psc.amar.v2.model.Practice practice = new fr.ans.psc.amar.v2.model.Practice();
-				
-				practice.setProfessionCode(practiceDto.getProfessionCode());
-				practice.setProfessionalCategoryCode(practiceDto.getProfessionalCategoryCode());
-				practice.setExpertiseTypeCode(practiceDto.getExpertiseTypeCode());
-				practice.setExpertiseCode(practiceDto.getExpertiseCode());
-				practice.setProfessionalCivilityTitle(practiceDto.getProfessionalCivilityTitle());
-				practice.setProfessionalLastName(practiceDto.getProfessionalLastName());
-				practice.setProfessionalFirstName(practiceDto.getProfessionalFirstName());
-				
-				// Mapping Activities si elles existent
-				if (practiceDto.getActivities() != null) {
-					List<fr.ans.psc.amar.v2.model.Activity> activities = new ArrayList<>();
-					practiceDto.getActivities().forEach(activityDto -> {
-						fr.ans.psc.amar.v2.model.Activity activity = new fr.ans.psc.amar.v2.model.Activity();
-						
-						activity.setProfessionalModeCode(activityDto.getProfessionalModeCode());
-						activity.setActivitySectorCode(activityDto.getActivitySectorCode());
-						activity.setRoleCode(activityDto.getRoleCode());
-						activity.setActivityTypeCode(activityDto.getActivityTypeCode());
-						activity.setSiretSiteNumber(activityDto.getSiretSiteNumber());
-						activity.setSirenSiteNumber(activityDto.getSirenSiteNumber());
-						activity.setFinessSiteNumber(activityDto.getFinessSiteNumber());
-						activity.setCompanyName(activityDto.getCompanyName());
-						activity.setCompanyWayNumber(activityDto.getCompanyWayNumber());
-						activity.setCompanyWayType(activityDto.getCompanyWayType());
-						activity.setCompanyWayLabel(activityDto.getCompanyWayLabel());
-						activity.setCompanyPostalCode(activityDto.getCompanyPostalCode());
-						activity.setCompanyTownCode(activityDto.getCompanyTownCode());
-						activity.setCompanyCountryCode(activityDto.getCompanyCountryCode());
-						activity.setCompanyPhone1(activityDto.getCompanyPhone1());
-						activity.setCompanyEmail(activityDto.getCompanyEmail());
-						
-						activities.add(activity);
-					});
-					practice.setActivities(activities);
-				}
-				
-				practices.add(practice);
-			});
+			userDto.getPractices().forEach(practiceDto -> practices.add(convertPracticeDtoToPractice(practiceDto)));
 			user.setPractices(practices);
 		}
 
 		// TODO: Ajouter mapping pour eims si nécessaire
 
 		return user;
+	}
+
+	/**
+	 * Conversion PracticeDto → Practice (modèle AMAR) — extracted from convertUserDtoToUser
+	 * for reuse by single-practice endpoints (upsertUserActivity).
+	 */
+	private fr.ans.psc.amar.v2.model.Practice convertPracticeDtoToPractice(
+			org.openapitools.model.PracticeDto practiceDto) {
+		fr.ans.psc.amar.v2.model.Practice practice = new fr.ans.psc.amar.v2.model.Practice();
+		practice.setProfessionCode(practiceDto.getProfessionCode());
+		practice.setProfessionalCategoryCode(practiceDto.getProfessionalCategoryCode());
+		practice.setExpertiseTypeCode(practiceDto.getExpertiseTypeCode());
+		practice.setExpertiseCode(practiceDto.getExpertiseCode());
+		practice.setProfessionalCivilityTitle(practiceDto.getProfessionalCivilityTitle());
+		practice.setProfessionalLastName(practiceDto.getProfessionalLastName());
+		practice.setProfessionalFirstName(practiceDto.getProfessionalFirstName());
+		practice.setSourceId(practiceDto.getSourceId());
+
+		if (practiceDto.getActivities() != null) {
+			List<fr.ans.psc.amar.v2.model.Activity> activities = new ArrayList<>();
+			practiceDto.getActivities().forEach(activityDto -> {
+				fr.ans.psc.amar.v2.model.Activity activity = new fr.ans.psc.amar.v2.model.Activity();
+				activity.setProfessionalModeCode(activityDto.getProfessionalModeCode());
+				activity.setActivitySectorCode(activityDto.getActivitySectorCode());
+				activity.setPharmacistTableSectionCode(activityDto.getPharmacistTableSectionCode());
+				activity.setRoleCode(activityDto.getRoleCode());
+				activity.setActivityTypeCode(activityDto.getActivityTypeCode());
+				activity.setSiretSiteNumber(activityDto.getSiretSiteNumber());
+				activity.setSirenSiteNumber(activityDto.getSirenSiteNumber());
+				activity.setFinessSiteNumber(activityDto.getFinessSiteNumber());
+				activity.setFinessLegalCompanyNumber(activityDto.getFinessLegalCompanyNumber());
+				activity.setCompanyTechnicalIdentifier(activityDto.getCompanyTechnicalIdentifier());
+				activity.setCompanyName(activityDto.getCompanyName());
+				activity.setCompanyCommercialSign(activityDto.getCompanyCommercialSign());
+				activity.setCompanyAdditionalAddress(activityDto.getCompanyAdditionalAddress());
+				activity.setCompanyGeographicalPointComplement(activityDto.getCompanyGeographicalPointComplement());
+				activity.setCompanyWayNumber(activityDto.getCompanyWayNumber());
+				activity.setCompanyRepeatIndex(activityDto.getCompanyRepeatIndex());
+				activity.setCompanyWayType(activityDto.getCompanyWayType());
+				activity.setCompanyWayLabel(activityDto.getCompanyWayLabel());
+				activity.setCompanyDistributionMention(activityDto.getCompanyDistributionMention());
+				activity.setCompanyCedexOffice(activityDto.getCompanyCedexOffice());
+				activity.setCompanyPostalCode(activityDto.getCompanyPostalCode());
+				activity.setCompanyTownCode(activityDto.getCompanyTownCode());
+				activity.setCompanyCountryCode(activityDto.getCompanyCountryCode());
+				activity.setCompanyPhone1(activityDto.getCompanyPhone1());
+				activity.setCompanyPhone2(activityDto.getCompanyPhone2());
+				activity.setCompanyFax(activityDto.getCompanyFax());
+				activity.setCompanyEmail(activityDto.getCompanyEmail());
+				activity.setCompanyCountyCode(activityDto.getCompanyCountyCode());
+				activity.setCompanyOldIdentifier(activityDto.getCompanyOldIdentifier());
+				activity.setCompanyRegistrationAuthority(activityDto.getCompanyRegistrationAuthority());
+				activities.add(activity);
+			});
+			practice.setActivities(activities);
+		}
+		return practice;
 	}
 
 	@Override
@@ -630,6 +655,65 @@ public class PsiApiController implements PsiApi {
 		}
 
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@Override
+	public ResponseEntity<Void> upsertUserActivity(String nationalId, org.openapitools.model.PracticeDto practiceDto)
+			throws IOException, InterruptedException, URISyntaxException {
+
+		log.info("Start - upsertUserActivity for nationalId={}", nationalId);
+
+		// Validation: sourceId obligatoire dans le body
+		if (practiceDto == null
+				|| practiceDto.getSourceId() == null
+				|| practiceDto.getSourceId().isEmpty()) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("X-Error-Message", "sourceId obligatoire dans le body");
+			return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+		}
+
+		// Conversion PracticeDto → Practice (AMAR) → Profession (modèle Ps)
+		fr.ans.psc.amar.v2.model.Practice practice = convertPracticeDtoToPractice(practiceDto);
+		fr.ans.psc.model.Profession profession = new fr.ans.psc.model.ps.PsiProfessionAdapter(practice);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String professionJson = mapper.writeValueAsString(profession);
+
+		HttpClient client = HttpClient.newHttpClient();
+		String encodedNationalId = URLEncoder.encode(nationalId, StandardCharsets.UTF_8);
+		String uri = UriComponentsBuilder.fromHttpUrl(psPath)
+				.path("/v2/ps/{psId}/activity")
+				.buildAndExpand(encodedNationalId).toUriString();
+
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(uri))
+				.headers("Content-Type", "application/json")
+				.PUT(HttpRequest.BodyPublishers.ofString(professionJson))
+				.build();
+
+		log.info(String.format("Send request to [%s] with sourceId=%s", uri, practiceDto.getSourceId()));
+
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		if (response != null) {
+			log.info(String.format("Response of [%s] : status=%d", uri, response.statusCode()));
+			if (response.statusCode() == 200) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+			HttpHeaders headers = new HttpHeaders();
+			if (response.statusCode() == 400) {
+				headers.add("X-Error-Message", "Données invalides ou absentes");
+			} else if (response.statusCode() == 401) {
+				headers.add("X-Error-Message", "Utilisateur non autorisé");
+			} else if (response.statusCode() == 410) {
+				headers.add("X-Error-Message", "Utilisateur non trouvé");
+			} else if (response.statusCode() == 500) {
+				headers.add("X-Error-Message", "Erreur interne serveur");
+			}
+			return new ResponseEntity<>(headers, HttpStatus.valueOf(response.statusCode()));
+		}
+
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@Override
