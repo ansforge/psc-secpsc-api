@@ -37,12 +37,20 @@ import fr.ans.psc.amar.v2.model.User;
 import fr.ans.psc.model.Ps;
 import fr.ans.psc.model.ps.PsiPsAdapter;
 import fr.ans.psc.model.user.PsiUserAdapter;
+import fr.ans.psc.secpsc.service.MessageProducer;
+import fr.ans.psc.secpsc.service.OperationType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
 @RequestMapping("${openapi.pscPsi.base-path:/api}")
 public class PsiApiController implements PsiApi {
+
+	private final MessageProducer messageProducer;
+
+	public PsiApiController(MessageProducer messageProducer) {
+		this.messageProducer = messageProducer;
+	}
 
 	@Value("${openapi.pscAmar.base-path:/api}")
 	private String amarPath;
@@ -579,9 +587,10 @@ public class PsiApiController implements PsiApi {
 
 			log.info(String.format("Response of [%s] : %s", uri, response));
 
-			if (response.statusCode() == 200) {
-				String jsonResponse = response.body();
-				return new ResponseEntity<>(HttpStatus.OK);
+			if (response.statusCode() == 200 || response.statusCode() == 201) {
+				OperationType op = response.statusCode() == 201 ? OperationType.CREATE : OperationType.UPDATE;
+				messageProducer.sendPsMessage(ps, op);
+				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
 			} else {
 				HttpHeaders headers = new HttpHeaders();
 				if (response.statusCode() == 400) {
@@ -745,6 +754,9 @@ public class PsiApiController implements PsiApi {
 
 			if (responsePscPs.statusCode() == 204) {
 				log.info("User {} successfully deleted", nationalId);
+				Ps ps = new Ps();
+				ps.setNationalId(nationalId);
+				messageProducer.sendPsMessage(ps, OperationType.DELETE);
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			} else {
 				HttpHeaders headers = new HttpHeaders();
