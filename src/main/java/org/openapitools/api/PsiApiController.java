@@ -28,7 +28,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -378,7 +377,7 @@ public class PsiApiController implements PsiApi {
 								.collect(Collectors.toCollection(LinkedHashSet::new));
 						userResponse.setEims(eims);
 					}
-				} catch (RestClientException e) {
+				} catch (Exception e) {
 					log.warn("Could not fetch eims from AMAR for {}: {}", nationalId, e.getMessage());
 				}
 
