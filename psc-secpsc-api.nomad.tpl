@@ -98,6 +98,8 @@ spring.rabbitmq.host={{ .Address }}
 spring.rabbitmq.port={{ .Port }}{{ end }}
 spring.rabbitmq.username={{ with secret "psc-ecosystem/${nomad_namespace}/rabbitmq" }}{{ .Data.data.user }}
 spring.rabbitmq.password={{ .Data.data.password }}{{ end }}
+in.amar.url={{ with secret "psc-ecosystem/${nomad_namespace}/amar" }}{{ .Data.data.amar_api_url }}{{ end }}
+in.amar.api.key={{ with secret "psc-ecosystem/${nomad_namespace}/amar" }}{{ .Data.data.ans_api_key }}{{ end }}
 EOF
         destination = "secrets/application.properties"
         change_mode = "restart"

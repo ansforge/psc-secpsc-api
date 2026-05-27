@@ -12,7 +12,9 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openapitools.model.CivilStatusDto;
@@ -26,13 +28,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
+import fr.ans.psc.amar.v2.api.TheEimsManagementApiApi;
+import fr.ans.psc.amar.v2.model.AbstractEim;
+import fr.ans.psc.amar.v2.model.AbstractEimObject;
 import fr.ans.psc.amar.v2.model.CivilStatus;
+import fr.ans.psc.amar.v2.model.EimsSummary;
 import fr.ans.psc.amar.v2.model.User;
 import fr.ans.psc.model.Ps;
 import fr.ans.psc.model.ps.PsiPsAdapter;
@@ -47,9 +54,11 @@ import lombok.extern.slf4j.Slf4j;
 public class PsiApiController implements PsiApi {
 
 	private final MessageProducer messageProducer;
+	private final TheEimsManagementApiApi eimsApi;
 
-	public PsiApiController(MessageProducer messageProducer) {
+	public PsiApiController(MessageProducer messageProducer, TheEimsManagementApiApi eimsApi) {
 		this.messageProducer = messageProducer;
+		this.eimsApi = eimsApi;
 	}
 
 	@Value("${openapi.pscAmar.base-path:/api}")
@@ -360,44 +369,44 @@ public class PsiApiController implements PsiApi {
 				// et nettoie email/phone de civilStatus
 				User userResponse = new fr.ans.psc.model.user.UserWithContactInfo(user, email, phone);
 
-				// TODO : A ENLEVER QUAND ON AURA LE AMAR
+				// Enrichir avec les eims d'AMAR (best-effort : un échec ne casse pas le GET)
+				try {
+					EimsSummary summary = eimsApi.getEims(URLEncoder.encode(nationalId, StandardCharsets.UTF_8));
+					if (summary != null && summary.getEims() != null) {
+						Set<AbstractEim> eims = summary.getEims().stream()
+								.map(PsiApiController::toAbstractEim)
+								.collect(Collectors.toCollection(LinkedHashSet::new));
+						userResponse.setEims(eims);
+					}
+				} catch (RestClientException e) {
+					log.warn("Could not fetch eims from AMAR for {}: {}", nationalId, e.getMessage());
+				}
+
 				return new ResponseEntity<>(userResponse, HttpStatus.OK);
-
-				// Récupérer le MIE de Amar
-
-//				String uriPscAmar = UriComponentsBuilder.fromHttpUrl(amarPath + "/users/eims").queryParam("nationalId", nationalId)
-//						.build().encode().toUriString();
-//
-//				HttpRequest requestPscAmar = HttpRequest.newBuilder().uri(new URI(uriPscAmar))
-//						.headers("Content-Type", "application/json", "nationalId", nationalId).GET().build();
-//				
-//				log.info(String.format("Send request to [%s] with in headers: nationalId=%s", uriPscAmar, nationalId));
-//
-//				HttpResponse<String> responsePscAmar = client.send(requestPscAmar, HttpResponse.BodyHandlers.ofString());
-//
-//				if (responsePscAmar.statusCode() == 200) {
-//					String jsonResponse = responsePscAmar.body();
-//					ObjectMapper mapper = new ObjectMapper();
-//					HashMap<?,?> mieResponse = mapper.readValue(jsonResponse, HashMap.class);
-//					//List<MIE> eims = mieResponse.get("data"); // MAPPING
-//					user.etEims(eims);
-//					
-//					return new ResponseEntity<>(user, HttpStatus.OK);
-//				} else {
-//					HttpHeaders headers = new HttpHeaders();
-//					if (responsePscAmar.statusCode() == 400) {
-//						headers.add("X-Error-Message", "Données invalides ou absentes");
-//					} else if (responsePscAmar.statusCode() == 404) {
-//						headers.add("X-Error-Message", "Utilisateur non trouvé");
-//					} else if (responsePscAmar.statusCode() == 500) {
-//						headers.add("X-Error-Message", "Erreur interne serveur");
-//					}
-//					return new ResponseEntity<>(headers, HttpStatus.valueOf(responsePscAmar.statusCode()));
-//				}
 			}
 		}
 
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Convertit un AbstractEimObject (retourné par l'API eims AMAR) en AbstractEim
+	 * (attendu par le modèle User). Les deux classes générées sont structurellement
+	 * identiques ; on copie champ par champ pour éviter toute dépendance à la
+	 * configuration des modules Jackson (OffsetDateTime, JsonNullable).
+	 */
+	static AbstractEim toAbstractEim(AbstractEimObject source) {
+		AbstractEim target = new AbstractEim();
+		target.setNationalId(source.getNationalId());
+		target.setType(source.getType());
+		target.setCreationDate(source.getCreationDate());
+		target.setEndOfValidityDate(source.getEndOfValidityDate());
+		target.setLastUsageDate(source.getLastUsageDate());
+		if (source.getEidasLevel() != null) {
+			target.setEidasLevel(AbstractEim.EidasLevelEnum.fromValue(source.getEidasLevel().getValue()));
+		}
+		target.setAttributes(source.getAttributes());
+		return target;
 	}
 
 	@Override
