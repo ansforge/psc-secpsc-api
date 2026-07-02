@@ -5,6 +5,8 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -27,6 +29,12 @@ public class RestTemplateConfig {
 	@Value("${in.amar.api.key:}")
 	private String amarApiKey;
 
+	private final AmarMtlsSslContextFactory amarMtlsSslContextFactory;
+
+	public RestTemplateConfig(AmarMtlsSslContextFactory amarMtlsSslContextFactory) {
+		this.amarMtlsSslContextFactory = amarMtlsSslContextFactory;
+	}
+
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
 		return builder.build();
@@ -39,7 +47,11 @@ public class RestTemplateConfig {
 		// converter Jackson : le RestTemplate par défaut du client AMAR ne le configure pas,
 		// ce qui casse la désérialisation du champ attributes (JsonNullable<Object>) d'AbstractEimObject.
 		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
+		// mTLS : si un certificat client AMAR est configuré, on présente le certificat via une
+		// request factory dédiée ; sinon on garde la factory par défaut (TLS simple, dev local).
+		ClientHttpRequestFactory baseFactory = amarMtlsSslContextFactory.createRequestFactory()
+				.orElseGet(SimpleClientHttpRequestFactory::new);
+		restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(baseFactory));
 		DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory();
 		uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
 		restTemplate.setUriTemplateHandler(uriBuilderFactory);

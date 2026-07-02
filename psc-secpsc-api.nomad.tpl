@@ -100,8 +100,26 @@ spring.rabbitmq.username={{ with secret "psc-ecosystem/${nomad_namespace}/rabbit
 spring.rabbitmq.password={{ .Data.data.password }}{{ end }}
 in.amar.url={{ with secret "psc-ecosystem/${nomad_namespace}/amar" }}{{ .Data.data.amar_api_url }}{{ end }}
 in.amar.api.key={{ with secret "psc-ecosystem/${nomad_namespace}/amar" }}{{ .Data.data.ans_api_key }}{{ end }}
+amar.cert.path=/secrets/amar-cert.pem
+amar.key.path=/secrets/amar-key.pem
 EOF
         destination = "secrets/application.properties"
+        change_mode = "restart"
+      }
+
+      template {
+        data = <<EOH
+{{ with secret "psc-ecosystem/${nomad_namespace}/amar" }}{{ .Data.data.amar_client_certificate }}{{ end }}
+EOH
+        destination = "secrets/amar-cert.pem"
+        change_mode = "restart"
+      }
+
+      template {
+        data = <<EOH
+{{ with secret "psc-ecosystem/${nomad_namespace}/amar" }}{{ .Data.data.amar_client_private_key }}{{ end }}
+EOH
+        destination = "secrets/amar-key.pem"
         change_mode = "restart"
       }
 
