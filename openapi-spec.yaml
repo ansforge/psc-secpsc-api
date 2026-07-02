@@ -263,7 +263,7 @@ paths:
   /user/force:
     delete:
       operationId: forceDeleteUser
-      summary: Supprimer définitivement un utilisateur (PREPROD UNIQUEMENT)
+      summary: Supprimer définitivement un utilisateur
       description: |
         Supprime physiquement l'utilisateur de la base de données (hard delete).
         Cette opération est irréversible. L'utilisateur et toutes ses données seront définitivement effacés.
