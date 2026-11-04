@@ -12,7 +12,9 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openapitools.model.CivilStatusDto;
@@ -32,17 +34,31 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
+import fr.ans.psc.amar.v2.api.TheEimsManagementApiApi;
+import fr.ans.psc.amar.v2.model.AbstractEim;
+import fr.ans.psc.amar.v2.model.AbstractEimObject;
 import fr.ans.psc.amar.v2.model.CivilStatus;
+import fr.ans.psc.amar.v2.model.EimsSummary;
 import fr.ans.psc.amar.v2.model.User;
 import fr.ans.psc.model.Ps;
 import fr.ans.psc.model.ps.PsiPsAdapter;
 import fr.ans.psc.model.user.PsiUserAdapter;
+import fr.ans.psc.secpsc.service.MessageProducer;
+import fr.ans.psc.secpsc.service.OperationType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
 @RequestMapping("${openapi.pscPsi.base-path:/api}")
 public class PsiApiController implements PsiApi {
+
+	private final MessageProducer messageProducer;
+	private final TheEimsManagementApiApi eimsApi;
+
+	public PsiApiController(MessageProducer messageProducer, TheEimsManagementApiApi eimsApi) {
+		this.messageProducer = messageProducer;
+		this.eimsApi = eimsApi;
+	}
 
 	@Value("${openapi.pscAmar.base-path:/api}")
 	private String amarPath;
@@ -352,44 +368,44 @@ public class PsiApiController implements PsiApi {
 				// et nettoie email/phone de civilStatus
 				User userResponse = new fr.ans.psc.model.user.UserWithContactInfo(user, email, phone);
 
-				// TODO : A ENLEVER QUAND ON AURA LE AMAR
+				// Enrichir avec les eims d'AMAR (best-effort : un échec ne casse pas le GET)
+				try {
+					EimsSummary summary = eimsApi.getEims(URLEncoder.encode(nationalId, StandardCharsets.UTF_8));
+					if (summary != null && summary.getEims() != null) {
+						Set<AbstractEim> eims = summary.getEims().stream()
+								.map(PsiApiController::toAbstractEim)
+								.collect(Collectors.toCollection(LinkedHashSet::new));
+						userResponse.setEims(eims);
+					}
+				} catch (Exception e) {
+					log.warn("Could not fetch eims from AMAR for {}: {}", nationalId, e.getMessage());
+				}
+
 				return new ResponseEntity<>(userResponse, HttpStatus.OK);
-
-				// Récupérer le MIE de Amar
-
-//				String uriPscAmar = UriComponentsBuilder.fromHttpUrl(amarPath + "/users/eims").queryParam("nationalId", nationalId)
-//						.build().encode().toUriString();
-//
-//				HttpRequest requestPscAmar = HttpRequest.newBuilder().uri(new URI(uriPscAmar))
-//						.headers("Content-Type", "application/json", "nationalId", nationalId).GET().build();
-//				
-//				log.info(String.format("Send request to [%s] with in headers: nationalId=%s", uriPscAmar, nationalId));
-//
-//				HttpResponse<String> responsePscAmar = client.send(requestPscAmar, HttpResponse.BodyHandlers.ofString());
-//
-//				if (responsePscAmar.statusCode() == 200) {
-//					String jsonResponse = responsePscAmar.body();
-//					ObjectMapper mapper = new ObjectMapper();
-//					HashMap<?,?> mieResponse = mapper.readValue(jsonResponse, HashMap.class);
-//					//List<MIE> eims = mieResponse.get("data"); // MAPPING
-//					user.etEims(eims);
-//					
-//					return new ResponseEntity<>(user, HttpStatus.OK);
-//				} else {
-//					HttpHeaders headers = new HttpHeaders();
-//					if (responsePscAmar.statusCode() == 400) {
-//						headers.add("X-Error-Message", "Données invalides ou absentes");
-//					} else if (responsePscAmar.statusCode() == 404) {
-//						headers.add("X-Error-Message", "Utilisateur non trouvé");
-//					} else if (responsePscAmar.statusCode() == 500) {
-//						headers.add("X-Error-Message", "Erreur interne serveur");
-//					}
-//					return new ResponseEntity<>(headers, HttpStatus.valueOf(responsePscAmar.statusCode()));
-//				}
 			}
 		}
 
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Convertit un AbstractEimObject (retourné par l'API eims AMAR) en AbstractEim
+	 * (attendu par le modèle User). Les deux classes générées sont structurellement
+	 * identiques ; on copie champ par champ pour éviter toute dépendance à la
+	 * configuration des modules Jackson (OffsetDateTime, JsonNullable).
+	 */
+	static AbstractEim toAbstractEim(AbstractEimObject source) {
+		AbstractEim target = new AbstractEim();
+		target.setNationalId(source.getNationalId());
+		target.setType(source.getType());
+		target.setCreationDate(source.getCreationDate());
+		target.setEndOfValidityDate(source.getEndOfValidityDate());
+		target.setLastUsageDate(source.getLastUsageDate());
+		if (source.getEidasLevel() != null) {
+			target.setEidasLevel(AbstractEim.EidasLevelEnum.fromValue(source.getEidasLevel().getValue()));
+		}
+		target.setAttributes(source.getAttributes());
+		return target;
 	}
 
 	@Override
@@ -579,9 +595,10 @@ public class PsiApiController implements PsiApi {
 
 			log.info(String.format("Response of [%s] : %s", uri, response));
 
-			if (response.statusCode() == 200) {
-				String jsonResponse = response.body();
-				return new ResponseEntity<>(HttpStatus.OK);
+			if (response.statusCode() == 200 || response.statusCode() == 201) {
+				OperationType op = response.statusCode() == 201 ? OperationType.CREATE : OperationType.UPDATE;
+				messageProducer.sendPsMessage(ps, op);
+				return new ResponseEntity<>(HttpStatus.valueOf(response.statusCode()));
 			} else {
 				HttpHeaders headers = new HttpHeaders();
 				if (response.statusCode() == 400) {
@@ -745,6 +762,9 @@ public class PsiApiController implements PsiApi {
 
 			if (responsePscPs.statusCode() == 204) {
 				log.info("User {} successfully deleted", nationalId);
+				Ps ps = new Ps();
+				ps.setNationalId(nationalId);
+				messageProducer.sendPsMessage(ps, OperationType.DELETE);
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			} else {
 				HttpHeaders headers = new HttpHeaders();
